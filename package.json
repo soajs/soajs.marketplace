@@ -1,0 +1,38 @@
+{
+  "name": "soajs.catalog",
+  "description": "soajs Catalog service",
+  "version": "1.0.0",
+  "author": {
+    "name": "soajs team",
+    "email": "team@soajs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:soajs/soajs.catalog.git"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt": "1.0.4",
+    "grunt-contrib-clean": "2.0.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-jshint": "2.1.0",
+    "grunt-coveralls": "2.0.0",
+    "grunt-env": "1.0.1",
+    "grunt-istanbul": "0.8.0",
+    "grunt-jsdoc": "2.4.0",
+    "grunt-mocha-test": "0.13.3",
+    "mocha": "6.2.2",
+    "request": "2.88.0",
+    "soajs.controller": "3.*"
+  },
+  "dependencies": {
+    "async": "3.1.1",
+    "soajs": "2.6.5"
+  }
+}
