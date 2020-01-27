@@ -8,14 +8,14 @@
  */
 
 "use strict";
-//const colName = "git";
+//const colName = "marketplace";
 const core = require("soajs");
 //const async = require("async");
 const Mongo = core.mongo;
 
 let indexing = {};
 
-function Catalog(service, options, mongoCore) {
+function Marketplace(service, options, mongoCore) {
     let __self = this;
 
     if (mongoCore) {
@@ -43,9 +43,9 @@ function Catalog(service, options, mongoCore) {
 
 
 
-Catalog.prototype.closeConnection = function () {
+Marketplace.prototype.closeConnection = function () {
     let __self = this;
     __self.mongoCore.closeDb();
 };
 
-module.exports = Catalog;
+module.exports = Marketplace;

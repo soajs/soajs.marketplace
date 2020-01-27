@@ -14,7 +14,7 @@ const fs = require("fs");
 
 let SSOT = {};
 let model = process.env.SOAJS_SERVICE_MODEL || "mongo";
-const BLs = ["catalog"];
+const BLs = ["marketplace"];
 
 let BL = {
 	init: init,
