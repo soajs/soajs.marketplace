@@ -1,7 +1,7 @@
 FROM soajsorg/node
 
-RUN mkdir -p /opt/soajs/soajs.catalog/node_modules/
-WORKDIR /opt/soajs/soajs.catalog/
+RUN mkdir -p /opt/soajs/soajs.marketplace/node_modules/
+WORKDIR /opt/soajs/soajs.marketplace/
 COPY . .
 RUN npm install
 
