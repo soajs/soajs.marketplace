@@ -19,7 +19,7 @@ let lib = {
 	 * @method findRoot
 	 * @return String rootPath
 	 */
-	findRoot: function () {
+	findRoot: () => {
 		let cwd = process.cwd();
 		let rootPath = cwd;
 		let newRootPath = null;
@@ -41,8 +41,8 @@ let lib = {
 	 * @param grunt {Object} The grunt instance
 	 * @param tasks {Array} Array of tasks as string
 	 */
-	loadTasks: function (grunt, rootPath, tasks) {
-		tasks.forEach(function (name) {
+	loadTasks: (grunt, rootPath, tasks) => {
+		tasks.forEach((name) => {
 			if (name === 'grunt-cli') {
 				return;
 			}
@@ -54,7 +54,7 @@ let lib = {
 	}
 };
 
-module.exports = function (grunt) {
+module.exports = (grunt) => {
 	//Loading the needed plugins to run the grunt tasks
 	let pluginsRootPath = lib.findRoot();
 	lib.loadTasks(grunt, pluginsRootPath, ['grunt-contrib-jshint', 'grunt-jsdoc', 'grunt-contrib-clean', 'grunt-mocha-test', 'grunt-env', 'grunt-istanbul', 'grunt-coveralls', 'grunt-contrib-copy']);
