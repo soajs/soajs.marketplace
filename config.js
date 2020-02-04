@@ -15,7 +15,7 @@ module.exports = {
 		memory: ''
 	},
 	"serviceVersion": 1,
-	"serviceName": "catalog",
+	"serviceName": "marketplace",
 	"serviceGroup": "SOAJS Core Services",
 	"servicePort": 4007,
 	"requestTimeout": 30,

@@ -16,39 +16,11 @@ let user = {
     ],
     config: {
         packages: {},
-        keys: {},
-        allowedTenants: [
-            {
-                tenant: {
-                    id: "THYME_tID",
-                    code: "THYME_CODE",
-                    pin: {
-                        code: "5678",
-                        allowed: true
-                    }
-                },
-                groups: [
-                    "waiter"
-                ]
-            },
-            {
-                tenant: {
-                    id: "ELVIRA_tID",
-                    code: "ELVIRA_CODE"
-                },
-                groups: [
-                    "manager"
-                ]
-            }
-        ]
+        keys: {}
     },
     tenant: {
         id: "5c0e74ba9acc3c5a84a51259",
-        code: "DBTN",
-        pin: {
-            code: "1235",
-            allowed: true
-        }
+        code: "DBTN"
     },
     lastLogin: 1567004442409
 };

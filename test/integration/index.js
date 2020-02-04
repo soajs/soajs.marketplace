@@ -24,7 +24,7 @@ describe("starting integration tests", () => {
 	        if (msg){
 		        console.log(msg);
 	        }
-            console.log("Starting Controller and GIT service");
+            console.log("Starting Controller and Marketplace service");
             controller = require("soajs.controller");
             setTimeout(function () {
 	            service = helper.requireModule('./index');

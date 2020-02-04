@@ -37,7 +37,7 @@ function Marketplace(service, options, mongoCore) {
         indexing[index] = true;
 
 
-        service.log.debug("Catalog: Indexes for " + index + " Updated!");
+        service.log.debug("Marketplace: Indexes for " + index + " Updated!");
     }
 }
 

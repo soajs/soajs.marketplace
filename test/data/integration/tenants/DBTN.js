@@ -11,11 +11,6 @@ let lib = {
     description: "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
     oauth: {
         secret: "this is a secret",
-        pin: {
-            DSBRD: {
-                enabled: false
-            }
-        },
         disabled: 0,
         type: 2,
         loginMode: "urac"

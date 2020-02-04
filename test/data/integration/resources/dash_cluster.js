@@ -8,7 +8,7 @@ let res = {
     author: "owner",
     locked: true,
     plugged: true,
-    shared: true,
+    shared: false,
     config: {
         name: "core_provision",
         prefix: "",
@@ -18,13 +18,18 @@ let res = {
                 port: 27017
             }
         ],
-        credentials: null,
-        streaming: {
-            batchSize: 1000
-        },
-        URLParam: {
-            bufferMaxEntries: 0
-        },
+	    credentials: null,
+	    streaming: {
+		
+	    },
+	    extraParam: {
+		
+	    },
+	    URLParam: {
+		    maxPoolSize: 2,
+		    bufferMaxEntries: 0,
+		    useUnifiedTopology: true
+	    },
         timeConnected: 1552747598093
     }
 };
