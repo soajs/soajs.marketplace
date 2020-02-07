@@ -64,7 +64,7 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		options.sort = {};
 	}
 	if (data && data.keywords) {
-		condition = {$text: {$search: data.keywords}}
+		condition = {$text: {$search: data.keywords}};
 	}
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
@@ -108,7 +108,7 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		options.sort = {};
 	}
 	if (data.subType) {
-		condition["configuration.subType"] = data.subType
+		condition["configuration.subType"] = data.subType;
 	}
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
