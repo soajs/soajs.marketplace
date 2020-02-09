@@ -37,7 +37,16 @@ function Marketplace(service, options, mongoCore) {
 		
 		__self.mongoCore.createIndex(colName, {
 			"name": "text",
-			"description": "text"
+			"description": "text",
+			"type": 1,
+			"configuration.subType": 1
+		}, {}, (err, index) => {
+			service.log.debug("Index: " + index + " created with error: " + err);
+		});
+		__self.mongoCore.createIndex(colName, {
+			"name": "text",
+			"description": "text",
+			"configuration.subType": 1
 		}, {}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
@@ -53,7 +62,11 @@ function Marketplace(service, options, mongoCore) {
 
 Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 	let __self = this;
-	let condition = {};
+	if (!data || !data.keywords) {
+		let error = new Error("Marketplace: keywords is required.");
+		return cb(error, null);
+	}
+	let condition = {$text: {$search: data.keywords}};
 	let options = {
 		"skip": 0,
 		"limit": 100
@@ -63,8 +76,11 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		options.limit = data.limit;
 		options.sort = {};
 	}
-	if (data && data.keywords) {
-		condition = {$text: {$search: data.keywords}};
+	if (data.type) {
+		condition.type = data.type;
+	}
+	if (data.subType) {
+		condition["configuration.subType"] = data.subType;
 	}
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {

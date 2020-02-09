@@ -104,6 +104,7 @@ module.exports = (grunt) => {
 		
 		env: {
 			mochaTest: {
+				SOAJS_IMPORTER_DROPDB: true,
 				SOAJS_ENV: "dashboard",
 				SOAJS_SRVIP: "127.0.0.1",
 				SOAJS_TEST: true,
@@ -111,6 +112,7 @@ module.exports = (grunt) => {
 				APP_DIR_FOR_CODE_COVERAGE: '../'
 			},
 			coverage: {
+				SOAJS_IMPORTER_DROPDB: true,
 				SOAJS_ENV: "dashboard",
 				SOAJS_SRVIP: "127.0.0.1",
 				SOAJS_TEST: true,
