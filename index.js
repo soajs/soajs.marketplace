@@ -25,6 +25,15 @@ service.init(() => {
 		
 		//GET methods
 		
+		service.get("/soajs/items", function (req, res) {
+			req.soajs.inputmaskData.type = "service";
+			req.soajs.inputmaskData.subType = "soajs";
+			bl.marketplace.getItems_by_type_subtype(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		
+		
 		//DELETE methods
 		
 		

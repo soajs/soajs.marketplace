@@ -16,7 +16,7 @@ let accessToken = "44a5399dcce96325fadfab908e614bf00e6fe967";
 
 module.exports = (apiName, method, params, cb) => {
 	let options = {
-		uri: 'http://127.0.0.1:4000/repositories' + apiName,
+		uri: 'http://127.0.0.1:4000/marketplace' + apiName,
 		headers: {
 			key: extKey,
 			access_token: accessToken

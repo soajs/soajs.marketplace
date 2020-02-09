@@ -9,8 +9,8 @@ let prod = {
 	scope: {
 		acl: {
 			dashboard: {
-				urac: {
-					"3": {
+				marketplace: {
+					"1": {
 						access: true
 					}
 				}
@@ -26,9 +26,9 @@ let prod = {
 			acl: {
 				dashboard: {
 					
-					urac: [
+					marketplace: [
 						{
-							version: "3"
+							version: "1"
 						}
 					]
 				}
@@ -42,9 +42,9 @@ let prod = {
 			locked: true,
 			acl: {
 				dashboard: {
-					urac: [
+					marketplace: [
 						{
-							version: "3"
+							version: "1"
 						}
 					]
 				}

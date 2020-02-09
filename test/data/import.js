@@ -573,11 +573,11 @@ let custom = {
 					
 					function (cb) {
 						//check for tenants data
-						if (fs.existsSync(dataPath + "oauth/")) {
+						if (fs.existsSync(dataPath + "oauth/token/")) {
 							let config = {
 								"delete": cleanDataBefore
 							};
-							return lib.oauth(config, dataPath + "oauth/", mongoConnection, cb);
+							return lib.oauth(config, dataPath + "oauth/token/", mongoConnection, cb);
 						} else {
 							return cb(null);
 						}

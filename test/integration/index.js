@@ -35,6 +35,7 @@ describe("starting integration tests", () => {
 	});
 	
 	it("loading tests", (done) => {
+		require("./get/soajs_items.js");
 		done();
 	});
 	
