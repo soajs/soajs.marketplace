@@ -58,8 +58,60 @@ let bl = {
 			}
 			return cb(null, response);
 		});
-	}
+	},
+	"getItems_by_keywords": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItems_by_keywords(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
 	
+	"updateItem_environments" : (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.updateItem_environments(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
+	"updateItem_recipes" : (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.updateItem_recipes(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
+	"updateItem_acl" : (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.updateItem_acl(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	}
 };
 
 module.exports = bl;

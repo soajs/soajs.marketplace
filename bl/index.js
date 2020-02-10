@@ -18,7 +18,8 @@ const BLs = ["marketplace"];
 
 let BL = {
 	init: init,
-	git: null
+	marketplace: null,
+	marketplace_soajs: null
 	
 };
 

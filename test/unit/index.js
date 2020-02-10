@@ -30,6 +30,7 @@ describe("Starting Unit test", () => {
 	
 	it("Unit test for Model", (done) => {
 		require("./model/mongo/marketplace.js");
+		//require("./model/mongo/marketplace_soajs.js");
 		done();
 	});
 	

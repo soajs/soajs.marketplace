@@ -34,22 +34,13 @@ let lib = {
 					let condition = {[condAnchor]: e[condAnchor]};
 					
 					let update = () => {
-						if (mongoConnection.updateOne) {
-							e = {$set: e};
-							mongoConnection.updateOne(colName, condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log(colName, error);
-								}
-								return cb();
-							});
-						} else {
-							mongoConnection.update(colName, condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log(colName, error);
-								}
-								return cb();
-							});
-						}
+						e = {$set: e};
+						mongoConnection.updateOne(colName, condition, e, {'upsert': true}, (error) => {
+							if (error) {
+								console.log(colName, error);
+							}
+							return cb();
+						});
 					};
 					
 					if (config.delete) {
@@ -101,22 +92,13 @@ let lib = {
 						e.user._id = mongoConnection.ObjectId(e.user._id);
 					}
 					let update = () => {
-						if (mongoConnection.updateOne) {
-							e = {$set: e};
-							mongoConnection.updateOne("oauth_token", condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log("oauth_token", error);
-								}
-								return cb();
-							});
-						} else {
-							mongoConnection.update("oauth_token", condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log("oauth_token", error);
-								}
-								return cb();
-							});
-						}
+						e = {$set: e};
+						mongoConnection.updateOne("oauth_token", condition, e, {'upsert': true}, (error) => {
+							if (error) {
+								console.log("oauth_token", error);
+							}
+							return cb();
+						});
 					};
 					
 					if (config.delete) {
@@ -165,22 +147,13 @@ let lib = {
 						e._id = mongoConnection.ObjectId(e._id);
 					}
 					let update = () => {
-						if (mongoConnection.updateOne) {
-							e = {$set: e};
-							mongoConnection.updateOne("users", condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log("users", error);
-								}
-								return cb();
-							});
-						} else {
-							mongoConnection.update("users", condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log("users", error);
-								}
-								return cb();
-							});
-						}
+						e = {$set: e};
+						mongoConnection.updateOne("users", condition, e, {'upsert': true}, (error) => {
+							if (error) {
+								console.log("users", error);
+							}
+							return cb();
+						});
 					};
 					
 					if (config.delete) {
@@ -229,22 +202,13 @@ let lib = {
 						e._id = mongoConnection.ObjectId(e._id);
 					}
 					let update = () => {
-						if (mongoConnection.updateOne) {
-							e = {$set: e};
-							mongoConnection.updateOne("groups", condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log("groups", error);
-								}
-								return cb();
-							});
-						} else {
-							mongoConnection.update("groups", condition, e, {'upsert': true}, (error) => {
-								if (error) {
-									console.log("groups", error);
-								}
-								return cb();
-							});
-						}
+						e = {$set: e};
+						mongoConnection.updateOne("groups", condition, e, {'upsert': true}, (error) => {
+							if (error) {
+								console.log("groups", error);
+							}
+							return cb();
+						});
 					};
 					
 					if (config.delete) {
@@ -614,7 +578,8 @@ let custom = {
 				});
 		};
 		
-		if (process.env.SOAJS_IMPORTER_DROPDB) {
+		if (process.env.SOAJS_IMPORTER_DROPDB === "true") {
+			process.env.SOAJS_IMPORTER_DROPDB = false;
 			mongoConnection.dropDatabase({}, (error, result) => {
 				console.log(error, result);
 				_execute();

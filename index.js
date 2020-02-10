@@ -26,18 +26,46 @@ service.init(() => {
 		//GET methods
 		
 		service.get("/soajs/items", function (req, res) {
-			req.soajs.inputmaskData.type = "service";
-			req.soajs.inputmaskData.subType = "soajs";
+			req.soajs.inputmaskData.soajs = true;
+			bl.marketplace.getItems_by_keywords(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		
+		service.get("/items", function (req, res) {
+			bl.marketplace.getItems_by_keywords(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.get("/items/type", function (req, res) {
 			bl.marketplace.getItems_by_type_subtype(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
 		
-		
 		//DELETE methods
 		
 		
 		//PUT methods
+		
+		service.put("/soajs/item/environments", function (req, res) {
+			req.soajs.inputmaskData.soajs = true;
+			bl.marketplace.updateItem_environments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.put("/soajs/item/recipes", function (req, res) {
+			req.soajs.inputmaskData.soajs = true;
+			bl.marketplace.updateItem_recipes(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.put("/soajs/item/acl", function (req, res) {
+			req.soajs.inputmaskData.soajs = true;
+			bl.marketplace.updateItem_acl(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
 		
 		//POST methods
 		

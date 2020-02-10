@@ -36,7 +36,7 @@ module.exports = {
 		"commonFields": {
 			"keywords": {
 				"source": ['query.keywords', 'body.keywords'],
-				"required": true,
+				"required": false,
 				"validation": {"type": "string"}
 			},
 			"start": {
@@ -56,6 +56,11 @@ module.exports = {
 					"type": "integer",
 					"max": 2000
 				}
+			},
+			"id": {
+				"source": ['query.id', 'body.id'],
+				"required": true,
+				"validation": {"type": "string"}
 			}
 		},
 		
@@ -63,10 +68,10 @@ module.exports = {
 			'/soajs/items': {
 				"_apiInfo": {
 					"l": "List items matching certain keywords from soajs only",
-					"group": "soajs",
+					"group": "SOAJS",
 					"groupMain": true
 				},
-				"commonFields": ["start", "limit"]
+				"commonFields": ["start", "limit", "keywords"]
 			},
 			'/items': {
 				"_apiInfo": {
@@ -76,7 +81,7 @@ module.exports = {
 				},
 				"commonFields": ["start", "limit", "keywords"],
 				"type": {
-					"source": ['query.token'],
+					"source": ['query.type'],
 					"required": false,
 					"validation": {"type": "string"}
 				},
@@ -85,7 +90,93 @@ module.exports = {
 					"required": false,
 					"validation": {"type": "string"}
 				}
+			},
+			'/items/type': {
+				"_apiInfo": {
+					"l": "List items matching a type with option to set subtype",
+					"group": "soajs",
+					"groupMain": true
+				},
+				"commonFields": ["start", "limit"],
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"subtype": {
+					"source": ['query.subtype'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
 			}
+		},
+		
+		"put": {
+			'/soajs/item/environments': {
+				"_apiInfo": {
+					"l": "Update item environments from soajs only",
+					"group": "SOAJS",
+					"groupMain": true
+				},
+				"commonFields": ["id"],
+				"type": {
+					"source": ['body.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["blackList", "whitelist"]
+					}
+				},
+				"environments": {
+					"source": ['body.environments'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1
+					}
+				}
+			},
+			'/soajs/item/recipes': {
+				"_apiInfo": {
+					"l": "Update item recipes from soajs only",
+					"group": "SOAJS",
+					"groupMain": true
+				},
+				"commonFields": ["id"],
+				"recipes": {
+					"source": ['body.recipes'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1
+					}
+				}
+			},
+			'/soajs/item/acl': {
+				"_apiInfo": {
+					"l": "Update item ACL from soajs only",
+					"group": "SOAJS",
+					"groupMain": true
+				},
+				"commonFields": ["id"],
+				"type": {
+					"source": ['body.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["blackList", "whitelist"]
+					}
+				},
+				"acl": {
+					"source": ['body.acl'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1
+					}
+				}
+			}
+			
 		}
 		
 	}

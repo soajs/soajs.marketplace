@@ -1,12 +1,12 @@
 'use strict';
 let lib = {
-	"_id": "5e3ef3f9c5a59210a815262a",
-	"name": "shopping",
-	"description": "MS shopping cart service for marketplace",
+	"_id": "5e409c94c5a59210a815262c",
+	"name": "pay",
+	"description": "MS pay service for marketplace",
 	"type": "service",
 	"configuration": {
 		"subType": "ecommerce",
-		"port": 4100,
+		"port": 4102,
 		"group": "Marketplace",
 		"requestTimeout": 30,
 		"requestTimeoutRenewal": 5,
@@ -31,23 +31,23 @@ let lib = {
 			"urac_Profile": false,
 			"apis": [
 				{
-					l: "Get shopping cart items",
-					v: "/items",
-					m: "get",
-					group: "Cart"
+					l: "pay items",
+					v: "/pay",
+					m: "post",
+					group: "Pay"
 				},
 				{
-					l: "Get all carts ",
-					v: "/carts",
+					l: "Get all pay ",
+					v: "/pays",
 					m: "get",
-					group: "Cart"
+					group: "Pay"
 				}
 			],
 			"documentation": {}
 		}
 	],
 	"metadata": {
-		"tags": ["cart", "ecommerce"],
+		"tags": ["order", "ecommerce"],
 		"program": ["marketplace"]
 	},
 	"ui": {
@@ -62,7 +62,7 @@ let lib = {
 	"src": {
 		"provider": "github",
 		"owner": "ht",
-		"repo": "mkpl.cart"
+		"repo": "mkpl.order"
 	}
 };
 module.exports = lib;

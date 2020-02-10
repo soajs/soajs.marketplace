@@ -16,6 +16,13 @@ let indexing = {};
 
 function Marketplace(service, options, mongoCore) {
 	let __self = this;
+	if (__self.log) {
+		__self.log = soajs.log;
+	} else {
+		__self.log = (log) => {
+			console.log(log);
+		};
+	}
 	
 	if (mongoCore) {
 		__self.mongoCore = mongoCore;
@@ -56,32 +63,45 @@ function Marketplace(service, options, mongoCore) {
 		}, {}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
+		__self.mongoCore.createIndex(colName, {
+			"configuration.subType": 1
+		}, {}, (err, index) => {
+			service.log.debug("Index: " + index + " created with error: " + err);
+		});
 		service.log.debug("Marketplace: Indexes for " + index + " Updated!");
 	}
 }
 
 Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 	let __self = this;
-	if (!data || !data.keywords) {
-		let error = new Error("Marketplace: keywords is required.");
-		return cb(error, null);
-	}
-	let condition = {$text: {$search: data.keywords}};
 	let options = {
 		"skip": 0,
 		"limit": 100
 	};
+	options.sort = {};
 	if (data && data.limit) {
-		options.skip = data.start;
 		options.limit = data.limit;
-		options.sort = {};
+	}
+	if (data && data.start) {
+		options.skip = data.start;
+	}
+	
+	let condition = {$and: []};
+	if (data.keywords) {
+		condition.$and.push({$text: {$search: data.keywords}});
 	}
 	if (data.type) {
-		condition.type = data.type;
+		condition.$and.push({type: data.type});
 	}
-	if (data.subType) {
-		condition["configuration.subType"] = data.subType;
+	if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
+		condition.$and.push({"configuration.subType": data.subType});
 	}
+	if (data.soajs) {
+		condition.$and.push({"configuration.subType": "soajs"});
+	} else {
+		condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+	}
+	
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
 			return cb(err, null);
@@ -112,21 +132,28 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		let error = new Error("Marketplace: type is required.");
 		return cb(error, null);
 	}
-	let condition = {
-		"type": data.type
-	};
 	let options = {
 		"skip": 0,
 		"limit": 100
 	};
+	options.sort = {};
 	if (data && data.limit) {
-		options.skip = data.start;
 		options.limit = data.limit;
-		options.sort = {};
 	}
-	if (data.subType) {
-		condition["configuration.subType"] = data.subType;
+	if (data && data.start) {
+		options.skip = data.start;
 	}
+	
+	let condition = {$and: [{"type": data.type}]};
+	if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
+		condition.$and.push({"configuration.subType": data.subType});
+	}
+	if (data.soajs) {
+		condition.$and.push({"configuration.subType": "soajs"});
+	} else {
+		condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+	}
+	
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
 			return cb(err, null);
@@ -165,7 +192,14 @@ Marketplace.prototype.updateItem_recipes = function (data, cb) {
 		if (err) {
 			return cb(err, null);
 		}
-		let condition = {"_id": _id};
+		
+		let condition = {$and: [{"_id": _id}]};
+		if (data.soajs) {
+			condition.$and.push({"configuration.subType": "soajs"});
+		} else {
+			condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+		}
+		
 		let s = {
 			'$set': {
 				"settings.recipes": data.recipes
@@ -204,7 +238,14 @@ Marketplace.prototype.updateItem_environments = function (data, cb) {
 		if (err) {
 			return cb(err, null);
 		}
-		let condition = {"_id": _id};
+		
+		let condition = {$and: [{"_id": _id}]};
+		if (data.soajs) {
+			condition.$and.push({"configuration.subType": "soajs"});
+		} else {
+			condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+		}
+		
 		let s = {
 			'$set': {
 				"settings.environments.value": data.environments,
@@ -245,7 +286,14 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 		if (err) {
 			return cb(err, null);
 		}
-		let condition = {"_id": _id};
+		
+		let condition = {$and: [{"_id": _id}]};
+		if (data.soajs) {
+			condition.$and.push({"configuration.subType": "soajs"});
+		} else {
+			condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+		}
+		
 		let s = {
 			'$set': {
 				"settings.acl.value": data.acl,

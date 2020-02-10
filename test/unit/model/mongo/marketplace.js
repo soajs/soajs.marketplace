@@ -56,34 +56,55 @@ describe("Unit test for: model - marketplace", function () {
 		done();
 	});
 	
+	it("validateId - error", function (done) {
+		modelObj.validateId(null, (error) => {
+			assert.ok(error);
+			done();
+		});
+	});
+	
+	it("validateId - error invalid id", function (done) {
+		modelObj.validateId("121212", (error) => {
+			assert.ok(error);
+			done();
+		});
+	});
+	
+	it("validateId - with id", function (done) {
+		modelObj.validateId("5cfb05c22ac09278709d0141", (error, _id) => {
+			assert.ok(_id);
+			done();
+		});
+	});
+	
 	it("getItems_by_keywords - with keywords", function (done) {
 		let data = {
-			"keywords": "multitenant",
+			"keywords": "marketplace",
 			"limit": 10,
 			"start": 0
 		};
 		modelObj.getItems_by_keywords(data, (error, response) => {
 			assert.ok(response);
-			assert.deepEqual(response.records.length, 1);
+			assert.ok(response.records.length > 1);
 			done();
 		});
 	});
 	it("getItems_by_keywords - with keywords and subtype", function (done) {
 		let data = {
-			"keywords": "multitenant",
-			"subType": "ecommerce",
+			"keywords": "marketplace",
+			"subType": "soajs",
 			"limit": 10,
 			"start": 0
 		};
 		modelObj.getItems_by_keywords(data, (error, response) => {
 			assert.ok(response);
-			assert.deepEqual(response.records.length, 0);
+			assert.deepEqual(response.records.length, 3);
 			done();
 		});
 	});
 	it("getItems_by_keywords - with keywords", function (done) {
 		let data = {
-			"keywords": "soajs",
+			"keywords": "marketplace",
 			"limit": 1,
 			"start": 0
 		};
@@ -105,7 +126,7 @@ describe("Unit test for: model - marketplace", function () {
 	it("getItems_by_type_subtype - with type and subtype", function (done) {
 		let data = {
 			"type": "service",
-			"subType": "soajs",
+			"subType": "ecommerce",
 			"limit": 10,
 			"start": 0
 		};
@@ -117,7 +138,7 @@ describe("Unit test for: model - marketplace", function () {
 	it("getItems_by_type_subtype - with type and subtype", function (done) {
 		let data = {
 			"type": "service",
-			"subType": "soajs",
+			"subType": "ecommerce",
 			"limit": 2,
 			"start": 0
 		};
@@ -128,6 +149,28 @@ describe("Unit test for: model - marketplace", function () {
 		});
 	});
 	
+	it("updateItem_recipes - for urac SOAJS", function (done) {
+		let main_data = {
+			"soajs": true,
+			"id": "5db1f85be9253564357b303e",
+			"recipes": ["core1", "core2"]
+		};
+		modelObj.updateItem_recipes(main_data, (error, response) => {
+			assert.ok(response);
+			assert.deepEqual(response, 1);
+			let data = {
+				"keywords": "urac",
+				"soajs": true,
+				"limit": 2,
+				"start": 0
+			};
+			modelObj.getItems_by_keywords(data, (error, response) => {
+				assert.ok(response);
+				assert.deepEqual(response.records[0].settings.recipes, main_data.recipes);
+				done();
+			});
+		});
+	});
 	it("updateItem_recipes - for shopping", function (done) {
 		let main_data = {
 			"id": "5e3ef3f9c5a59210a815262a",

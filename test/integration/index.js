@@ -35,7 +35,13 @@ describe("starting integration tests", () => {
 	});
 	
 	it("loading tests", (done) => {
+		require("./get/items.js");
+		require("./get/items_type.js");
 		require("./get/soajs_items.js");
+		
+		require("./put/soajs_item_environments.js");
+		require("./put/soajs_item_recipes.js");
+		require("./put/soajs_item_acl.js");
 		done();
 	});
 	
