@@ -26,7 +26,6 @@ describe("Testing API: GET /items", () => {
         };
         requester('/items', 'get', params, (error, body) => {
             assert.ok(body);
-            console.log(body.errors)
             assert.ok(body.data.records.length > 0);
             let id_array = [];
             for (let i = 0; i < body.data.records.length; i++) {

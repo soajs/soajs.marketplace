@@ -17,7 +17,7 @@ let indexing = {};
 function Marketplace(service, options, mongoCore) {
 	let __self = this;
 	if (__self.log) {
-		__self.log = soajs.log;
+		__self.log = service.log;
 	} else {
 		__self.log = (log) => {
 			console.log(log);
