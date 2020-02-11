@@ -22,6 +22,7 @@ module.exports = {
 	"requestTimeoutRenewal": 5,
 	"oauth": true,
 	"extKeyRequired": true,
+	"urac": true,
 	
 	
 	"errors": {
@@ -69,15 +70,13 @@ module.exports = {
 				"_apiInfo": {
 					"l": "List items matching certain keywords from soajs only",
 					"group": "SOAJS",
-					"groupMain": true
 				},
 				"commonFields": ["start", "limit", "keywords"]
 			},
 			'/items': {
 				"_apiInfo": {
 					"l": "List items matching certain keywords with option to set from what type and subtype",
-					"group": "soajs",
-					"groupMain": true
+					"group": "Item",
 				},
 				"commonFields": ["start", "limit", "keywords"],
 				"type": {
@@ -94,8 +93,7 @@ module.exports = {
 			'/items/type': {
 				"_apiInfo": {
 					"l": "List items matching a type with option to set subtype",
-					"group": "soajs",
-					"groupMain": true
+					"group": "Item"
 				},
 				"commonFields": ["start", "limit"],
 				"type": {
@@ -115,8 +113,7 @@ module.exports = {
 			'/soajs/item/environments': {
 				"_apiInfo": {
 					"l": "Update item environments from soajs only",
-					"group": "SOAJS",
-					"groupMain": true
+					"group": "SOAJS"
 				},
 				"commonFields": ["id"],
 				"type": {
@@ -139,8 +136,7 @@ module.exports = {
 			'/soajs/item/recipes': {
 				"_apiInfo": {
 					"l": "Update item recipes from soajs only",
-					"group": "SOAJS",
-					"groupMain": true
+					"group": "SOAJS"
 				},
 				"commonFields": ["id"],
 				"recipes": {
@@ -155,8 +151,7 @@ module.exports = {
 			'/soajs/item/acl': {
 				"_apiInfo": {
 					"l": "Update item ACL from soajs only",
-					"group": "SOAJS",
-					"groupMain": true
+					"group": "SOAJS"
 				},
 				"commonFields": ["id"],
 				"type": {

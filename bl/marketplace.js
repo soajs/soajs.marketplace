@@ -8,6 +8,16 @@
 
 'use strict';
 
+function getGroups(soajs) {
+	let groups = null;
+	if (soajs && soajs.urac && soajs.urac.groups) {
+		if (Array.isArray(soajs.urac.groups) && soajs.urac.groups.length > 0) {
+			groups = soajs.urac.groups;
+		}
+	}
+	return groups;
+}
+
 let bl = {
 	"modelObj": null,
 	"model": null,
@@ -50,6 +60,7 @@ let bl = {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
+		inputmaskData.groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
 		modelObj.getItems_by_type_subtype(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);
@@ -63,6 +74,7 @@ let bl = {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
+		inputmaskData.groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
 		modelObj.getItems_by_keywords(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);
@@ -73,10 +85,11 @@ let bl = {
 		});
 	},
 	
-	"updateItem_environments" : (soajs, inputmaskData, options, cb) => {
+	"updateItem_environments": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
+		inputmaskData.groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
 		modelObj.updateItem_environments(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);
@@ -86,10 +99,11 @@ let bl = {
 			return cb(null, response);
 		});
 	},
-	"updateItem_recipes" : (soajs, inputmaskData, options, cb) => {
+	"updateItem_recipes": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
+		inputmaskData.groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
 		modelObj.updateItem_recipes(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);
@@ -99,10 +113,11 @@ let bl = {
 			return cb(null, response);
 		});
 	},
-	"updateItem_acl" : (soajs, inputmaskData, options, cb) => {
+	"updateItem_acl": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
+		inputmaskData.groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
 		modelObj.updateItem_acl(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);

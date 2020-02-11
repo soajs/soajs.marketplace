@@ -50,6 +50,7 @@ function Marketplace(service, options, mongoCore) {
 		}, {}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
+		
 		__self.mongoCore.createIndex(colName, {
 			"name": "text",
 			"description": "text",
@@ -57,17 +58,20 @@ function Marketplace(service, options, mongoCore) {
 		}, {}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
+		
 		__self.mongoCore.createIndex(colName, {
 			"type": 1,
 			"configuration.subType": 1
 		}, {}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
+		
 		__self.mongoCore.createIndex(colName, {
 			"configuration.subType": 1
 		}, {}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
+		
 		service.log.debug("Marketplace: Indexes for " + index + " Updated!");
 	}
 }
@@ -86,21 +90,23 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		options.skip = data.start;
 	}
 	
-	let condition = {$and: []};
+	let condition = {};
 	if (data.keywords) {
-		condition.$and.push({$text: {$search: data.keywords}});
+		condition.$text = {$search: data.keywords};
 	}
 	if (data.type) {
-		condition.$and.push({type: data.type});
-	}
-	if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
-		condition.$and.push({"configuration.subType": data.subType});
+		condition.type = data.type;
 	}
 	if (data.soajs) {
-		condition.$and.push({"configuration.subType": "soajs"});
+		condition["configuration.subType"] = "soajs";
 	} else {
-		condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+		if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
+			condition["configuration.subType"] = data.subType;
+		} else {
+			condition["configuration.subType"] = {$ne: "soajs"};
+		}
 	}
+	condition = __self.add_acl_2_condition(data, condition);
 	
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
@@ -144,16 +150,18 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		options.skip = data.start;
 	}
 	
-	let condition = {$and: [{"type": data.type}]};
-	if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
-		condition.$and.push({"configuration.subType": data.subType});
-	}
+	let condition = {"type": data.type};
 	if (data.soajs) {
-		condition.$and.push({"configuration.subType": "soajs"});
+		condition["configuration.subType"] = "soajs";
 	} else {
-		condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+		if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
+			condition["configuration.subType"] = data.subType;
+		} else {
+			condition["configuration.subType"] = {$ne: "soajs"};
+		}
 	}
 	
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
 			return cb(err, null);
@@ -193,11 +201,11 @@ Marketplace.prototype.updateItem_recipes = function (data, cb) {
 			return cb(err, null);
 		}
 		
-		let condition = {$and: [{"_id": _id}]};
+		let condition = {"_id": _id};
 		if (data.soajs) {
-			condition.$and.push({"configuration.subType": "soajs"});
+			condition["configuration.subType"] = "soajs";
 		} else {
-			condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+			condition["configuration.subType"] = {$ne: "soajs"};
 		}
 		
 		let s = {
@@ -205,17 +213,23 @@ Marketplace.prototype.updateItem_recipes = function (data, cb) {
 				"settings.recipes": data.recipes
 			}
 		};
-		__self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
-			if (err) {
-				return cb(err);
-			}
-			if (!record || (record && !record.nModified)) {
-				let error = new Error("Marketplace: item [" + data.id + "] was not updated.");
+		
+		//condition = __self.add_acl_2_condition(data, condition);
+		__self.checkACL(data, condition, {}, (error) => {
+			if (error) {
 				return cb(error);
 			}
-			return cb(null, record.nModified);
+			__self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+				if (err) {
+					return cb(err);
+				}
+				if (!record || (record && !record.nModified)) {
+					let error = new Error("Marketplace: item [" + data.id + "] was not updated.");
+					return cb(error);
+				}
+				return cb(null, record.nModified);
+			});
 		});
-		
 	});
 };
 
@@ -239,11 +253,11 @@ Marketplace.prototype.updateItem_environments = function (data, cb) {
 			return cb(err, null);
 		}
 		
-		let condition = {$and: [{"_id": _id}]};
+		let condition = {"_id": _id};
 		if (data.soajs) {
-			condition.$and.push({"configuration.subType": "soajs"});
+			condition["configuration.subType"] = "soajs";
 		} else {
-			condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+			condition["configuration.subType"] = {$ne: "soajs"};
 		}
 		
 		let s = {
@@ -253,17 +267,23 @@ Marketplace.prototype.updateItem_environments = function (data, cb) {
 				"settings.environments.config": data.config || {}
 			}
 		};
-		__self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
-			if (err) {
-				return cb(err);
-			}
-			if (!record || (record && !record.nModified)) {
-				let error = new Error("Marketplace: item [" + data.id + "] was not updated.");
+		
+		//condition = __self.add_acl_2_condition(data, condition);
+		__self.checkACL(data, condition, {}, (error) => {
+			if (error) {
 				return cb(error);
 			}
-			return cb(null, record.nModified);
+			__self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+				if (err) {
+					return cb(err);
+				}
+				if (!record || (record && !record.nModified)) {
+					let error = new Error("Marketplace: item [" + data.id + "] was not updated.");
+					return cb(error);
+				}
+				return cb(null, record.nModified);
+			});
 		});
-		
 	});
 };
 
@@ -287,11 +307,11 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 			return cb(err, null);
 		}
 		
-		let condition = {$and: [{"_id": _id}]};
+		let condition = {"_id": _id};
 		if (data.soajs) {
-			condition.$and.push({"configuration.subType": "soajs"});
+			condition["configuration.subType"] = "soajs";
 		} else {
-			condition.$and.push({"configuration.subType": {$ne: "soajs"}});
+			condition["configuration.subType"] = {$ne: "soajs"};
 		}
 		
 		let s = {
@@ -301,17 +321,23 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 				"settings.acl.config": data.config || {}
 			}
 		};
-		__self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
-			if (err) {
-				return cb(err);
-			}
-			if (!record || (record && !record.nModified)) {
-				let error = new Error("Marketplace: item [" + data.id + "] was not updated.");
+		
+		//condition = __self.add_acl_2_condition(data, condition);
+		__self.checkACL(data, condition, {}, (error) => {
+			if (error) {
 				return cb(error);
 			}
-			return cb(null, record.nModified);
+			__self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+				if (err) {
+					return cb(err);
+				}
+				if (!record || (record && !record.nModified)) {
+					let error = new Error("Marketplace: item [" + data.id + "] was not updated.");
+					return cb(error);
+				}
+				return cb(null, record.nModified);
+			});
 		});
-		
 	});
 };
 
@@ -330,6 +356,70 @@ Marketplace.prototype.validateId = function (id, cb) {
 		__self.log(e);
 		return cb(new Error("A valid ID is required"), null);
 	}
+};
+
+Marketplace.prototype.checkACL = function (data, condition, options, cb) {
+	let __self = this;
+	__self.mongoCore.findOne(colName, condition, options, (err, item) => {
+		if (err) {
+			return cb(err, null);
+		}
+		if (!item) {
+			let error = new Error("Marketplace: item not found.");
+			return cb(error, null);
+		}
+		if (data.groups && Array.isArray(data.groups)) {
+			if (item.settings && item.settings.acl && item.settings.acl.type && item.settings.acl.value && Array.isArray(item.settings.acl.value) && item.settings.acl.value.length > 0) {
+				let acl = item.settings.acl;
+				let groupsFound = data.groups.some(o => acl.value.includes(o));
+				if (acl.type === "whitelist") {
+					if (groupsFound) {
+						return cb(null, true);
+					} else {
+						let error = new Error("Marketplace: Access restricted to this item.");
+						return cb(error, null);
+					}
+				}
+				if (acl.type === "blacklist") {
+					if (groupsFound) {
+						let error = new Error("Marketplace: Access restricted to this item.");
+						return cb(error, null);
+					} else {
+						return cb(null, true);
+					}
+				}
+			}
+			return cb(null, true);
+		} else {
+			return cb(null, true);
+		}
+	});
+};
+
+Marketplace.prototype.add_acl_2_condition = function (data, condition) {
+	if (data.groups) {
+		condition.$or = [
+			{"settings.acl.type": {"$exists": false}},
+			{"settings.acl.value": {"$exists": false}},
+			{
+				"$and": [{"settings.acl.type": {"$exists": true, "$eq": "whitelist"}}, {
+					"settings.acl.value": {
+						"$exists": true,
+						"$in": data.groups
+					}
+				}]
+			},
+			{
+				"$and": [{"settings.acl.type": {"$exists": true, "$eq": "blacklist"}}, {
+					"settings.acl.value": {
+						"$exists": true,
+						"$nin": data.groups
+					}
+				}]
+			}
+		];
+	}
+	return condition;
 };
 
 Marketplace.prototype.closeConnection = function () {
