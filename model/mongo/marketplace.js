@@ -215,7 +215,7 @@ Marketplace.prototype.updateItem_recipes = function (data, cb) {
 		};
 		
 		//condition = __self.add_acl_2_condition(data, condition);
-		__self.checkACL(data, condition, {}, (error) => {
+		__self.check_if_can_access(data, condition, {}, (error) => {
 			if (error) {
 				return cb(error);
 			}
@@ -269,7 +269,7 @@ Marketplace.prototype.updateItem_environments = function (data, cb) {
 		};
 		
 		//condition = __self.add_acl_2_condition(data, condition);
-		__self.checkACL(data, condition, {}, (error) => {
+		__self.check_if_can_access(data, condition, {}, (error) => {
 			if (error) {
 				return cb(error);
 			}
@@ -323,7 +323,7 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 		};
 		
 		//condition = __self.add_acl_2_condition(data, condition);
-		__self.checkACL(data, condition, {}, (error) => {
+		__self.check_if_can_access(data, condition, {}, (error) => {
 			if (error) {
 				return cb(error);
 			}
@@ -358,7 +358,7 @@ Marketplace.prototype.validateId = function (id, cb) {
 	}
 };
 
-Marketplace.prototype.checkACL = function (data, condition, options, cb) {
+Marketplace.prototype.check_if_can_access = function (data, condition, options, cb) {
 	let __self = this;
 	__self.mongoCore.findOne(colName, condition, options, (err, item) => {
 		if (err) {
