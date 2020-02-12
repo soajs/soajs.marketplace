@@ -32,6 +32,12 @@ service.init(() => {
 			});
 		});
 		
+		service.get("/public/items", function (req, res) {
+			req.soajs.inputmaskData.public = true;
+			bl.marketplace.getItems_by_keywords(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
 		service.get("/items", function (req, res) {
 			bl.marketplace.getItems_by_keywords(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));

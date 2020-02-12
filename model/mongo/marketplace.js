@@ -419,6 +419,13 @@ Marketplace.prototype.add_acl_2_condition = function (data, condition) {
 			}
 		];
 	}
+	if (data.public) {
+		if (condition.$or) {
+			condition.$or.push({"settings.acl.public.ro": {"$exists": true, "$eq": true}});
+		} else {
+			condition["settings.acl.public.ro"] = {"$exists": true, "$eq": true};
+		}
+	}
 	return condition;
 };
 

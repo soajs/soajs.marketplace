@@ -55,7 +55,11 @@ let lib = {
 		"sub": ""
 	},
 	"settings": {
-		"acl": {},
+		"acl": {
+			"public": {
+				"ro": true
+			}
+		},
 		"recipes": [],
 		"environments": {}
 	},

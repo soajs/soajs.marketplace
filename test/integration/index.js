@@ -35,6 +35,7 @@ describe("starting integration tests", () => {
 	});
 	
 	it("loading tests", (done) => {
+		require("./get/public_items.js");
 		require("./get/items.js");
 		require("./get/items_type.js");
 		require("./get/soajs_items.js");

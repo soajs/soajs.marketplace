@@ -18,13 +18,14 @@ module.exports = (apiName, method, params, cb) => {
 	let options = {
 		uri: 'http://127.0.0.1:4000/marketplace' + apiName,
 		headers: {
-			key: extKey,
-			access_token: accessToken
+			key: extKey
 		},
 		method: method.toUpperCase(),
 		json: true
 	};
-	
+	if (!params.public){
+		options.headers.access_token = accessToken;
+	}
 	if (params.headers) {
 		for (let header in params.headers) {
 			if (Object.hasOwnProperty.call(params.headers, header)) {

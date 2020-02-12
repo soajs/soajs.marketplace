@@ -73,6 +73,23 @@ module.exports = {
 				},
 				"commonFields": ["start", "limit", "keywords"]
 			},
+			'/public/items': {
+				"_apiInfo": {
+					"l": "List public items matching certain keywords with option to set from what type and subtype",
+					"group": "Public",
+				},
+				"commonFields": ["start", "limit", "keywords"],
+				"type": {
+					"source": ['query.type'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"subtype": {
+					"source": ['query.subtype'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
 			'/items': {
 				"_apiInfo": {
 					"l": "List items matching certain keywords with option to set from what type and subtype",
