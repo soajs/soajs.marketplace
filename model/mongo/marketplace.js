@@ -45,30 +45,25 @@ function Marketplace(service, options, mongoCore) {
 		__self.mongoCore.createIndex(colName, {
 			"name": "text",
 			"description": "text",
+			"configuration.subType": 1,
 			"type": 1,
-			"configuration.subType": 1
-		}, {}, (err, index) => {
-			service.log.debug("Index: " + index + " created with error: " + err);
-		});
-		
-		__self.mongoCore.createIndex(colName, {
-			"name": "text",
-			"description": "text",
-			"configuration.subType": 1
-		}, {}, (err, index) => {
+			"settings.acl.groups.type": 1
+		}, {"name": "name_description_type_subType"}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
 		__self.mongoCore.createIndex(colName, {
 			"type": 1,
-			"configuration.subType": 1
-		}, {}, (err, index) => {
+			"configuration.subType": 1,
+			"settings.acl.groups.type": 1
+		}, {"name": "type_subType"}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
 		__self.mongoCore.createIndex(colName, {
-			"configuration.subType": 1
-		}, {}, (err, index) => {
+			"configuration.subType": 1,
+			"settings.acl.groups.type": 1
+		}, {"name": "subType"}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
@@ -101,9 +96,6 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 	if (data.keywords) {
 		condition.$text = {$search: data.keywords};
 	}
-	if (data.type) {
-		condition.type = data.type;
-	}
 	if (data.soajs) {
 		condition["configuration.subType"] = "soajs";
 	} else {
@@ -112,6 +104,9 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		} else {
 			condition["configuration.subType"] = {$ne: "soajs"};
 		}
+	}
+	if (data.type) {
+		condition.type = data.type;
 	}
 	condition = __self.add_acl_2_condition(data, condition);
 	
