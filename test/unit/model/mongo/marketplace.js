@@ -223,7 +223,7 @@ describe("Unit test for: model - marketplace", function () {
 		let main_data = {
 			"id": "5e3ef3f9c5a59210a815262a",
 			"type": "whitelist",
-			"acl": ["owner", "devops"]
+			"groups": ["owner", "devops"]
 		};
 		modelObj.updateItem_acl(main_data, (error, response) => {
 			assert.ok(response);
@@ -237,8 +237,8 @@ describe("Unit test for: model - marketplace", function () {
 			};
 			modelObj.getItems_by_keywords(data, (error, response) => {
 				assert.ok(response);
-				assert.deepEqual(response.records[0].settings.acl.type, main_data.type);
-				assert.deepEqual(response.records[0].settings.acl.value, main_data.acl);
+				assert.deepEqual(response.records[0].settings.acl.groups.type, main_data.type);
+				assert.deepEqual(response.records[0].settings.acl.groups.value, main_data.groups);
 				done();
 			});
 		});

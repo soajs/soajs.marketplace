@@ -21,7 +21,7 @@ describe("Testing API: PUT /soajs/item/acl", () => {
 			body: {
 				"id": "5db1f85be9253564357b303d",
 				"type": "whitelist",
-				"acl": ["owner", "catalog"]
+				"groups": ["owner", "catalog"]
 			}
 		};
 		requester('/soajs/item/acl', 'put', params, (error, body) => {

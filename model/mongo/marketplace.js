@@ -72,6 +72,13 @@ function Marketplace(service, options, mongoCore) {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
+		__self.mongoCore.createIndex(colName, {
+			"_id": 1,
+			"configuration.subType": 1
+		}, {}, (err, index) => {
+			service.log.debug("Index: " + index + " created with error: " + err);
+		});
+		
 		service.log.debug("Marketplace: Indexes for " + index + " Updated!");
 	}
 }
@@ -289,8 +296,8 @@ Marketplace.prototype.updateItem_environments = function (data, cb) {
 
 Marketplace.prototype.updateItem_acl = function (data, cb) {
 	let __self = this;
-	if (!data || !data.id || !data.type || !data.acl) {
-		let error = new Error("Marketplace: id, type and acl are required.");
+	if (!data || !data.id || !data.type || !data.groups) {
+		let error = new Error("Marketplace: id, type and groups are required.");
 		return cb(error, null);
 	}
 	let allowedTypes = ["blackList", "whitelist"];
@@ -298,8 +305,8 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 		let error = new Error("Marketplace: type can only be one of the following: " + allowedTypes.join(","));
 		return cb(error, null);
 	}
-	if (!Array.isArray(data.acl)) {
-		let error = new Error("Marketplace: acl must be an array.");
+	if (!Array.isArray(data.groups)) {
+		let error = new Error("Marketplace: groups must be an array.");
 		return cb(error, null);
 	}
 	__self.validateId(data.id, (err, _id) => {
@@ -316,9 +323,9 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 		
 		let s = {
 			'$set': {
-				"settings.acl.value": data.acl,
-				"settings.acl.type": data.type,
-				"settings.acl.config": data.config || {}
+				"settings.acl.groups.value": data.groups,
+				"settings.acl.groups.type": data.type,
+				"settings.acl.groups.config": data.config || {}
 			}
 		};
 		
@@ -368,10 +375,11 @@ Marketplace.prototype.check_if_can_access = function (data, condition, options, 
 			let error = new Error("Marketplace: item not found.");
 			return cb(error, null);
 		}
-		if (data.groups && Array.isArray(data.groups)) {
-			if (item.settings && item.settings.acl && item.settings.acl.type && item.settings.acl.value && Array.isArray(item.settings.acl.value) && item.settings.acl.value.length > 0) {
-				let acl = item.settings.acl;
-				let groupsFound = data.groups.some(o => acl.value.includes(o));
+		if (data._groups && Array.isArray(data._groups)) {
+			if (item.settings && item.settings.acl && item.settings.acl.groups && item.settings.acl.groups.type &&
+				item.settings.acl.groups.value && Array.isArray(item.settings.acl.groups.value) && item.settings.acl.groups.value.length > 0) {
+				let acl = item.settings.acl.groups;
+				let groupsFound = data._groups.some(o => acl.value.includes(o));
 				if (acl.type === "whitelist") {
 					if (groupsFound) {
 						return cb(null, true);
@@ -397,23 +405,23 @@ Marketplace.prototype.check_if_can_access = function (data, condition, options, 
 };
 
 Marketplace.prototype.add_acl_2_condition = function (data, condition) {
-	if (data.groups) {
+	if (data._groups) {
 		condition.$or = [
-			{"settings.acl.type": {"$exists": false}},
-			{"settings.acl.value": {"$exists": false}},
+			{"settings.acl.groups.type": {"$exists": false}},
+			{"settings.acl.groups.value": {"$exists": false}},
 			{
-				"$and": [{"settings.acl.type": {"$exists": true, "$eq": "whitelist"}}, {
-					"settings.acl.value": {
+				"$and": [{"settings.acl.groups.type": {"$exists": true, "$eq": "whitelist"}}, {
+					"settings.acl.groups.value": {
 						"$exists": true,
-						"$in": data.groups
+						"$in": data._groups
 					}
 				}]
 			},
 			{
-				"$and": [{"settings.acl.type": {"$exists": true, "$eq": "blacklist"}}, {
-					"settings.acl.value": {
+				"$and": [{"settings.acl.groups.type": {"$exists": true, "$eq": "blacklist"}}, {
+					"settings.acl.groups.value": {
 						"$exists": true,
-						"$nin": data.groups
+						"$nin": data._groups
 					}
 				}]
 			}

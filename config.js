@@ -179,8 +179,8 @@ module.exports = {
 						"enum": ["blackList", "whitelist"]
 					}
 				},
-				"acl": {
-					"source": ['body.acl'],
+				"groups": {
+					"source": ['body.groups'],
 					"required": true,
 					"validation": {
 						"type": "array",
