@@ -226,7 +226,6 @@ describe("Unit test for: model - marketplace", function () {
 			"groups": ["owner", "devops"]
 		};
 		modelObj.updateItem_acl(main_data, (error, response) => {
-			console.log(error)
 			assert.ok(response);
 			assert.deepEqual(response, 1);
 			let data = {

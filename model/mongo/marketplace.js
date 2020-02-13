@@ -48,7 +48,7 @@ function Marketplace(service, options, mongoCore) {
 			"configuration.subType": 1,
 			"type": 1,
 			"settings.acl.groups.type": 1
-		}, {"name": "name_description_type_subType"}, (err, index) => {
+		}, {"name": "name_description_subType_type"}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
