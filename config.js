@@ -76,7 +76,7 @@ module.exports = {
 			'/public/items': {
 				"_apiInfo": {
 					"l": "List public items matching certain keywords with option to set from what type and subtype",
-					"group": "Public",
+					"group": "Guest",
 				},
 				"commonFields": ["start", "limit", "keywords"],
 				"type": {
