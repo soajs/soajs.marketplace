@@ -68,14 +68,14 @@ module.exports = {
 		"get": {
 			'/soajs/items': {
 				"_apiInfo": {
-					"l": "List items matching certain keywords from soajs only",
+					"l": "This API lists the items matching certain keywords from soajs catalog only.",
 					"group": "SOAJS",
 				},
 				"commonFields": ["start", "limit", "keywords"]
 			},
 			'/public/items': {
 				"_apiInfo": {
-					"l": "List public items matching certain keywords with option to set from what type and subtype",
+					"l": "This API lists the public items matching certain keywords with option to select from what type and subtype.",
 					"group": "Guest",
 				},
 				"commonFields": ["start", "limit", "keywords"],
@@ -92,7 +92,7 @@ module.exports = {
 			},
 			'/items': {
 				"_apiInfo": {
-					"l": "List items matching certain keywords with option to set from what type and subtype",
+					"l": "This API lists the items matching certain keywords with option to select from what type and subtype.",
 					"group": "Item",
 				},
 				"commonFields": ["start", "limit", "keywords"],
@@ -109,7 +109,7 @@ module.exports = {
 			},
 			'/items/type': {
 				"_apiInfo": {
-					"l": "List items matching a type with option to set subtype",
+					"l": "This API lists the items matching certain type with option to select a subtype.",
 					"group": "Item"
 				},
 				"commonFields": ["start", "limit"],
@@ -129,7 +129,7 @@ module.exports = {
 		"put": {
 			'/soajs/item/environments': {
 				"_apiInfo": {
-					"l": "Update item environments from soajs only",
+					"l": "This API updates the item environments from soajs catalog only",
 					"group": "SOAJS"
 				},
 				"commonFields": ["id"],
@@ -152,7 +152,7 @@ module.exports = {
 			},
 			'/soajs/item/recipes': {
 				"_apiInfo": {
-					"l": "Update item recipes from soajs only",
+					"l": "This API updates the item recipes from soajs catalog only",
 					"group": "SOAJS"
 				},
 				"commonFields": ["id"],
@@ -167,7 +167,7 @@ module.exports = {
 			},
 			'/soajs/item/acl': {
 				"_apiInfo": {
-					"l": "Update item ACL from soajs only",
+					"l": "This API updates the item ACL from soajs catalog only",
 					"group": "SOAJS"
 				},
 				"commonFields": ["id"],
