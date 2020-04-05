@@ -10,7 +10,6 @@
 const imported = require("../data/import.js");
 let helper = require("../helper.js");
 
-let service, controller;
 
 describe("starting integration tests", () => {
 	
@@ -24,13 +23,23 @@ describe("starting integration tests", () => {
 				console.log(msg);
 			}
 			console.log("Starting Controller and Marketplace service");
-			controller = require("soajs.controller");
+			require("soajs.controller");
 			setTimeout(function () {
-				service = helper.requireModule('./index');
-				setTimeout(function () {
-					done();
-				}, 5000);
+				helper.requireModule('./index')(() => {
+					setTimeout(function () {
+						done();
+					}, 5000);
+				});
 			}, 5000);
+			/*
+			require("soajs.controller")(() => {
+				helper.requireModule('./index')(() => {
+					setTimeout(function () {
+						done();
+					}, 5000);
+				});
+			});
+			*/
 		});
 	});
 	

@@ -125,8 +125,150 @@ module.exports = {
 				}
 			}
 		},
-		
+		"post": {
+			"/item": {
+				"_apiInfo": {
+					"l": "Add an item",
+					"group": "Item management"
+				},
+				
+				"name": {
+					"source": ['body.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"description": {
+					"source": ['body.description'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"type": {
+					"source": ['body.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ['service', 'daemon']
+					}
+				},
+				"configuration": {
+					"source": ['body.configuration'],
+					"required": true,
+					"validation": {"type": "object"}
+				},
+				"version": {
+					"source": ['body.version'],
+					"required": true,
+					"validation": {"type": "object"}
+				},
+				"metadata": {
+					"source": ['body.metadata'],
+					"required": true,
+					"validation": {"type": "object"}
+				},
+				"ui": {
+					"source": ['body.ui'],
+					"required": true,
+					"validation": {"type": "object"}
+				},
+				"src": {
+					"source": ['body.src'],
+					"required": true,
+					"validation": {"type": "object"}
+				}
+			}
+		},
+		"delete": {
+			"/item": {
+				"_apiInfo": {
+					"l": "Delete an item",
+					"group": "Item management"
+				},
+				"commonFields": ["id"]
+			}
+		},
 		"put": {
+			"/item": {
+				"_apiInfo": {
+					"l": "Update an item",
+					"group": "Item management"
+				},
+				"commonFields": ["id"]
+			},
+			"/item/configure/deploy": {
+				"_apiInfo": {
+					"l": "Configure deployment of an item",
+					"group": "Item management"
+				},
+				"commonFields": ["id"]
+			},
+			"/item/deploy": {
+				"_apiInfo": {
+					"l": "Deploy an item",
+					"group": "Item management"
+				},
+				"commonFields": ["id"]
+			},
+			'/item/environments': {
+				"_apiInfo": {
+					"l": "This API updates the item environments",
+					"group": "Item settings"
+				},
+				"commonFields": ["id"],
+				"type": {
+					"source": ['body.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["blackList", "whitelist"]
+					}
+				},
+				"environments": {
+					"source": ['body.environments'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1
+					}
+				}
+			},
+			'/item/recipes': {
+				"_apiInfo": {
+					"l": "This API updates the item recipes",
+					"group": "Item settings"
+				},
+				"commonFields": ["id"],
+				"recipes": {
+					"source": ['body.recipes'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1
+					}
+				}
+			},
+			'/item/acl': {
+				"_apiInfo": {
+					"l": "This API updates the item ACL",
+					"group": "Item settings"
+				},
+				"commonFields": ["id"],
+				"type": {
+					"source": ['body.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["blackList", "whitelist"]
+					}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1
+					}
+				}
+			},
 			'/soajs/item/environments': {
 				"_apiInfo": {
 					"l": "This API updates the item environments from soajs catalog only",

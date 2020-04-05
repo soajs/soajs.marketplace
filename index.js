@@ -17,6 +17,8 @@ const bl = require("./bl/index.js");
 
 const service = new soajs.server.service(config);
 
+let serviceStartCb = null;
+
 service.init(() => {
 	bl.init(service, config, (error) => {
 		if (error) {
@@ -24,7 +26,6 @@ service.init(() => {
 		}
 		
 		//GET methods
-		
 		service.get("/soajs/items", function (req, res) {
 			req.soajs.inputmaskData.soajs = true;
 			bl.marketplace.getItems_by_keywords(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -50,10 +51,11 @@ service.init(() => {
 		});
 		
 		//DELETE methods
+		service.delete("/item", function (req, res) {
 		
+		});
 		
 		//PUT methods
-		
 		service.put("/soajs/item/environments", function (req, res) {
 			req.soajs.inputmaskData.soajs = true;
 			bl.marketplace.updateItem_environments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -72,9 +74,40 @@ service.init(() => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
+		service.put("/item/environments", function (req, res) {
+			bl.marketplace.updateItem_environments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.put("/item/recipes", function (req, res) {
+			bl.marketplace.updateItem_recipes(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.put("/item/acl", function (req, res) {
+			bl.marketplace.updateItem_acl(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.put("/item", function (req, res) {
+		
+		});
+		service.put("/item/configure/deploy", function (req, res) {
+		
+		});
+		service.put("/item/deploy", function (req, res) {
+		
+		});
 		
 		//POST methods
+		service.post("/item", function (req, res) {
 		
-		service.start();
+		});
+		
+		service.start(serviceStartCb);
 	});
 });
+
+module.exports = function (cb) {
+	serviceStartCb = cb;
+};
