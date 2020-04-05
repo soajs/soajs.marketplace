@@ -52,7 +52,7 @@ service.init(() => {
 		
 		//DELETE methods
 		service.delete("/item", function (req, res) {
-		
+			return res.json(req.soajs.buildResponse(null, {}));
 		});
 		
 		//PUT methods
@@ -90,18 +90,18 @@ service.init(() => {
 			});
 		});
 		service.put("/item", function (req, res) {
-		
+			return res.json(req.soajs.buildResponse(null, {}));
 		});
 		service.put("/item/configure/deploy", function (req, res) {
-		
+			return res.json(req.soajs.buildResponse(null, {}));
 		});
 		service.put("/item/deploy", function (req, res) {
-		
+			return res.json(req.soajs.buildResponse(null, {}));
 		});
 		
 		//POST methods
 		service.post("/item", function (req, res) {
-		
+			return res.json(req.soajs.buildResponse(null, {}));
 		});
 		
 		service.start(serviceStartCb);
