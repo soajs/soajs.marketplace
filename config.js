@@ -128,7 +128,7 @@ module.exports = {
 		"post": {
 			"/item": {
 				"_apiInfo": {
-					"l": "Add an item",
+					"l": "This API adds an item",
 					"group": "Item management"
 				},
 				
@@ -180,7 +180,7 @@ module.exports = {
 		"delete": {
 			"/item": {
 				"_apiInfo": {
-					"l": "Delete an item",
+					"l": "This API deletes an item",
 					"group": "Item management"
 				},
 				"commonFields": ["id"]
@@ -189,21 +189,21 @@ module.exports = {
 		"put": {
 			"/item": {
 				"_apiInfo": {
-					"l": "Update an item",
+					"l": "This API updates an item",
 					"group": "Item management"
 				},
 				"commonFields": ["id"]
 			},
 			"/item/configure/deploy": {
 				"_apiInfo": {
-					"l": "Configure deployment of an item",
+					"l": "This API updates the configure deployment of an item",
 					"group": "Item management"
 				},
 				"commonFields": ["id"]
 			},
 			"/item/deploy": {
 				"_apiInfo": {
-					"l": "Deploy an item",
+					"l": "THis API deploy an item",
 					"group": "Item management"
 				},
 				"commonFields": ["id"]
