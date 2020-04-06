@@ -343,21 +343,15 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 	});
 };
 
-Marketplace.prototype.validateId = function (id, cb) {
+Marketplace.prototype.addItems_resource = function (data, cb) {
 	let __self = this;
-	
-	if (!id) {
-		let error = new Error("User: must provide an id.");
+	if (!data || !Array.isArray(data) || data.length === 0) {
+		let error = new Error("Marketplace: Array of items is required with at least one item.");
 		return cb(error, null);
 	}
-	
-	try {
-		id = __self.mongoCore.ObjectId(id);
-		return cb(null, id);
-	} catch (e) {
-		__self.log(e);
-		return cb(new Error("A valid ID is required"), null);
-	}
+	__self.mongoCore.insertMany(colName, data, {}, (err, record) => {
+		return cb(err, record);
+	});
 };
 
 Marketplace.prototype.check_if_can_access = function (data, condition, options, cb) {
@@ -430,6 +424,24 @@ Marketplace.prototype.add_acl_2_condition = function (data, condition) {
 		}
 	}
 	return condition;
+};
+
+
+Marketplace.prototype.validateId = function (id, cb) {
+	let __self = this;
+	
+	if (!id) {
+		let error = new Error("User: must provide an id.");
+		return cb(error, null);
+	}
+	
+	try {
+		id = __self.mongoCore.ObjectId(id);
+		return cb(null, id);
+	} catch (e) {
+		__self.log(e);
+		return cb(new Error("A valid ID is required"), null);
+	}
 };
 
 Marketplace.prototype.closeConnection = function () {

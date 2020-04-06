@@ -8,6 +8,8 @@
 
 'use strict';
 
+const item_resource_schema = require("./schema/item_resource.js");
+
 module.exports = {
 	type: 'service',
 	prerequisites: {
@@ -126,54 +128,20 @@ module.exports = {
 			}
 		},
 		"post": {
-			"/item": {
+			"/items/resource": {
 				"_apiInfo": {
-					"l": "This API adds an item",
+					"l": "This API adds items of type resource to the catalog",
 					"group": "Item management"
 				},
-				
-				"name": {
-					"source": ['body.name'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"description": {
-					"source": ['body.description'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"type": {
-					"source": ['body.type'],
+				"items": {
+					"source": ['body.items'],
 					"required": true,
 					"validation": {
-						"type": "string",
-						"enum": ['service', 'daemon']
+						"type": "array",
+						"minItems": 1,
+						"maxItems": 100,
+						"items": item_resource_schema
 					}
-				},
-				"configuration": {
-					"source": ['body.configuration'],
-					"required": true,
-					"validation": {"type": "object"}
-				},
-				"version": {
-					"source": ['body.version'],
-					"required": true,
-					"validation": {"type": "object"}
-				},
-				"metadata": {
-					"source": ['body.metadata'],
-					"required": true,
-					"validation": {"type": "object"}
-				},
-				"ui": {
-					"source": ['body.ui'],
-					"required": true,
-					"validation": {"type": "object"}
-				},
-				"src": {
-					"source": ['body.src'],
-					"required": true,
-					"validation": {"type": "object"}
 				}
 			}
 		},

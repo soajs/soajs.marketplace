@@ -95,7 +95,7 @@ module.exports = (grunt) => {
 				}
 			},
 			files: {
-				src: ['index.js', 'config.js', 'Gruntfile.js', 'bl/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
+				src: ['index.js', 'config.js', 'Gruntfile.js', 'schema/*.js', 'bl/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
 			},
 			gruntfile: {
 				src: 'Gruntfile.js'
@@ -146,7 +146,7 @@ module.exports = (grunt) => {
 		
 		
 		instrument: {
-			src: ['index.js', 'config.js', 'bl/*.js', 'model/mongo/*.js'],
+			src: ['index.js', 'config.js', 'schema/*.js', 'bl/*.js', 'model/mongo/*.js'],
 			options: {
 				lazy: false,
 				basePath: 'test/coverage/instrument/'

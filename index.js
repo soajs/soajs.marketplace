@@ -74,6 +74,7 @@ service.init(() => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
+		
 		service.put("/item/environments", function (req, res) {
 			bl.marketplace.updateItem_environments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
@@ -100,8 +101,10 @@ service.init(() => {
 		});
 		
 		//POST methods
-		service.post("/item", function (req, res) {
-			return res.json(req.soajs.buildResponse(null, {}));
+		service.post("/items/resource", function (req, res) {
+			bl.marketplace.addItems_resource(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
 		});
 		
 		service.start(serviceStartCb);
