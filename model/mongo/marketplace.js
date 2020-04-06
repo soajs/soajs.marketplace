@@ -345,11 +345,11 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 
 Marketplace.prototype.addItems_resource = function (data, cb) {
 	let __self = this;
-	if (!data || !Array.isArray(data) || data.length === 0) {
+	if (!data || !data.items || !Array.isArray(data.items) || data.items.length === 0) {
 		let error = new Error("Marketplace: Array of items is required with at least one item.");
 		return cb(error, null);
 	}
-	__self.mongoCore.insertMany(colName, data, {}, (err, record) => {
+	__self.mongoCore.insertMany(colName, data.items, {}, (err, record) => {
 		return cb(err, record);
 	});
 };

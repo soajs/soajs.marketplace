@@ -52,6 +52,8 @@ describe("starting integration tests", () => {
 		require("./put/soajs_item_environments.js");
 		require("./put/soajs_item_recipes.js");
 		require("./put/soajs_item_acl.js");
+		
+		require("./post/items_resource.js");
 		done();
 	});
 	

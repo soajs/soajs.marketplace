@@ -46,17 +46,19 @@ module.exports = {
 			}
 		},
 		"metadata": {
-			"required": true,
+			"required": false,
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
 				"tags": {
 					"required": true,
-					"type": "array"
+					"type": "array",
+					"minItems": 1
 				},
 				"program": {
 					"required": true,
-					"type": "array"
+					"type": "array",
+					"minItems": 1
 				},
 				"attributes": {
 					"required": false,
@@ -65,37 +67,39 @@ module.exports = {
 			}
 		},
 		"ui": {
-			"required": true,
+			"required": false,
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
 				"main": {
 					"required": true,
 					"type": "string",
-					"maxLength": 10,
+					"maxLength": 20,
 					"pattern": /^[a-zA-Z0-9_-]+$/
 				},
 				"sub": {
 					"required": true,
 					"type": "string",
-					"maxLength": 10,
+					"maxLength": 20,
 					"pattern": /^[a-zA-Z0-9_-]+$/
 				}
 			}
 		},
 		"src": {
-			"required": true,
+			"required": false,
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
 				"provider": {
 					"required": true,
-					"type": "string"
+					"type": "string",
+					"default": "manual",
+					"enum": ["manual"]
 				}
 			}
 		},
 		"version": {
-			"required": false,
+			"required": true,
 			"type": "object",
 			"additionalProperties": true,
 			"properties": {
