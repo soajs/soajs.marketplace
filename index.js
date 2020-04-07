@@ -101,8 +101,39 @@ service.init(() => {
 		});
 		
 		//POST methods
-		service.post("/items/resource", function (req, res) {
-			bl.marketplace.addItems_resource(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+		service.post("/item/resource", function (req, res) {
+			req.soajs.inputmaskData.item.type = "resource";
+			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.post("/item/service", function (req, res) {
+			req.soajs.inputmaskData.item.type = "service";
+			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.post("/item/daemon", function (req, res) {
+			req.soajs.inputmaskData.item.type = "daemon";
+			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.post("/item/static", function (req, res) {
+			req.soajs.inputmaskData.item.type = "static";
+			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.post("/item/custom", function (req, res) {
+			req.soajs.inputmaskData.item.type = "custom";
+			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+		service.post("/item/config", function (req, res) {
+			req.soajs.inputmaskData.item.type = "config";
+			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});

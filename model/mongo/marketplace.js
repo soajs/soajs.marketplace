@@ -343,13 +343,13 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 	});
 };
 
-Marketplace.prototype.addItems_resource = function (data, cb) {
+Marketplace.prototype.addItem = function (data, cb) {
 	let __self = this;
-	if (!data || !data.items || !Array.isArray(data.items) || data.items.length === 0) {
-		let error = new Error("Marketplace: Array of items is required with at least one item.");
+	if (!data || !data.item) {
+		let error = new Error("Marketplace: item is required.");
 		return cb(error, null);
 	}
-	__self.mongoCore.insertMany(colName, data.items, {}, (err, record) => {
+	__self.mongoCore.insertOne(colName, data.item, {}, (err, record) => {
 		return cb(err, record);
 	});
 };

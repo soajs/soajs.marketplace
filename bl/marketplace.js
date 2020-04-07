@@ -128,13 +128,13 @@ let bl = {
 		});
 	},
 	
-	"addItems_resource": (soajs, inputmaskData, options, cb) => {
+	"addItem": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		inputmaskData._groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.addItems_resource(inputmaskData, (err, response) => {
+		modelObj.addItem(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));

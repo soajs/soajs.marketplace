@@ -9,6 +9,11 @@
 'use strict';
 
 const item_resource_schema = require("./schema/item_resource.js");
+const item_service_schema = require("./schema/item_service.js");
+const item_daemon_schema = require("./schema/item_daemon.js");
+const item_static_schema = require("./schema/item_static.js");
+const item_custom_schema = require("./schema/item_custom.js");
+const item_config_schema = require("./schema/item_config.js");
 
 module.exports = {
 	type: 'service',
@@ -128,20 +133,70 @@ module.exports = {
 			}
 		},
 		"post": {
-			"/items/resource": {
+			"/item/resource": {
 				"_apiInfo": {
-					"l": "This API adds items of type resource to the catalog",
+					"l": "This API adds an item of type resource to the catalog",
 					"group": "Item management"
 				},
-				"items": {
-					"source": ['body.items'],
+				"item": {
+					"source": ['body.item'],
 					"required": true,
-					"validation": {
-						"type": "array",
-						"minItems": 1,
-						"maxItems": 100,
-						"items": item_resource_schema
-					}
+					"validation": item_resource_schema
+				}
+			},
+			"/item/service": {
+				"_apiInfo": {
+					"l": "This API adds an item of type service to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_service_schema
+				}
+			},
+			"/item/daemon": {
+				"_apiInfo": {
+					"l": "This API adds an item of type daemon to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_daemon_schema
+				}
+			},
+			"/item/static": {
+				"_apiInfo": {
+					"l": "This API adds an item of type static to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_static_schema
+				}
+			},
+			"/item/custom": {
+				"_apiInfo": {
+					"l": "This API adds an item of type custom to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_custom_schema
+				}
+			},
+			"/item/config": {
+				"_apiInfo": {
+					"l": "This API adds an item of type config to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_config_schema
 				}
 			}
 		},

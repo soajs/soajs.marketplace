@@ -1,9 +1,9 @@
 "use strict";
 const assert = require('assert');
 const requester = require('../requester');
-const _data = require("./data.js");
+const _data = require("./data/service.js");
 
-describe("Testing API: POST /items/resource", () => {
+describe("Testing API: POST /item/service", () => {
 	
 	before(function (done) {
 		done();
@@ -14,13 +14,13 @@ describe("Testing API: POST /items/resource", () => {
 		done();
 	});
 	
-	it("Success - add items of type resource to the catalog", (done) => {
+	it("Success - add item[0] of type resource to the catalog", (done) => {
 		let params = {
-			body: {"items": _data}
+			body: {"item": _data[0]}
 		};
-		requester('/items/resource', 'post', params, (error, body) => {
+		requester('/item/resource', 'post', params, (error, body) => {
 			assert.ok(body);
-			assert.deepEqual(body.data.length, 3);
+			assert.deepEqual(body.data.length, 1);
 			
 			//let check = validator.validate(body, listUsersSchema);
 			//assert.deepEqual(check.valid, true);
@@ -28,5 +28,6 @@ describe("Testing API: POST /items/resource", () => {
 			done();
 		});
 	});
+
 	
 });
