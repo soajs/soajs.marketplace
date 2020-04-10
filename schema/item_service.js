@@ -18,6 +18,12 @@ module.exports = {
 			"maxLength": 20,
 			"pattern": /^[a-zA-Z0-9_-]+$/
 		},
+		"type": {
+			"type": "string",
+			"required": false,
+			"enum": ["service"],
+			"default": "service"
+		},
 		"description": {
 			"required": true,
 			"type": "string"
@@ -25,7 +31,7 @@ module.exports = {
 		"configuration": {
 			"required": true,
 			"type": "object",
-			"additionalProperties": true,
+			"additionalProperties": false,
 			"properties": {
 				"subType": {
 					"required": true,
@@ -36,6 +42,47 @@ module.exports = {
 					"required": true,
 					"type": "string",
 					"pattern": /^[a-zA-Z0-9_-]+$/
+				},
+				"port": {
+					"required": true,
+					"type": "integer"
+				},
+				"requestTimeout": {
+					"required": false,
+					"type": "integer"
+				},
+				"requestTimeoutRenewal": {
+					"required": false,
+					"type": "integer"
+				},
+				"maintenance": {
+					"type": "object",
+					"required": false,
+					"additionalProperties": false,
+					"properties": {
+						"port" : {
+							"type": "object",
+							"required": true,
+							"properties": {
+								"type" : {
+									"type": "string",
+									"required": true
+								},
+								"value" : {
+									"type": "integer",
+									"required": false
+								}
+							}
+						},
+						"readiness" : {
+							"type": "string",
+							"required": true
+						},
+						"commands": {
+							"type": "object",
+							"required": false
+						}
+					}
 				}
 			}
 		},
@@ -86,16 +133,21 @@ module.exports = {
 			"properties": {
 				"provider": {
 					"required": true,
-					"type": "string",
-					"default": "manual",
-					"enum": ["manual"]
+					"type": "string"
+				},
+				"owner": {
+					"required": true,
+					"type": "string"
+				},
+				"repo": {
+					"required": true,
+					"type": "string"
 				}
 			}
 		},
 		"version": {
 			"required": true,
-			"type": "object",
-			"additionalProperties": true,
+			"type": "array",
 			"properties": {
 				"version": {
 					"required": true,
@@ -103,7 +155,65 @@ module.exports = {
 				},
 				"documentation": {
 					"required": false,
+					"type": "object",
+					"properties": {
+						"readme": {
+							"required": false,
+							"type": "string"
+						},
+						"release": {
+							"required": false,
+							"type": "string"
+						}
+					}
+				},
+				"branch": {
+					"required": false,
 					"type": "string"
+				},
+				"tag": {
+					"required": false,
+					"type": "string"
+				},
+				"soa": {
+					"required": false,
+					"type": "string"
+				},
+				"apis": {
+					"required": false,
+					"type": "object"
+				},
+				"extKeyRequired": {
+					"type": "boolean",
+					"required": false
+				},
+				"oauth": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac_Profile": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac_ACL": {
+					"type": "boolean",
+					"required": false
+				},
+				"tenant_Profile": {
+					"type": "boolean",
+					"required": false
+				},
+				"provision_ACL": {
+					"type": "boolean",
+					"required": false
+				},
+				"swaggerFilename": {
+					"type": "string",
+					"required": false
 				}
 			}
 		}

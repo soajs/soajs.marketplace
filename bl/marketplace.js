@@ -132,14 +132,37 @@ let bl = {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		inputmaskData._groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.addItem(inputmaskData, (err, response) => {
-			bl.mp.closeModel(modelObj);
+		let opts = {
+			name: inputmaskData.name,
+			type: inputmaskData.type
+		};
+		modelObj.getItem(opts, (err, response) => {
 			if (err) {
+				bl.mp.closeModel(modelObj);
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, response);
+			
+			let catalogDriver = require(`./catalog/${inputmaskData.type}/index.js`);
+			catalogDriver.checkCanUpdate(response, inputmaskData, (err) => {
+				if (err) {
+					bl.mp.closeModel(modelObj);
+					return cb(bl.handleError(soajs, 401, err));
+				}
+				catalogDriver.createCatalog(inputmaskData, (err, catalog) => {
+					if (err) {
+						bl.mp.closeModel(modelObj);
+						return cb(bl.handleError(soajs, 402, err));
+					}
+					modelObj.addItem(catalog, (err, response) => {
+						bl.mp.closeModel(modelObj);
+						if (err) {
+							return cb(bl.handleError(soajs, 602, err));
+						}
+						return cb(null, response);
+					});
+				});
+			});
 		});
 	}
 };

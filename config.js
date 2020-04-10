@@ -35,6 +35,8 @@ module.exports = {
 	"errors": {
 		400: "Business logic required data are missing",
 		
+		401: "Catalog Entry with same DNA detected!",
+		402: "Branch or Tag is required",
 		601: "Model not found",
 		602: "Model error: ",
 		
