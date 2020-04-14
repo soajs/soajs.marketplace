@@ -8,167 +8,253 @@
 
 "use strict";
 const async = require('async');
+const utils = require('../../utils/index.js');
 
 let lib = {
-	"assignVersionConf" : (opts, assignee) =>{
-		assignee.soa = opts.version.soa;
-		assignee.apis = opts.version.schema;
-		assignee.extKeyRequired = opts.version.extKeyRequired;
-		assignee.oauth =  opts.version.oauth;
-		assignee.provision_ACL = opts.version.provision_ACL;
-		assignee.tenant_Profile = opts.version.tenant_Profile;
-		assignee.urac = opts.version.urac;
-		assignee.urac_ACL = opts.version.urac_ACL;
-		assignee.urac_Config = opts.version.urac_Config;
-		assignee.urac_GroupConfig = opts.version.urac_GroupConfig;
-		assignee.urac_Profile = opts.version.urac_Profile;
-		if (opts.version.documentation) {
-			assignee.documentation = opts.version.documentation;
+	"assignVersionConf": (opts, assignee) => {
+		assignee.extKeyRequired = !!opts.extKeyRequired;
+		assignee.oauth = !!opts.oauth;
+		assignee.provision_ACL = !!opts.provision_ACL;
+		assignee.tenant_Profile = !!opts.tenant_Profile;
+		assignee.urac = !!opts.urac;
+		assignee.urac_ACL = !!opts.urac_ACL;
+		assignee.urac_Config = !!opts.urac_Config;
+		assignee.urac_GroupConfig = !!opts.urac_GroupConfig;
+		assignee.urac_Profile = !!opts.urac_Profile;
+		if (assignee.profile) {
+			assignee.profile = opts.profile;
+		}
+		if (assignee.interConnect) {
+			assignee.interConnect = opts.interConnect;
 		}
 		return null;
 	},
 	"createCatalog": (data, cb) => {
 		let catalog = {};
-		if (data.oldCatalog) {
-			catalog = JSON.parse(JSON.stringify(data.oldCatalog));
-		}
-		let ts = new Date().getTime();
-		catalog.name = data.name;
-		catalog.type = data.type;
-		catalog.description = soa.description;
-		catalog.configuration = data.configuration;
-		if (data.metadata) {
-			catalog.metadata = data.metadata;
-		}
-		catalog.src = data.src;
-		catalog.ui = data.tab;
-		
-		//version
-		let newVersions = [];
-		let v = data.version.version ? data.version.version : "1";
-		if (!catalog.versions) {
-			catalog.versions = [];
-			let temp = {
-				"version": v,
-				"lastSync": {
-					"ts": ts
-				}
+		utils.generateSchemas(data, () => {
+			let soa = data.soa;
+			if (data.oldCatalog) {
+				delete data.oldCatalog._id;
+				catalog = JSON.parse(JSON.stringify(data.oldCatalog));
+			}
+			catalog.name = soa.name;
+			catalog.type = "service";
+			catalog.description = soa.description;
+			
+			//configuration
+			if (!catalog.configuration) {
+				catalog.configuration = {};
+			}
+			if (soa.port) {
+				catalog.configuration.port = soa.port;
+			}
+			if (soa.group) {
+				catalog.configuration.group = soa.group;
+			}
+			if (soa.requestTimeout) {
+				catalog.configuration.requestTimeout = soa.requestTimeout;
+			}
+			if (soa.requestTimeoutRenewal) {
+				catalog.configuration.requestTimeoutRenewal = soa.requestTimeoutRenewal;
+			}
+			if (soa.maintenance) {
+				catalog.configuration.maintenance = soa.maintenance;
+			}
+			if (soa.subType) {
+				catalog.configuration.subType = soa.subType;
+			}
+			
+			//metadata
+			if (!catalog.metadata) {
+				catalog.metadata = {};
+			}
+			if (soa.tags) {
+				catalog.metadata.tags = soa.tags;
+			}
+			if (soa.attributes) {
+				catalog.metadata.attributes = soa.attributes;
+			}
+			if (soa.program) {
+				catalog.metadata.program = soa.program;
+			}
+			
+			//src
+			catalog.src = {
+				"provider": data.src.provider,
 			};
-			lib.assignVersionConf(data, temp);
-			if (data.version.branch) {
-				temp.lastSync.branch = data.branch;
-				temp.branches = [data.branch];
-			} else if (data.version.tag) {
-				temp.lastSync.tag = data.tag;
-				temp.tags = [data.tag];
-			} else {
-				return cb(true);
+			if (data.src.owner) {
+				catalog.src.owner = data.src.owner;
 			}
-			if (data.version.swagger) {
-				catalog.configuration.swagger = true;
+			if (data.src.repo) {
+				catalog.src.repo = data.src.repo;
 			}
-			catalog.versions.push(temp);
-			return cb(null, catalog);
-		}
-		let found = false;
-		async.each(catalog.versions, function (oneVersion, callback) {
-			if (oneVersion.version === v) {
-				found = true;
-				oneVersion.lastSync = {
-					"ts": data.ts
-				};
-				if (data.branch) {
-					oneVersion.lastSync.branch = data.branch;
-					if (!oneVersion.branches) {
-						oneVersion.branches = [];
-					}
-					let index = oneVersion.branches.indexOf(data.branch);
-					if (index === -1) {
-						oneVersion.branches.push(data.branch);
-					}
-				} else if (data.tag) {
-					oneVersion.lastSync.tag = data.tag;
-					if (!oneVersion.tags) {
-						oneVersion.tags = [];
-					}
-					let index = oneVersion.tags.indexOf(data.tag);
-					if (index === -1) {
-						oneVersion.tags.push(data.tag);
-					}
-				} else {
-					return callback(true);
-				}
-				lib.assignVersionConf(data, oneVersion);
-				if (data.version.swagger) {
-					catalog.configuration.swagger = true;
-				}
-				
-				newVersions.push(oneVersion);
-			} else {
-				if (data.branch) {
-					if (oneVersion.branches) {
-						let index = oneVersion.branches.indexOf(v);
-						if (index > -1) {
-							oneVersion.branches = oneVersion.branches.splice(index, 1);
-						}
-						if (oneVersion.branches.length > 0) {
-							newVersions.push(oneVersion);
-						}
-					}
-				} else if (data.tag) {
-					if (oneVersion.tags) {
-						let index = oneVersion.tags.indexOf(v);
-						if (index > -1) {
-							oneVersion.tags = oneVersion.tags.splice(index, 1);
-						}
-						if (oneVersion.tags.length > 0) {
-							newVersions.push(oneVersion);
-						}
-					}
-				}
-				else {
-					return callback(true);
-				}
+			//ui
+			if (soa.tab) {
+				catalog.ui = soa.tab;
 			}
-			return callback();
-		}, function (err) {
-			if (err) {
-				return cb(true);
-			}
-			if (!found) {
+			
+			
+			//version
+			let newVersions = [];
+			let v = soa.version ? soa.version : "1";
+			let ts = new Date().getTime();
+			if (!catalog.versions) {
+				//new record
+				catalog.versions = [];
 				let temp = {
 					"version": v,
 					"lastSync": {
-						"ts": data.ts
-					}
+						"ts": ts
+					},
+					"soa": JSON.stringify(soa),
+					"apis": data.schema
 				};
-				if (data.branch) {
-					temp.lastSync.branch = data.branch;
-					temp.branches = [data.branch];
-				} else if (data.tag) {
-					temp.lastSync.tag = data.tag;
-					temp.tags = [data.tag];
+				lib.assignVersionConf(data.soa, temp);
+				if (data.src.branch) {
+					temp.lastSync.branch = data.src.branch;
+					temp.branches = [data.src.branch];
+				} else if (data.src.tag) {
+					temp.lastSync.tag = data.src.tag;
+					temp.tags = [data.src.tag];
 				}
-				else {
-					return cb(true);
+				
+				if (data.documentation) {
+					if (!temp.documentation) {
+						temp.documentation = {};
+					}
+					if (data.documentation.readme) {
+						temp.documentation.readme = data.documentation.readme;
+					}
+					if (data.documentation.release) {
+						temp.documentation.release = data.documentation.release;
+					}
 				}
-				lib.assignVersionConf(data, temp);
-				if (data.version.swagger) {
+				if (data.swagger) {
+					temp.swagger = JSON.stringify(data.swagger);
 					catalog.configuration.swagger = true;
 				}
-				newVersions.push(temp);
+				catalog.versions.push(temp);
+				return cb(catalog);
+			} else {
+				let found = false;
+				async.each(catalog.versions, function (oneVersion, callback) {
+					if (oneVersion.version === v) {
+						found = true;
+						oneVersion.lastSync = {
+							"ts": ts
+						};
+						lib.assignVersionConf(data.soa, oneVersion);
+						if (data.src.branch) {
+							oneVersion.lastSync.branch = data.src.branch;
+							if (!oneVersion.branches) {
+								oneVersion.branches = [];
+							}
+							let index = oneVersion.branches.indexOf(data.src.branch);
+							if (index === -1) {
+								oneVersion.branches.push(data.src.branch);
+							}
+						} else if (data.src.tag) {
+							oneVersion.lastSync.tag = data.src.tag;
+							if (!oneVersion.tags) {
+								oneVersion.tags = [];
+							}
+							let index = oneVersion.tags.indexOf(data.src.tag);
+							if (index === -1) {
+								oneVersion.tags.push(data.src.tag);
+							}
+						}
+						oneVersion.soa = JSON.stringify(soa);
+						oneVersion.apis = data.schema;
+						if (data.swagger) {
+							oneVersion.swagger = JSON.stringify(data.swagger);
+							catalog.configuration.swagger = true;
+						}
+						if (data.documentation) {
+							if (!oneVersion.documentation) {
+								oneVersion.documentation = {};
+							}
+							if (data.documentation.readme) {
+								oneVersion.documentation.readme = data.documentation.readme;
+							}
+							if (data.documentation.release) {
+								oneVersion.documentation.release = data.documentation.release;
+							}
+						}
+						newVersions.push(oneVersion);
+					} else {
+						if (data.src.branch) {
+							if (oneVersion.branches) {
+								let index = oneVersion.branches.indexOf(v);
+								if (index > -1) {
+									oneVersion.branches = oneVersion.branches.splice(index, 1);
+								}
+								if (oneVersion.branches.length > 0) {
+									newVersions.push(oneVersion);
+								}
+							}
+						} else if (data.src.tag) {
+							if (oneVersion.tags) {
+								let index = oneVersion.tags.indexOf(v);
+								if (index > -1) {
+									oneVersion.tags = oneVersion.tags.splice(index, 1);
+								}
+								if (oneVersion.tags.length > 0) {
+									newVersions.push(oneVersion);
+								}
+							}
+						}
+						
+					}
+					return callback();
+				}, function () {
+					if (!found) {
+						let temp = {
+							"version": v,
+							"lastSync": {
+								"ts":ts
+							},
+							"soa": JSON.stringify(soa),
+							"apis": data.schema,
+						};
+						lib.assignVersionConf(data.soa, temp);
+						if (data.src.branch) {
+							temp.lastSync.branch = data.src.branch;
+							temp.branches = [data.src.branch];
+						} else if (data.src.tag) {
+							temp.lastSync.tag = data.src.tag;
+							temp.tags = [data.src.tag];
+						}
+						if (data.documentation) {
+							if (!temp.documentation) {
+								temp.documentation = {};
+							}
+							if (data.documentation.readme) {
+								temp.documentation.readme = data.documentation.readme;
+							}
+							if (data.documentation.release) {
+								temp.documentation.release = data.documentation.release;
+							}
+						}
+						if (data.swagger) {
+							temp.swagger = JSON.stringify(data.swagger);
+							catalog.configuration.swagger = true;
+						}
+						newVersions.push(temp);
+					}
+					catalog.versions = newVersions;
+					return cb(catalog);
+				});
 			}
-			catalog.versions = newVersions;
-			return cb(null, catalog);
 		});
+		
 	},
-	"checkCanUpdate": (catalog, inputmaskData, cb) => {
+	"checkCanUpdate": (data, cb) => {
+		let catalog = data.oldCatalog;
 		if (catalog && catalog.src) {
-			inputmaskData.oldCatalog = response;
 			if (catalog.src) {
-				if (catalog.src.provider === inputmaskData.src.provider) {
+				if (catalog.src.provider === data.src.provider) {
 					if (catalog.src.provider !== "manual") {
-						if (catalog.src.owner !== inputmaskData.src.owner || catalog.src.repo !== inputmaskData.src.repo) {
+						if (catalog.src.owner !== data.src.owner || catalog.src.repo !== data.src.repo) {
 							return cb(true);
 						}
 					}
@@ -177,8 +263,8 @@ let lib = {
 				}
 			}
 		}
+		return cb(false);
 	},
 };
 
 module.exports = lib;
-

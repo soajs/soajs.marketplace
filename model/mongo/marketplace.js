@@ -349,9 +349,16 @@ Marketplace.prototype.addItem = function (data, cb) {
 		let error = new Error("Marketplace: item is required.");
 		return cb(error, null);
 	}
-	__self.mongoCore.insertOne(colName, data.item, {}, (err, record) => {
-		return cb(err, record);
-	});
+	let condition = {
+		name: data.item.name,
+		type: data.item.type
+	};
+	
+	let options = {'upsert': true, 'safe': true};
+	let fields = {
+		'$set': data.item
+	};
+	__self.mongoCore.updateOne(colName, condition, fields, options, cb);
 };
 
 Marketplace.prototype.check_if_can_access = function (data, condition, options, cb) {
@@ -426,6 +433,20 @@ Marketplace.prototype.add_acl_2_condition = function (data, condition) {
 	return condition;
 };
 
+Marketplace.prototype.getItem = function (data, cb) {
+	let __self = this;
+	if (!data || !data.name || !data.type) {
+		let error = new Error("Marketplace: name and type is required.");
+		return cb(error, null);
+	}
+	let condition = {
+		name: data.name,
+		type: data.type
+	};
+	__self.mongoCore.findOne(colName, condition, (err, item) => {
+		return cb(err, item);
+	});
+};
 
 Marketplace.prototype.validateId = function (id, cb) {
 	let __self = this;

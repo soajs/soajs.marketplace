@@ -8,12 +8,12 @@
 
 'use strict';
 
-const item_resource_schema = require("./schema/item_resource.js");
-const item_service_schema = require("./schema/item_service.js");
-const item_daemon_schema = require("./schema/item_daemon.js");
-const item_static_schema = require("./schema/item_static.js");
-const item_custom_schema = require("./schema/item_custom.js");
-const item_config_schema = require("./schema/item_config.js");
+const item_resource_schema = require("./driver/resource/validator.js");
+const item_service_schema = require("./driver/service/validator.js");
+const item_daemon_schema = require("./driver/daemon/validator.js");
+const item_static_schema = require("./driver/static/validator.js");
+const item_custom_schema = require("./driver/custom/validator.js");
+const item_config_schema = require("./driver/config/validator.js");
 
 module.exports = {
 	type: 'service',
@@ -37,6 +37,7 @@ module.exports = {
 		
 		401: "Catalog Entry with same DNA detected!",
 		402: "Branch or Tag is required",
+		500: "Nothing to Update!",
 		601: "Model not found",
 		602: "Model error: ",
 		
@@ -131,74 +132,6 @@ module.exports = {
 					"source": ['query.subtype'],
 					"required": false,
 					"validation": {"type": "string"}
-				}
-			}
-		},
-		"post": {
-			"/item/resource": {
-				"_apiInfo": {
-					"l": "This API adds an item of type resource to the catalog",
-					"group": "Item management"
-				},
-				"item": {
-					"source": ['body.item'],
-					"required": true,
-					"validation": item_resource_schema
-				}
-			},
-			"/item/service": {
-				"_apiInfo": {
-					"l": "This API adds an item of type service to the catalog",
-					"group": "Item management"
-				},
-				"item": {
-					"source": ['body.item'],
-					"required": true,
-					"validation": item_service_schema
-				}
-			},
-			"/item/daemon": {
-				"_apiInfo": {
-					"l": "This API adds an item of type daemon to the catalog",
-					"group": "Item management"
-				},
-				"item": {
-					"source": ['body.item'],
-					"required": true,
-					"validation": item_daemon_schema
-				}
-			},
-			"/item/static": {
-				"_apiInfo": {
-					"l": "This API adds an item of type static to the catalog",
-					"group": "Item management"
-				},
-				"item": {
-					"source": ['body.item'],
-					"required": true,
-					"validation": item_static_schema
-				}
-			},
-			"/item/custom": {
-				"_apiInfo": {
-					"l": "This API adds an item of type custom to the catalog",
-					"group": "Item management"
-				},
-				"item": {
-					"source": ['body.item'],
-					"required": true,
-					"validation": item_custom_schema
-				}
-			},
-			"/item/config": {
-				"_apiInfo": {
-					"l": "This API adds an item of type config to the catalog",
-					"group": "Item management"
-				},
-				"item": {
-					"source": ['body.item'],
-					"required": true,
-					"validation": item_config_schema
 				}
 			}
 		},
@@ -354,8 +287,73 @@ module.exports = {
 						"minItems": 1
 					}
 				}
+			},
+			"/item/resource": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type resource to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_resource_schema
+				}
+			},
+			"/item/service": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type service to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_service_schema
+				}
+			},
+			"/item/daemon": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type daemon to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_daemon_schema
+				}
+			},
+			"/item/static": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type static to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_static_schema
+				}
+			},
+			"/item/custom": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type custom to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_custom_schema
+				}
+			},
+			"/item/config": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type config to the catalog",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_config_schema
+				}
 			}
-			
 		}
 		
 	}

@@ -133,33 +133,42 @@ let bl = {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		let modelObj = bl.mp.getModel(soajs, options);
+		let data = inputmaskData.item;
 		let opts = {
-			name: inputmaskData.name,
-			type: inputmaskData.type
+			name: data.soa.name,
+			type: data.soa.type
 		};
+		if (data.src.provider !== "manual" && !(data.src.tag || data.src.branch)){
+			bl.mp.closeModel(modelObj);
+			return cb(bl.handleError(soajs, 402, null));
+		}
 		modelObj.getItem(opts, (err, response) => {
 			if (err) {
 				bl.mp.closeModel(modelObj);
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			
-			let catalogDriver = require(`./catalog/${inputmaskData.type}/index.js`);
-			catalogDriver.checkCanUpdate(response, inputmaskData, (err) => {
+			if (response){
+				data.oldCatalog = response;
+			}
+			let catalogDriver = require(`../driver/${data.soa.type}/index.js`);
+			catalogDriver.checkCanUpdate(data, (err) => {
 				if (err) {
 					bl.mp.closeModel(modelObj);
 					return cb(bl.handleError(soajs, 401, err));
 				}
-				catalogDriver.createCatalog(inputmaskData, (err, catalog) => {
-					if (err) {
-						bl.mp.closeModel(modelObj);
-						return cb(bl.handleError(soajs, 402, err));
-					}
-					modelObj.addItem(catalog, (err, response) => {
+				catalogDriver.createCatalog(data, (catalog) => {
+					opts = {
+						item: catalog
+					};
+					modelObj.addItem(opts, (err, result) => {
 						bl.mp.closeModel(modelObj);
 						if (err) {
 							return cb(bl.handleError(soajs, 602, err));
 						}
-						return cb(null, response);
+						if (result.n === 0){
+							return cb(bl.handleError(soajs, 500, null));
+						}
+						return cb(null, response ? "Catalog Entry Successfully updated!": "Catalog Entry Successfully Added!");
 					});
 				});
 			});
