@@ -13,6 +13,8 @@ let helper = require("../helper.js");
 
 describe("starting integration tests", () => {
 	
+	let controller, service;
+	
 	before((done) => {
 		let rootPath = process.cwd();
 		imported.runPath(rootPath + "/test/data/soajs_profile.js", rootPath + "/test/data/integration/", true, null, (err, msg) => {
@@ -22,24 +24,17 @@ describe("starting integration tests", () => {
 			if (msg) {
 				console.log(msg);
 			}
-			console.log("Starting Controller and Marketplace service");
-			require("soajs.controller");
-			setTimeout(function () {
-				helper.requireModule('./index')(() => {
-					setTimeout(function () {
-						done();
-					}, 5000);
-				});
-			}, 5000);
-			/*
-			require("soajs.controller")(() => {
-				helper.requireModule('./index')(() => {
+			console.log("Starting Controller ...");
+			controller = require("soajs.controller/_index.js");
+			controller.runService(() => {
+				console.log("Starting Marketplace ...");
+				service = helper.requireModule('./_index.js');
+				service.runService(() => {
 					setTimeout(function () {
 						done();
 					}, 5000);
 				});
 			});
-			*/
 		});
 	});
 	

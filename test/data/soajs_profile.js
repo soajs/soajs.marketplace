@@ -10,12 +10,8 @@ module.exports = {
 		}
 	],
 	"credentials": null,
-	"streaming": {
-		"batchSize": 1000
-	},
+	"streaming": {},
 	"URLParam": {
-		"maxPoolSize": 2,
-		"bufferMaxEntries": 0,
 		"useUnifiedTopology": true
 	}
 };

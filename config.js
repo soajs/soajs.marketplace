@@ -31,7 +31,16 @@ module.exports = {
 	"extKeyRequired": true,
 	"urac": true,
 	
+	"maintenance": {
+		"readiness": "/heartbeat",
+		"port": {"type": "maintenance"},
+		"commands": [
+			{"label": "Reload Registry", "path": "/reloadRegistry", "icon": "fas fa-undo"},
+			{"label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info"}
+		]
+	},
 	
+	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
 		
