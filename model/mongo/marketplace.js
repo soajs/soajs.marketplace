@@ -74,6 +74,13 @@ function Marketplace(service, options, mongoCore) {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
+		__self.mongoCore.createIndex(colName, {
+			"name": 1,
+			"type": 1
+		}, {}, (err, index) => {
+			service.log.debug("Index: " + index + " created with error: " + err);
+		});
+		
 		service.log.debug("Marketplace: Indexes for " + index + " Updated!");
 	}
 }
