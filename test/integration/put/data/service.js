@@ -1187,6 +1187,11 @@ module.exports = {
 				"interConnect": [{
 					"name": "example2"
 				}],
+				"tags": ["tag1"],
+				"programs": "program1",
+				"attributes": {
+					"attrib": "1"
+				},
 				"prerequisites": {
 					"cpu": " ",
 					"memory": " "

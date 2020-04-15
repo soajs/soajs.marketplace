@@ -19,6 +19,11 @@ module.exports = {
 					"readme": "README.md",
 					"release": "RELEASE.md"
 				},
+				"tags": ["tag1"],
+				"programs": "program1",
+				"attributes": {
+					"attrib": "1"
+				}
 			},
 			"documentation": {
 				"release": "Release: V1",

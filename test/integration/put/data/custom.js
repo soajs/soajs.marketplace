@@ -11,7 +11,7 @@ module.exports = {
 				"branch": "master"
 			},
 			"soa": {
-				"name": "config",
+				"name": "custom",
 				"group": "custom",
 				"version": "1",
 				"description": "description is description",
@@ -19,6 +19,11 @@ module.exports = {
 					"readme": "README.md",
 					"release": "RELEASE.md"
 				},
+				"tags": ["tag1"],
+				"programs": "program1",
+				"attributes": {
+					"attrib": "1"
+				}
 			},
 			"documentation": {
 				"release": "Release: V1",
@@ -35,7 +40,7 @@ module.exports = {
 				"branch": "dev"
 			},
 			"soa": {
-				"name": "config",
+				"name": "custom",
 				"group": "custom",
 				"version": "2",
 				"description": "description is description",
@@ -59,7 +64,7 @@ module.exports = {
 				"branch": "stg"
 			},
 			"soa": {
-				"name": "config",
+				"name": "custom",
 				"group": "custom",
 				"version": "2",
 				"description": "description is description",
