@@ -102,37 +102,37 @@ service.init(() => {
 		
 		
 		service.put("/item/resource", function (req, res) {
-			req.soajs.inputmaskData.item.type = "resource";
+			req.soajs.inputmaskData.item.soa.type = "resource";
 			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
 		service.put("/item/service", function (req, res) {
-			req.soajs.inputmaskData.item.type = "service";
+			req.soajs.inputmaskData.item.soa.type = "service";
 			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
 		service.put("/item/daemon", function (req, res) {
-			req.soajs.inputmaskData.item.type = "daemon";
+			req.soajs.inputmaskData.item.soa.type = "daemon";
 			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
 		service.put("/item/static", function (req, res) {
-			req.soajs.inputmaskData.item.type = "static";
+			req.soajs.inputmaskData.item.soa.type = "static";
 			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
 		service.put("/item/custom", function (req, res) {
-			req.soajs.inputmaskData.item.type = "custom";
+			req.soajs.inputmaskData.item.soa.type = "custom";
 			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
 		service.put("/item/config", function (req, res) {
-			req.soajs.inputmaskData.item.type = "config";
+			req.soajs.inputmaskData.item.soa.type = "config";
 			bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 				return res.json(req.soajs.buildResponse(error, data));
 			});

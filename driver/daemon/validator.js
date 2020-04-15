@@ -52,7 +52,7 @@ let validator = {
 				},
 				"subType": {
 					"type": "string",
-					"required": false,
+					"required": true,
 					"pattern": /^[a-zA-Z0-9_-]+$/
 				},
 				"name": {

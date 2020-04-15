@@ -6,7 +6,7 @@ module.exports = {
 		"item": {
 			"src": {
 				"provider": "github",
-				"owner": "RaghebAD",
+				"owner": "test",
 				"repo": "soajs.test",
 				"branch": "master"
 			},
@@ -1166,7 +1166,7 @@ module.exports = {
 		"item": {
 			"src": {
 				"provider": "github",
-				"owner": "RaghebAD",
+				"owner": "test",
 				"repo": "soajs.test",
 				"branch": "dev"
 			},
@@ -1184,7 +1184,6 @@ module.exports = {
 				"requestTimeoutRenewal": 5,
 				"urac_ACL": false,
 				"provision_ACL": false,
-				"type": "service",
 				"interConnect": [{
 					"name": "example2"
 				}],
@@ -2326,7 +2325,7 @@ module.exports = {
 		"item": {
 			"src": {
 				"provider": "github",
-				"owner": "RaghebAD",
+				"owner": "test",
 				"repo": "soajs.test",
 				"branch": "stg"
 			},
@@ -2344,7 +2343,6 @@ module.exports = {
 				"requestTimeoutRenewal": 5,
 				"urac_ACL": false,
 				"provision_ACL": false,
-				"type": "service",
 				"interConnect": [{
 					"name": "example2"
 				}],

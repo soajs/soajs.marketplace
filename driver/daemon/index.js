@@ -28,10 +28,7 @@ let lib = {
 			assignee.interConnect = opts.interConnect;
 		}
 		if (opts.jobs){
-			assignee.jobs = {};
-			opts.jobs.forEach((job)=>{
-				assignee.jobs[job] = {};
-			});
+			assignee.jobs = opts.jobs;
 		}
 		return null;
 	},
@@ -44,7 +41,7 @@ let lib = {
 				catalog = JSON.parse(JSON.stringify(data.oldCatalog));
 			}
 			catalog.name = soa.name;
-			catalog.type = "service";
+			catalog.type = "daemon";
 			catalog.description = soa.description;
 			
 			//configuration

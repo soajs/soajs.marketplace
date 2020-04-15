@@ -1,7 +1,7 @@
 "use strict";
 const assert = require('assert');
-const requester = require('../requester');
-const _data = require("./data/service.js");
+const requester = require('../../requester');
+const _data = require("../data/service.js");
 
 describe("Testing API: PUT /item/service", () => {
 	
