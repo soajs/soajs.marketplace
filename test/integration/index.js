@@ -55,6 +55,9 @@ describe("starting integration tests", () => {
 		require("./put/items/item_resource.js");
 		require("./put/items/item_daemon.js");
 		require("./put/items/item_static.js");
+		
+		require("./delete/item_resource.js");
+		
 		done();
 	});
 	

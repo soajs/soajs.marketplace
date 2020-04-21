@@ -150,7 +150,22 @@ module.exports = {
 					"l": "This API deletes an item",
 					"group": "Item management"
 				},
-				"commonFields": ["id"]
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["resource"]
+					}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				}
 			}
 		},
 		"put": {

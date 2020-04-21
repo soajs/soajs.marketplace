@@ -77,7 +77,7 @@ function Marketplace(service, options, mongoCore) {
 		__self.mongoCore.createIndex(colName, {
 			"name": 1,
 			"type": 1
-		}, {}, (err, index) => {
+		}, {unique: true}, (err, index) => {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
@@ -457,31 +457,27 @@ Marketplace.prototype.getItem = function (data, cb) {
 
 Marketplace.prototype.deleteItem = function (data, cb) {
 	let __self = this;
-	if (!data || !data.id) {
-		let error = new Error("Group: id is required.");
+	if (!data || !data.type || !data.name) {
+		let error = new Error("Marketplace: type and name are required.");
 		return cb(error, null);
 	}
-	__self.validateId(data.id, (err, _id) => {
+	
+	let condition = {'type': data.type, 'name': data.name};
+	__self.mongoCore.findOne(colName, condition, null, (err, record) => {
 		if (err) {
-			return cb(err, null);
+			return cb(err);
 		}
-		let condition = {'_id': _id};
-		__self.mongoCore.findOne(colName, condition, null, (err, record) => {
-			if (err) {
-				return cb(err);
-			}
-			if (!record) {
-				let error = new Error("Item: cannot delete record. Not found.");
-				return cb(error, null);
-			}
-			if (record.locked) {
-				//return error msg that this record is locked
-				let error = new Error("Item: cannot delete a locked record.");
-				return cb(error, null);
-			}
-			__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
-				return cb(err, record);
-			});
+		if (!record) {
+			let error = new Error("Item: cannot delete record. Not found.");
+			return cb(error, null);
+		}
+		if (record.locked) {
+			//return error msg that this record is locked
+			let error = new Error("Item: cannot delete a locked record.");
+			return cb(error, null);
+		}
+		__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
+			return cb(err, record);
 		});
 	});
 };

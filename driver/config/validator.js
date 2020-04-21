@@ -48,7 +48,7 @@ let validator = {
 				"type": {
 					"type": "string",
 					"required": false,
-					"enum": ["service"]
+					"enum": ["config"]
 				},
 				"subType": {
 					"type": "string",
