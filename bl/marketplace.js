@@ -132,12 +132,23 @@ let bl = {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.deleteItem(inputmaskData, (err, response) => {
-			bl.mp.closeModel(modelObj);
+		modelObj.getItem(inputmaskData, (err, response) => {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, response);
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			if (response.locked) {
+				return cb(bl.handleError(soajs, 502, null));
+			}
+			modelObj.deleteItem(inputmaskData, (err) => {
+				bl.mp.closeModel(modelObj);
+				if (err) {
+					return cb(bl.handleError(soajs, 602, err));
+				}
+				return cb(null, true);
+			});
 		});
 	},
 	

@@ -48,6 +48,7 @@ module.exports = {
 		402: "Branch or Tag is required",
 		500: "Nothing to Update!",
 		501: "Item not found!",
+		502: "Item is locked!",
 		601: "Model not found",
 		602: "Model error: ",
 		
@@ -384,15 +385,13 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API redeploy a deployed item",
 					"group": "Item deploy"
-				},
-				"commonFields": ["id"]
+				}
 			},
 			"/item/deploy/restart": {
 				"_apiInfo": {
 					"l": "This API restart a deployed item",
 					"group": "Item deploy"
-				},
-				"commonFields": ["id"]
+				}
 			},
 			"/item/deploy/cd": {
 				"_apiInfo": {
@@ -406,14 +405,44 @@ module.exports = {
 					"l": "This API deploy an item",
 					"group": "Item deploy"
 				},
-				"commonFields": ["id"]
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["resource"]
+					}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				}
 			},
 			"/item/configure/deploy": {
 				"_apiInfo": {
 					"l": "This API updates the configure deployment of an item",
 					"group": "Item deploy"
 				},
-				"commonFields": ["id"]
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["resource"]
+					}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				}
 			}
 		}
 		
