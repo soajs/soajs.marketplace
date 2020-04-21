@@ -35,7 +35,7 @@ describe("Testing API: Delete /item", () => {
 		};
 		requester('/item', 'delete', params, (error, body) => {
 			assert.ok(body);
-			assert.deepEqual(body.data.name, "antoine");
+			assert.deepEqual(body, {"result": true, "data": true});
 			//let check = validator.validate(body, listUsersSchema);
 			//assert.deepEqual(check.valid, true);
 			//assert.deepEqual(check.errors, []);
