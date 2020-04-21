@@ -47,6 +47,7 @@ module.exports = {
 		401: "Catalog Entry with same DNA detected!",
 		402: "Branch or Tag is required",
 		500: "Nothing to Update!",
+		501: "Item not found!",
 		601: "Model not found",
 		602: "Model error: ",
 		

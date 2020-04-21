@@ -455,6 +455,22 @@ Marketplace.prototype.getItem = function (data, cb) {
 	});
 };
 
+Marketplace.prototype.getItem = function (data, cb) {
+	let __self = this;
+	if (!data || !data.type || !data.name) {
+		let error = new Error("Marketplace: type and name are required.");
+		return cb(error, null);
+	}
+	
+	let condition = {'type': data.type, 'name': data.name};
+	__self.mongoCore.findOne(colName, condition, null, (err, record) => {
+		if (err) {
+			return cb(err);
+		}
+		return cb(err, record);
+	});
+};
+
 Marketplace.prototype.deleteItem = function (data, cb) {
 	let __self = this;
 	if (!data || !data.type || !data.name) {
