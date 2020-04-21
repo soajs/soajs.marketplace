@@ -186,6 +186,26 @@ let bl = {
 				});
 			});
 		});
+	},
+	
+	"configure_deploy": (soajs, inputmaskData, options, cb) => {
+		/*
+		1- check if the recipe is allowed
+		2- if yes save the deployment configuration
+		3- if no return an error
+		 */
+		return cb(null, {});
+	},
+	"deploy": (soajs, inputmaskData, options, cb) => {
+		/*
+		1- check if the item is not deployed
+		2- if yes return an error
+		3- if no get the computed env variables
+		4- get item deploy configuration
+		5- resolve computed variables
+		6- deploy
+		 */
+		return cb(null, {});
 	}
 };
 
