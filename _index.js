@@ -54,7 +54,6 @@ function run(serviceStartCb) {
 			});
 			
 			
-			
 			//DELETE methods
 			service.delete("/item", function (req, res) {
 				bl.marketplace.deleteItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -65,7 +64,6 @@ function run(serviceStartCb) {
 			service.delete("/item/configure/deploy", function (req, res) {
 				return res.json(req.soajs.buildResponse(null, {}));
 			});
-			
 			
 			
 			//PUT methods
@@ -151,12 +149,15 @@ function run(serviceStartCb) {
 				return res.json(req.soajs.buildResponse(null, {}));
 			});
 			service.put("/item/deploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
+				bl.marketplace.deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
 			});
 			service.put("/item/configure/deploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
+				bl.marketplace.configure_deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
 			});
-			
 			
 			
 			//POST methods
