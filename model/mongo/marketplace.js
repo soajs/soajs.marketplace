@@ -455,6 +455,37 @@ Marketplace.prototype.getItem = function (data, cb) {
 	});
 };
 
+Marketplace.prototype.deleteItem = function (data, cb) {
+	let __self = this;
+	if (!data || !data.id) {
+		let error = new Error("Group: id is required.");
+		return cb(error, null);
+	}
+	__self.validateId(data.id, (err, _id) => {
+		if (err) {
+			return cb(err, null);
+		}
+		let condition = {'_id': _id};
+		__self.mongoCore.findOne(colName, condition, null, (err, record) => {
+			if (err) {
+				return cb(err);
+			}
+			if (!record) {
+				let error = new Error("Item: cannot delete record. Not found.");
+				return cb(error, null);
+			}
+			if (record.locked) {
+				//return error msg that this record is locked
+				let error = new Error("Item: cannot delete a locked record.");
+				return cb(error, null);
+			}
+			__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
+				return cb(err, record);
+			});
+		});
+	});
+};
+
 Marketplace.prototype.validateId = function (id, cb) {
 	let __self = this;
 	

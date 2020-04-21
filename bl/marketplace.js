@@ -127,6 +127,19 @@ let bl = {
 			return cb(null, response);
 		});
 	},
+	"deleteItem": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.deleteItem(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
 	
 	"addItem": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
@@ -138,7 +151,7 @@ let bl = {
 			name: data.soa.name,
 			type: data.soa.type
 		};
-		if (data.src.provider !== "manual" && !(data.src.tag || data.src.branch)){
+		if (data.src.provider !== "manual" && !(data.src.tag || data.src.branch)) {
 			bl.mp.closeModel(modelObj);
 			return cb(bl.handleError(soajs, 402, null));
 		}
@@ -147,7 +160,7 @@ let bl = {
 				bl.mp.closeModel(modelObj);
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			if (response){
+			if (response) {
 				data.oldCatalog = response;
 			}
 			let catalogDriver = require(`../driver/${data.soa.type}/index.js`);
@@ -165,10 +178,10 @@ let bl = {
 						if (err) {
 							return cb(bl.handleError(soajs, 602, err));
 						}
-						if (result.n === 0){
+						if (result.n === 0) {
 							return cb(bl.handleError(soajs, 500, null));
 						}
-						return cb(null, response ? "Catalog Entry Successfully updated!": "Catalog Entry Successfully Added!");
+						return cb(null, response ? "Catalog Entry Successfully updated!" : "Catalog Entry Successfully Added!");
 					});
 				});
 			});

@@ -154,27 +154,22 @@ module.exports = {
 			}
 		},
 		"put": {
-			"/item": {
-				"_apiInfo": {
-					"l": "This API updates an item",
-					"group": "Item management"
-				},
-				"commonFields": ["id"]
-			},
+		
 			"/item/configure/deploy": {
 				"_apiInfo": {
 					"l": "This API updates the configure deployment of an item",
-					"group": "Item management"
+					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
 			},
 			"/item/deploy": {
 				"_apiInfo": {
-					"l": "THis API deploy an item",
-					"group": "Item management"
+					"l": "This API deploy an item",
+					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
 			},
+			
 			'/item/environments': {
 				"_apiInfo": {
 					"l": "This API updates the item environments",
@@ -236,6 +231,7 @@ module.exports = {
 					}
 				}
 			},
+			
 			'/soajs/item/environments': {
 				"_apiInfo": {
 					"l": "This API updates the item environments from soajs catalog only",
@@ -297,6 +293,7 @@ module.exports = {
 					}
 				}
 			},
+			
 			"/item/resource": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type resource to the catalog",
@@ -308,6 +305,7 @@ module.exports = {
 					"validation": item_resource_schema
 				}
 			},
+			
 			"/item/service": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type service to the catalog",
@@ -319,6 +317,7 @@ module.exports = {
 					"validation": item_service_schema
 				}
 			},
+			
 			"/item/daemon": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type daemon to the catalog",
@@ -330,6 +329,7 @@ module.exports = {
 					"validation": item_daemon_schema
 				}
 			},
+			
 			"/item/static": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type static to the catalog",
@@ -341,6 +341,7 @@ module.exports = {
 					"validation": item_static_schema
 				}
 			},
+			
 			"/item/custom": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type custom to the catalog",
@@ -352,6 +353,7 @@ module.exports = {
 					"validation": item_custom_schema
 				}
 			},
+			
 			"/item/config": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type config to the catalog",
