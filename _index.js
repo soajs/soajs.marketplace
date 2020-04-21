@@ -49,12 +49,24 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.get("/item/configure/deploy", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			
+			
+			
 			//DELETE methods
 			service.delete("/item", function (req, res) {
 				bl.marketplace.deleteItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
+			
+			service.delete("/item/configure/deploy", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			
+			
 			
 			//PUT methods
 			service.put("/soajs/item/environments", function (req, res) {
@@ -90,13 +102,6 @@ function run(serviceStartCb) {
 				bl.marketplace.updateItem_acl(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
-			});
-			
-			service.put("/item/configure/deploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
-			});
-			service.put("/item/deploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
 			});
 			
 			service.put("/item/resource", function (req, res) {
@@ -135,6 +140,24 @@ function run(serviceStartCb) {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
+			
+			service.put("/item/deploy/redeploy", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			service.put("/item/deploy/restart", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			service.put("/item/deploy/cd", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			service.put("/item/deploy", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			service.put("/item/configure/deploy", function (req, res) {
+				return res.json(req.soajs.buildResponse(null, {}));
+			});
+			
+			
 			
 			//POST methods
 			

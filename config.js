@@ -379,21 +379,21 @@ module.exports = {
 				}
 			},
 			
-			"/item/redeploy": {
+			"/item/deploy/redeploy": {
 				"_apiInfo": {
 					"l": "This API redeploy a deployed item",
 					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
 			},
-			"/item/restart": {
+			"/item/deploy/restart": {
 				"_apiInfo": {
 					"l": "This API restart a deployed item",
 					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
 			},
-			"/item/cd": {
+			"/item/deploy/cd": {
 				"_apiInfo": {
 					"l": "This API deploy an item used by CI",
 					"group": "Item deploy"
