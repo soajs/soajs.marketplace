@@ -197,50 +197,6 @@ let bl = {
 				});
 			});
 		});
-	},
-	
-	"configure_deploy": (soajs, inputmaskData, options, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
-			if (err) {
-				return cb(bl.handleError(soajs, 602, err));
-			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			/*
-			1- check if the recipe is allowed
-			2- if yes save the deployment configuration
-			3- if no return an error
-		    */
-			return cb(null, true);
-		});
-	},
-	"deploy": (soajs, inputmaskData, options, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
-			if (err) {
-				return cb(bl.handleError(soajs, 602, err));
-			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			/*
-			1- check if the item is not deployed
-			2- if yes return an error
-			3- if no get the computed env variables
-			4- get item deploy configuration
-			5- resolve computed variables
-			6- deploy
-			 */
-			return cb(null, true);
-		});
 	}
 };
 

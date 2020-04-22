@@ -49,8 +49,10 @@ function run(serviceStartCb) {
 				});
 			});
 			
-			service.get("/item/configure/deploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
+			service.get("/item/deploy/inspect", function (req, res) {
+				bl.deploy.inspect(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
 			});
 			
 			
@@ -59,10 +61,6 @@ function run(serviceStartCb) {
 				bl.marketplace.deleteItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
-			});
-			
-			service.delete("/item/configure/deploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
 			});
 			
 			
@@ -139,22 +137,18 @@ function run(serviceStartCb) {
 				});
 			});
 			
-			service.put("/item/deploy/redeploy", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
-			});
-			service.put("/item/deploy/restart", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
-			});
-			service.put("/item/deploy/cd", function (req, res) {
-				return res.json(req.soajs.buildResponse(null, {}));
-			});
 			service.put("/item/deploy", function (req, res) {
-				bl.marketplace.deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				bl.deploy.deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
 			service.put("/item/configure/deploy", function (req, res) {
-				bl.marketplace.configure_deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				bl.deploy.saveConfiguration(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			service.put("/item/deploy/configure", function (req, res) {
+				bl.deploy.saveConfigurationAndDeploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});

@@ -44,6 +44,9 @@ function init(service, localConfig, cb) {
         }
     };
     async.each(BLs, fillModels, function (err) {
+	
+	    BL.deploy = require("./deploy.js")(BL);
+	    
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
             return cb({"code": 601, "msg": localConfig.errors[601]});

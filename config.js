@@ -148,9 +148,9 @@ module.exports = {
 				}
 			},
 			
-			"/item/configure/deploy": {
+			"/item/deploy/inspect": {
 				"_apiInfo": {
-					"l": "This API gets the configure deployment of an item including (allowed recipes, saved settings, and kubernetes settings)",
+					"l": "This API gets the configure deployment of an item including (allowed recipes, saved configuration, and kubernetes configuration for both service and deployment|daemonset)",
 					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
@@ -184,8 +184,7 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API deletes the configure deployment of an item",
 					"group": "Item deploy"
-				},
-				"commonFields": ["id"]
+				}
 			}
 		},
 		"put": {
@@ -397,12 +396,33 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API deploy an item used by CI",
 					"group": "Item deploy"
-				},
-				"commonFields": ["id"]
+				}
 			},
 			"/item/deploy": {
 				"_apiInfo": {
 					"l": "This API deploy an item",
+					"group": "Item deploy"
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["resource"]
+					}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				}
+			},
+			"/item/deploy/configure": {
+				"_apiInfo": {
+					"l": "This API updates the configure deployment of an item and deploy",
 					"group": "Item deploy"
 				},
 				"type": {
