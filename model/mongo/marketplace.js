@@ -540,7 +540,7 @@ Marketplace.prototype.deleteItem_source = function (data, cb) {
 		"src.owner": data.owner,
 		"src.repo": data.repo
 	};
-	__self.mongoCore.deleteOne(colName, condition, {}, (err, res) => {
+	__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
 		return cb(err);
 	});
 };
@@ -552,12 +552,12 @@ Marketplace.prototype.deleteItem_version = function (data, cb) {
 		return cb(error, null);
 	}
 	
-	let condition =  {'type': data.type, 'name': data.name};
+	let condition = {'type': data.type, 'name': data.name};
 	
 	let options = {'upsert': false, 'safe': true};
 	let fields = {
 		'$set': {
-			versions : data.versions
+			versions: data.versions
 		}
 	};
 	__self.mongoCore.updateOne(colName, condition, fields, options, cb);
