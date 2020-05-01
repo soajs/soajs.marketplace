@@ -49,6 +49,18 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.get("/items/src", function (req, res) {
+				bl.marketplace.getItem_by_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
+			service.get("/item/type", function (req, res) {
+				bl.marketplace.getItem_by_type(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
 			service.get("/item/deploy/inspect", function (req, res) {
 				bl.deploy.inspect(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
@@ -63,6 +75,11 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.delete("/item/src", function (req, res) {
+				bl.marketplace.deleteItem_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
 			
 			//PUT methods
 			service.put("/soajs/item/environments", function (req, res) {
@@ -99,7 +116,16 @@ function run(serviceStartCb) {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
-			
+			service.put("/item/branch", function (req, res) {
+				bl.marketplace.deleteItem_branch(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			service.put("/item/tag", function (req, res) {
+				bl.marketplace.deleteItem_tag(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
 			service.put("/item/resource", function (req, res) {
 				req.soajs.inputmaskData.item.soa.type = "resource";
 				bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {

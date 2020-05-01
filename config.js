@@ -46,6 +46,8 @@ module.exports = {
 		
 		401: "Catalog Entry with same DNA detected!",
 		402: "Branch or Tag is required",
+		403: "Branch not found",
+		404: "Tag not found",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
@@ -148,6 +150,45 @@ module.exports = {
 				}
 			},
 			
+			'/items/src': {
+				"_apiInfo": {
+					"l": "This API gets an item by its source.",
+					"group": "Item"
+				},
+				"provider": {
+					"source": ['query.provider'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"owner": {
+					"source": ['query.owner'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"repo": {
+					"source": ['query.repo'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			
+			'/item/type': {
+				"_apiInfo": {
+					"l": "This API get one item by its name and type.",
+					"group": "Item"
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			
 			"/item/deploy/inspect": {
 				"_apiInfo": {
 					"l": "This API gets the configure deployment of an item including (allowed recipes, saved configuration, and kubernetes configuration for both service and deployment|daemonset)",
@@ -177,6 +218,28 @@ module.exports = {
 						"type": "string",
 						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
+				}
+			},
+			
+			"/item/src": {
+				"_apiInfo": {
+					"l": "This API deletes an item by source",
+					"group": "Item management"
+				},
+				"provider": {
+					"source": ['query.provider'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"owner": {
+					"source": ['query.owner'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"repo": {
+					"source": ['query.repo'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
 			
@@ -463,7 +526,50 @@ module.exports = {
 						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
 				}
-			}
+			},
+			"/item/branch": {
+				"_apiInfo": {
+					"l": "This API appends an item by branch",
+					"group": "Item management"
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"branch": {
+					"source": ['query.branch'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			
+			"/item/tag": {
+				"_apiInfo": {
+					"l": "This API appends an item by tag",
+					"group": "Item management"
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"tag": {
+					"source": ['query.tag'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
 		}
 		
 	}

@@ -84,6 +84,35 @@ let bl = {
 			return cb(null, response);
 		});
 	},
+	"getItem_by_source": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		inputmaskData._groups = getGroups(soajs);
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem_by_source(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
+	
+	"getItem_by_type": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		inputmaskData._groups = getGroups(soajs);
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem_by_type(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
 	
 	"updateItem_environments": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
@@ -143,6 +172,129 @@ let bl = {
 				return cb(bl.handleError(soajs, 502, null));
 			}
 			modelObj.deleteItem(inputmaskData, (err) => {
+				bl.mp.closeModel(modelObj);
+				if (err) {
+					return cb(bl.handleError(soajs, 602, err));
+				}
+				return cb(null, true);
+			});
+		});
+	},
+	
+	"deleteItem_source": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			if (response.locked) {
+				return cb(bl.handleError(soajs, 502, null));
+			}
+			modelObj.deleteItem_source(inputmaskData, (err) => {
+				bl.mp.closeModel(modelObj);
+				if (err) {
+					return cb(bl.handleError(soajs, 602, err));
+				}
+				return cb(null, true);
+			});
+		});
+	},
+	
+	"deleteItem_branch": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			if (response.locked) {
+				return cb(bl.handleError(soajs, 502, null));
+			}
+			let index;
+			for (let i = 0; i < response.versions.length; i++) {
+				if (response.versions[i].branches){
+					index = response.versions[i].branches.indexOf(inputmaskData.branch);
+					if (index > -1) {
+						response.versions[i].branches.splice(index, 1);
+						if (response.versions[i].branches.length === 0 && (!response.versions[i].tags || response.versions[i].tags.length === 0)) {
+							response.versions.splice(i, 1);
+						}
+						break;
+					}
+				}
+				else {
+					index = -1;
+				}
+			}
+			if (index < 0) {
+				return cb(bl.handleError(soajs, 403, null));
+			}
+			let opts = {
+				versions : response.versions,
+				name : response.name,
+				type: response.type
+			};
+			modelObj.deleteItem_version(opts, (err) => {
+				bl.mp.closeModel(modelObj);
+				if (err) {
+					return cb(bl.handleError(soajs, 602, err));
+				}
+				return cb(null, true);
+			});
+		});
+	},
+	
+	"deleteItem_tag": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			if (response.locked) {
+				return cb(bl.handleError(soajs, 502, null));
+			}
+			let index;
+			for (let i = 0; i < response.versions.length; i++) {
+				if (response.versions[i].tags) {
+					index = response.versions[i].tags.indexOf(inputmaskData.tag);
+					if (index > -1) {
+						response.versions[i].tags.splice(index, 1);
+						if (response.versions[i].tags.length === 0 && (!response.versions[i].branches || response.versions[i].branches.length === 0)) {
+							response.versions.splice(i, 1);
+						}
+						break;
+					}
+				}
+				else {
+					index = -1;
+				}
+			}
+			if (index < 0) {
+				return cb(bl.handleError(soajs, 404, null));
+			}
+			let opts = {
+				versions : response.versions,
+				name : response.name,
+				type: response.type
+			};
+			modelObj.deleteItem_version(opts, (err) => {
 				bl.mp.closeModel(modelObj);
 				if (err) {
 					return cb(bl.handleError(soajs, 602, err));

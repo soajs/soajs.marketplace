@@ -81,6 +81,25 @@ function Marketplace(service, options, mongoCore) {
 			service.log.debug("Index: " + index + " created with error: " + err);
 		});
 		
+		__self.mongoCore.createIndex(colName,
+			{'source.provider': 1, "source.name": 1, "source.owner": 1},
+			{
+				unique: true,
+				partialFilterExpression: {
+					"source.owner": {
+						"$exists": true
+					},
+					"source.provider": {
+						"$exists": true
+					},
+					"source.name": {
+						"$exists": true
+					}
+				}
+			}, (err, index) => {
+				service.log.debug("Index: " + index + " created with error: " + err);
+			});
+		
 		service.log.debug("Marketplace: Indexes for " + index + " Updated!");
 	}
 }
@@ -192,6 +211,46 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 				return cb(null, response);
 			});
 		}
+	});
+};
+
+Marketplace.prototype.getItem_by_source = function (data, cb) {
+	let __self = this;
+	if (!data || !data.provider || !data.owner || !data.repo) {
+		let error = new Error("Marketplace: Source type, owner, and repo are required.");
+		return cb(error, null);
+	}
+	
+	let condition = {
+		"src.provider": data.provider,
+		"src.owner": data.owner,
+		"src.repo": data.repo
+	};
+	__self.mongoCore.find(colName, condition, null, (err, record) => {
+		if (err) {
+			return cb(err);
+		}
+		return cb(err, record);
+	});
+};
+
+Marketplace.prototype.getItem_by_type = function (data, cb) {
+	let __self = this;
+	if (!data || !data.name || !data.type) {
+		let error = new Error("Marketplace: type and name are required.");
+		return cb(error, null);
+	}
+	
+	let condition = {
+		"name": data.provider,
+		"type": data.owner
+	};
+	
+	__self.mongoCore.findOne(colName, condition, null, (err, record) => {
+		if (err) {
+			return cb(err);
+		}
+		return cb(err, record);
 	});
 };
 
@@ -442,21 +501,6 @@ Marketplace.prototype.add_acl_2_condition = function (data, condition) {
 
 Marketplace.prototype.getItem = function (data, cb) {
 	let __self = this;
-	if (!data || !data.name || !data.type) {
-		let error = new Error("Marketplace: name and type is required.");
-		return cb(error, null);
-	}
-	let condition = {
-		name: data.name,
-		type: data.type
-	};
-	__self.mongoCore.findOne(colName, condition, (err, item) => {
-		return cb(err, item);
-	});
-};
-
-Marketplace.prototype.getItem = function (data, cb) {
-	let __self = this;
 	if (!data || !data.type || !data.name) {
 		let error = new Error("Marketplace: type and name are required.");
 		return cb(error, null);
@@ -482,6 +526,41 @@ Marketplace.prototype.deleteItem = function (data, cb) {
 	__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
 		return cb(err);
 	});
+};
+
+Marketplace.prototype.deleteItem_source = function (data, cb) {
+	let __self = this;
+	if (!data || !data.provider || !data.owner || !data.repo) {
+		let error = new Error("Marketplace: Source type, owner, and repo are required.");
+		return cb(error, null);
+	}
+	
+	let condition = {
+		"src.provider": data.provider,
+		"src.owner": data.owner,
+		"src.repo": data.repo
+	};
+	__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
+		return cb(err);
+	});
+};
+
+Marketplace.prototype.deleteItem_version = function (data, cb) {
+	let __self = this;
+	if (!data || !data.name || !data.type || !data.hasOwnProperty("versions")) {
+		let error = new Error("Marketplace: name, type, and versions are required.");
+		return cb(error, null);
+	}
+	
+	let condition =  {'type': data.type, 'name': data.name};
+	
+	let options = {'upsert': false, 'safe': true};
+	let fields = {
+		'$set': {
+			versions : data.versions
+		}
+	};
+	__self.mongoCore.updateOne(colName, condition, fields, options, cb);
 };
 
 Marketplace.prototype.validateId = function (id, cb) {

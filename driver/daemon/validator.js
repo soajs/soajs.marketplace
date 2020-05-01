@@ -117,11 +117,11 @@ let validator = {
 					"properties": {
 						"readme": {
 							"type": "string",
-							"required": true
+							"required": false
 						},
 						"release": {
 							"type": "string",
-							"required": true
+							"required": false
 						}
 					}
 				},
