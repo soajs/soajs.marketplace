@@ -540,7 +540,7 @@ Marketplace.prototype.deleteItem_source = function (data, cb) {
 		"src.owner": data.owner,
 		"src.repo": data.repo
 	};
-	__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
+	__self.mongoCore.deleteOne(colName, condition, {}, (err, res) => {
 		return cb(err);
 	});
 };

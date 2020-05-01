@@ -186,23 +186,12 @@ let bl = {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
+		modelObj.deleteItem_source(inputmaskData, (err) => {
+			bl.mp.closeModel(modelObj);
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			if (response.locked) {
-				return cb(bl.handleError(soajs, 502, null));
-			}
-			modelObj.deleteItem_source(inputmaskData, (err) => {
-				bl.mp.closeModel(modelObj);
-				if (err) {
-					return cb(bl.handleError(soajs, 602, err));
-				}
-				return cb(null, true);
-			});
+			return cb(null, true);
 		});
 	},
 	
