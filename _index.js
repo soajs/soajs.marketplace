@@ -75,7 +75,7 @@ function run(serviceStartCb) {
 				});
 			});
 			
-			service.delete("/item/src", function (req, res) {
+			service.delete("/items/src", function (req, res) {
 				bl.marketplace.deleteItem_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});

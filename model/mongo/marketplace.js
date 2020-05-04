@@ -242,8 +242,8 @@ Marketplace.prototype.getItem_by_type = function (data, cb) {
 	}
 	
 	let condition = {
-		"name": data.provider,
-		"type": data.owner
+		"name": data.name,
+		"type": data.type
 	};
 	
 	__self.mongoCore.findOne(colName, condition, null, (err, record) => {

@@ -42,6 +42,8 @@ describe("starting integration tests", () => {
 	it("loading tests", (done) => {
 		require("./get/public_items.js");
 		require("./get/items.js");
+		require("./get/item_type.js");
+		require("./get/items_src.js");
 		require("./get/items_type.js");
 		require("./get/soajs_items.js");
 		
@@ -57,7 +59,7 @@ describe("starting integration tests", () => {
 		require("./put/items/item_static.js");
 		
 		require("./delete/item_resource.js");
-		
+		require("./delete/items_src.js");
 		done();
 	});
 	

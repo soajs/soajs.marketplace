@@ -21,7 +21,7 @@ module.exports = {
 		cpu: '',
 		memory: ''
 	},
-	"serviceVersion": 1,
+	"serviceVersion": "1",
 	"serviceName": "marketplace",
 	"serviceGroup": "SOAJS Core Services",
 	"servicePort": 4007,
@@ -197,6 +197,7 @@ module.exports = {
 				"commonFields": ["id"]
 			}
 		},
+		
 		"delete": {
 			"/item": {
 				"_apiInfo": {
@@ -221,9 +222,9 @@ module.exports = {
 				}
 			},
 			
-			"/item/src": {
+			"/items/src": {
 				"_apiInfo": {
-					"l": "This API deletes an item by source",
+					"l": "This API deletes items by source",
 					"group": "Item management"
 				},
 				"provider": {
