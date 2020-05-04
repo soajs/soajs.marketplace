@@ -62,8 +62,7 @@ let validator = {
 				},
 				"group": {
 					"type": "string",
-					"required": true,
-					"pattern": /^[a-zA-Z0-9_-]+$/
+					"required": true
 				},
 				"description": {
 					"type": "string",
@@ -140,7 +139,7 @@ let validator = {
 							"name": {
 								"type": "string"
 							},
-							"type": {
+							"version": {
 								"type": "string"
 							}
 						},
@@ -227,7 +226,7 @@ let validator = {
 							"required": true
 						},
 						"commands": {
-							"type": "object",
+							"type": "array",
 							"required": false
 						}
 					}

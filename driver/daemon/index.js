@@ -12,20 +12,8 @@ const utils = require('../../utils/index.js');
 
 let lib = {
 	"assignVersionConf": (opts, assignee) => {
-		assignee.extKeyRequired = !!opts.extKeyRequired;
-		assignee.oauth = !!opts.oauth;
-		assignee.provision_ACL = !!opts.provision_ACL;
-		assignee.tenant_Profile = !!opts.tenant_Profile;
-		assignee.urac = !!opts.urac;
-		assignee.urac_ACL = !!opts.urac_ACL;
-		assignee.urac_Config = !!opts.urac_Config;
-		assignee.urac_GroupConfig = !!opts.urac_GroupConfig;
-		assignee.urac_Profile = !!opts.urac_Profile;
 		if (assignee.profile) {
 			assignee.profile = opts.profile;
-		}
-		if (assignee.interConnect) {
-			assignee.interConnect = opts.interConnect;
 		}
 		if (opts.jobs){
 			assignee.jobs = opts.jobs;

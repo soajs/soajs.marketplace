@@ -63,7 +63,6 @@ let validator = {
 				"group": {
 					"type": "string",
 					"required": true,
-					"pattern": /^[a-zA-Z0-9_-]+$/
 				},
 				"description": {
 					"type": "string",

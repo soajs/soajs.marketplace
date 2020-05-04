@@ -63,7 +63,6 @@ let validator = {
 				"group": {
 					"type": "string",
 					"required": true,
-					"pattern": /^[a-zA-Z0-9_-]+$/
 				},
 				"description": {
 					"type": "string",
@@ -129,24 +128,6 @@ let validator = {
 					"type": "object",
 					"required": false
 				},
-				"interConnect": {
-					"type": "array",
-					"required": false,
-					"items": {
-						"type": "object",
-						"uniqueItems": true,
-						"minItems": 1,
-						"properties": {
-							"name": {
-								"type": "string"
-							},
-							"type": {
-								"type": "string"
-							}
-						},
-						"additionalProperties": false
-					}
-				},
 				"swaggerFilename": {
 					"type": "string",
 					"required": false
@@ -158,50 +139,6 @@ let validator = {
 				"version": {
 					"type": "string",
 					"required": true
-				},
-				"extKeyRequired": {
-					"type": "boolean",
-					"required": false
-				},
-				"oauth": {
-					"type": "boolean",
-					"required": false
-				},
-				"urac": {
-					"type": "boolean",
-					"required": false
-				},
-				"urac_Profile": {
-					"type": "boolean",
-					"required": false
-				},
-				"urac_Config": {
-					"type": "boolean",
-					"required": false
-				},
-				"urac_GroupConfig": {
-					"type": "boolean",
-					"required": false
-				},
-				"urac_ACL": {
-					"type": "boolean",
-					"required": false
-				},
-				"tenant_Profile": {
-					"type": "boolean",
-					"required": false
-				},
-				"provision_ACL": {
-					"type": "boolean",
-					"required": false
-				},
-				"requestTimeout": {
-					"type": "integer",
-					"required": false
-				},
-				"requestTimeoutRenewal": {
-					"type": "integer",
-					"required": false
 				},
 				"maintenance": {
 					"type": "object",
@@ -227,7 +164,7 @@ let validator = {
 							"required": true
 						},
 						"commands": {
-							"type": "object",
+							"type": "array",
 							"required": false
 						}
 					}
