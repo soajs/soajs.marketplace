@@ -163,6 +163,13 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.put("/item/service/soajs", function (req, res) {
+				req.soajs.inputmaskData.item.soa.type = "service";
+				bl.marketplace.addItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
 			service.put("/item/deploy", function (req, res) {
 				bl.deploy.deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));

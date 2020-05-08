@@ -303,6 +303,7 @@ let bl = {
 			name: data.soa.name,
 			type: data.soa.type
 		};
+		
 		if (data.src.provider !== "manual" && !(data.src.tag || data.src.branch)) {
 			bl.mp.closeModel(modelObj);
 			return cb(bl.handleError(soajs, 402, null));
@@ -315,7 +316,14 @@ let bl = {
 			if (response) {
 				data.oldCatalog = response;
 			}
-			let catalogDriver = require(`../driver/${data.soa.type}/index.js`);
+			
+			let catalogDriver;
+			if (data.soa.type ==="service" && data.soa.subType === "soajs"){
+				catalogDriver = require(`../driver/${data.soa.subType}/index.js`);
+			}
+			else {
+				catalogDriver = require(`../driver/${data.soa.type}/index.js`);
+			}
 			catalogDriver.checkCanUpdate(data, (err) => {
 				if (err) {
 					bl.mp.closeModel(modelObj);

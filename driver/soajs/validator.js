@@ -48,13 +48,12 @@ let validator = {
 				"type": {
 					"type": "string",
 					"required": false,
-					"enum": ["resource"]
+					"enum": ["service"]
 				},
 				"subType": {
 					"type": "string",
 					"required": false,
-					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
-					"minLength": 1
+					"enum": ["soajs"]
 				},
 				"name": {
 					"type": "string",
@@ -132,9 +131,138 @@ let validator = {
 					"type": "object",
 					"required": false
 				},
+				"interConnect": {
+					"type": "array",
+					"required": false,
+					"items": {
+						"type": "object",
+						"uniqueItems": true,
+						"minItems": 1,
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"version": {
+								"type": "string"
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+				"swaggerFilename": {
+					"type": "string",
+					"required": false
+				},
+				"port": {
+					"type": "integer",
+					"required": true
+				},
 				"version": {
 					"type": "string",
 					"required": true
+				},
+				"extKeyRequired": {
+					"type": "boolean",
+					"required": false
+				},
+				"oauth": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac_Profile": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac_Config": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac_GroupConfig": {
+					"type": "boolean",
+					"required": false
+				},
+				"urac_ACL": {
+					"type": "boolean",
+					"required": false
+				},
+				"tenant_Profile": {
+					"type": "boolean",
+					"required": false
+				},
+				"provision_ACL": {
+					"type": "boolean",
+					"required": false
+				},
+				"requestTimeout": {
+					"type": "integer",
+					"required": false
+				},
+				"requestTimeoutRenewal": {
+					"type": "integer",
+					"required": false
+				},
+				"maintenance": {
+					"type": "object",
+					"required": false,
+					"additionalProperties": false,
+					"properties": {
+						"port": {
+							"type": "object",
+							"required": true,
+							"properties": {
+								"type": {
+									"type": "string",
+									"required": true
+								},
+								"value": {
+									"type": "integer",
+									"required": false
+								}
+							}
+						},
+						"readiness": {
+							"type": "string",
+							"required": true
+						},
+						"commands": {
+							"type": "array",
+							"required": false
+						}
+					}
+				},
+				"prerequisites": {
+					"type": "object",
+					"required": false,
+					"additionalProperties": false,
+					"properties": {
+						"cpu": {
+							"type": "string",
+							"required": true
+						},
+						"memory": {
+							"type": "string",
+							"required": true
+						}
+					}
+				}
+			}
+		},
+		"apiList": {
+			"type": "object",
+			"required": false,
+			"properties": {
+				"type" : {
+					"required": true,
+					"type": "string",
+					"enum": ["swagger", "schema"]
+				},
+				"schema" : {
+					"required": true,
+					"type": "object"
 				}
 			}
 		},

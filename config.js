@@ -14,6 +14,7 @@ const item_daemon_schema = require("./driver/daemon/validator.js");
 const item_static_schema = require("./driver/static/validator.js");
 const item_custom_schema = require("./driver/custom/validator.js");
 const item_config_schema = require("./driver/config/validator.js");
+const item_soajs_schema = require("./driver/soajs/validator.js");
 
 module.exports = {
 	type: 'service',
@@ -251,6 +252,7 @@ module.exports = {
 				}
 			}
 		},
+		
 		"put": {
 			
 			'/soajs/item/environments': {
@@ -441,6 +443,19 @@ module.exports = {
 					"source": ['body.item'],
 					"required": true,
 					"validation": item_config_schema
+				}
+			},
+			
+			// SOAJS Framework
+			"/item/service/soajs": {
+				"_apiInfo": {
+					"l": "This API adds/updates an item of type service built using the SOAJS Framework (config.js)",
+					"group": "Item management"
+				},
+				"item": {
+					"source": ['body.item'],
+					"required": true,
+					"validation": item_soajs_schema
 				}
 			},
 			

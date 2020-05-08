@@ -53,17 +53,20 @@ let validator = {
 				"subType": {
 					"type": "string",
 					"required": false,
-					"pattern": /^[a-zA-Z0-9_-]+$/
+					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+					"minLength": 1
 				},
 				"name": {
 					"type": "string",
 					"required": true,
-					"pattern": /^[a-zA-Z0-9_-]+$/
+					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+					"minLength": 1
 				},
 				"group": {
 					"type": "string",
 					"required": true,
-					"pattern": /^[a-zA-Z0-9_-]+$/
+					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+					"minLength": 1
 				},
 				"description": {
 					"type": "string",
