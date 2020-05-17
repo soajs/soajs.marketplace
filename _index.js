@@ -162,6 +162,11 @@ function run(serviceStartCb) {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
+			// service.put("/item/version/configuration", function (req, res) {
+			// 	bl.marketplace.update_item_version_config(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+			// 		return res.json(req.soajs.buildResponse(error, data));
+			// 	});
+			// });
 			
 			service.put("/item/service/soajs", function (req, res) {
 				req.soajs.inputmaskData.item.soa.type = "service";

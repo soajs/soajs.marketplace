@@ -266,7 +266,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["blackList", "whitelist"]
+						"enum": ["blacklist", "whitelist"]
 					}
 				},
 				"environments": {
@@ -304,7 +304,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["blackList", "whitelist"]
+						"enum": ["blacklist", "whitelist"]
 					}
 				},
 				"groups": {
@@ -328,7 +328,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["blackList", "whitelist"]
+						"enum": ["blacklist", "whitelist"]
 					}
 				},
 				"environments": {
@@ -366,7 +366,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["blackList", "whitelist"]
+						"enum": ["blacklist", "whitelist"]
 					}
 				},
 				"groups": {
@@ -445,7 +445,48 @@ module.exports = {
 					"validation": item_config_schema
 				}
 			},
-			
+			// "/item/version/configuration": {
+			// 	"_apiInfo": {
+			// 		"l": "This API appends the version configuration of an item.",
+			// 		"group": "Item management"
+			// 	},
+			// 	"name": {
+			// 		"source": ['body.id'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string"
+			// 		}
+			// 	},
+			// 	"type": {
+			// 		"source": ['body.type'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string",
+			// 			"enum":["service"]
+			// 		}
+			// 	},
+			// 	"env": {
+			// 		"source": ['body.env'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string"
+			// 		}
+			// 	},
+			// 	"version": {
+			// 		"source": ['body.version'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string"
+			// 		}
+			// 	},
+			// 	"settings": {
+			// 		"source": ['body.settings'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "object"
+			// 		}
+			// 	}
+			// },
 			// SOAJS Framework
 			"/item/service/soajs": {
 				"_apiInfo": {

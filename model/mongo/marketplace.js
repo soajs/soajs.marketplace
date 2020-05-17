@@ -135,7 +135,6 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		condition.type = data.type;
 	}
 	condition = __self.add_acl_2_condition(data, condition);
-	
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
 			return cb(err, null);
@@ -307,7 +306,7 @@ Marketplace.prototype.updateItem_environments = function (data, cb) {
 		let error = new Error("Marketplace: id, type and environments are required.");
 		return cb(error, null);
 	}
-	let allowedTypes = ["blackList", "whitelist"];
+	let allowedTypes = ["blacklist", "whitelist"];
 	if (!allowedTypes.includes(data.type)) {
 		let error = new Error("Marketplace: type can only be one of the following: " + allowedTypes.join(","));
 		return cb(error, null);
@@ -361,7 +360,7 @@ Marketplace.prototype.updateItem_acl = function (data, cb) {
 		let error = new Error("Marketplace: id, type and groups are required.");
 		return cb(error, null);
 	}
-	let allowedTypes = ["blackList", "whitelist"];
+	let allowedTypes = ["blacklist", "whitelist"];
 	if (!allowedTypes.includes(data.type)) {
 		let error = new Error("Marketplace: type can only be one of the following: " + allowedTypes.join(","));
 		return cb(error, null);
@@ -513,6 +512,28 @@ Marketplace.prototype.getItem = function (data, cb) {
 		}
 		return cb(err, record);
 	});
+};
+
+Marketplace.prototype.getItem_by_ID = function (data, cb) {
+	let __self = this;
+	if (!data || !data.id) {
+		let error = new Error("Marketplace: id are required.");
+		return cb(error, null);
+	}
+	__self.validateId(data.id, (err, _id) => {
+		if (err) {
+			return cb(err, null);
+		}
+		let condition = {'_id':_id};
+		__self.mongoCore.findOne(colName, condition, null, (err, record) => {
+			if (err) {
+				return cb(err);
+			}
+			return cb(err, record);
+		});
+	});
+
+	
 };
 
 Marketplace.prototype.deleteItem = function (data, cb) {

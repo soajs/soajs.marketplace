@@ -148,6 +148,8 @@ let bl = {
 		}
 		inputmaskData._groups = getGroups(soajs);
 		let modelObj = bl.mp.getModel(soajs, options);
+		
+		//todo let owner be handled behind the scenes (in case of whitelist - black list)
 		modelObj.updateItem_acl(inputmaskData, (err, response) => {
 			bl.mp.closeModel(modelObj);
 			if (err) {
@@ -346,7 +348,23 @@ let bl = {
 				});
 			});
 		});
-	}
+	},
+	// "update_item_version_config" :(soajs, inputmaskData, options, cb) => {
+	// 	if (!inputmaskData) {
+	// 		return cb(bl.handleError(soajs, 400, null));
+	// 	}
+	// 	let modelObj = bl.mp.getModel(soajs, options);
+	// 	let opts = {
+	// 		id:inputmaskData.id,
+	// 	};
+	// 	modelObj.getItem_by_ID(opts, (err, response) => {
+	// 		if (err) {
+	// 			bl.mp.closeModel(modelObj);
+	// 			return cb(bl.handleError(soajs, 602, err));
+	// 		}
+	// 		return cb(null, "Catalog Entry Successfully updated!");
+	// 	});
+	// }
 };
 
 module.exports = bl;
