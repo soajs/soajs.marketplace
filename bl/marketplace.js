@@ -214,7 +214,7 @@ let bl = {
 			}
 			let index;
 			for (let i = 0; i < response.versions.length; i++) {
-				if (response.versions[i].branches){
+				if (response.versions[i].branches) {
 					index = response.versions[i].branches.indexOf(inputmaskData.branch);
 					if (index > -1) {
 						response.versions[i].branches.splice(index, 1);
@@ -223,8 +223,7 @@ let bl = {
 						}
 						break;
 					}
-				}
-				else {
+				} else {
 					index = -1;
 				}
 			}
@@ -232,8 +231,8 @@ let bl = {
 				return cb(bl.handleError(soajs, 403, null));
 			}
 			let opts = {
-				versions : response.versions,
-				name : response.name,
+				versions: response.versions,
+				name: response.name,
 				type: response.type
 			};
 			modelObj.deleteItem_version(opts, (err) => {
@@ -272,8 +271,7 @@ let bl = {
 						}
 						break;
 					}
-				}
-				else {
+				} else {
 					index = -1;
 				}
 			}
@@ -281,8 +279,8 @@ let bl = {
 				return cb(bl.handleError(soajs, 404, null));
 			}
 			let opts = {
-				versions : response.versions,
-				name : response.name,
+				versions: response.versions,
+				name: response.name,
 				type: response.type
 			};
 			modelObj.deleteItem_version(opts, (err) => {
@@ -320,10 +318,9 @@ let bl = {
 			}
 			
 			let catalogDriver;
-			if (data.soa.type ==="service" && data.soa.subType === "soajs"){
+			if (data.soa.type === "service" && data.soa.subType === "soajs") {
 				catalogDriver = require(`../driver/${data.soa.subType}/index.js`);
-			}
-			else {
+			} else {
 				catalogDriver = require(`../driver/${data.soa.type}/index.js`);
 			}
 			catalogDriver.checkCanUpdate(data, (err) => {
@@ -349,22 +346,22 @@ let bl = {
 			});
 		});
 	},
-	// "update_item_version_config" :(soajs, inputmaskData, options, cb) => {
-	// 	if (!inputmaskData) {
-	// 		return cb(bl.handleError(soajs, 400, null));
-	// 	}
-	// 	let modelObj = bl.mp.getModel(soajs, options);
-	// 	let opts = {
-	// 		id:inputmaskData.id,
-	// 	};
-	// 	modelObj.getItem_by_ID(opts, (err, response) => {
-	// 		if (err) {
-	// 			bl.mp.closeModel(modelObj);
-	// 			return cb(bl.handleError(soajs, 602, err));
-	// 		}
-	// 		return cb(null, "Catalog Entry Successfully updated!");
-	// 	});
-	// }
+	
+	"update_item_version_config": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		inputmaskData._groups = getGroups(soajs);
+		
+		modelObj.update_item_version_config(inputmaskData, (err, response)=>{
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	}
 };
 
 module.exports = bl;

@@ -9,7 +9,7 @@
 "use strict";
 const colName = "marketplace";
 const core = require("soajs");
-//const async = require("async");
+const access = require("./access");
 const Mongo = core.mongo;
 
 let indexing = {};
@@ -436,66 +436,16 @@ Marketplace.prototype.check_if_can_access = function (data, condition, options, 
 			let error = new Error("Marketplace: item not found.");
 			return cb(error, null);
 		}
-		if (data._groups && Array.isArray(data._groups)) {
-			if (item.settings && item.settings.acl && item.settings.acl.groups && item.settings.acl.groups.type &&
-				item.settings.acl.groups.value && Array.isArray(item.settings.acl.groups.value) && item.settings.acl.groups.value.length > 0) {
-				let acl = item.settings.acl.groups;
-				let groupsFound = data._groups.some(o => acl.value.includes(o));
-				if (acl.type === "whitelist") {
-					if (groupsFound) {
-						return cb(null, true);
-					} else {
-						let error = new Error("Marketplace: Access restricted to this item.");
-						return cb(error, null);
-					}
-				}
-				if (acl.type === "blacklist") {
-					if (groupsFound) {
-						let error = new Error("Marketplace: Access restricted to this item.");
-						return cb(error, null);
-					} else {
-						return cb(null, true);
-					}
-				}
-			}
-			return cb(null, true);
-		} else {
-			return cb(null, true);
-		}
+		access.check_can_access(data, item, cb);
 	});
 };
 
+Marketplace.prototype.check_can_access = function (data, item, cb) {
+	access.check_can_access(data, item, cb);
+};
+
 Marketplace.prototype.add_acl_2_condition = function (data, condition) {
-	if (data._groups) {
-		condition.$or = [
-			{"settings.acl.groups.type": {"$exists": false}},
-			{"settings.acl.groups.value": {"$exists": false}},
-			{
-				"$and": [{"settings.acl.groups.type": {"$exists": true, "$eq": "whitelist"}}, {
-					"settings.acl.groups.value": {
-						"$exists": true,
-						"$in": data._groups
-					}
-				}]
-			},
-			{
-				"$and": [{"settings.acl.groups.type": {"$exists": true, "$eq": "blacklist"}}, {
-					"settings.acl.groups.value": {
-						"$exists": true,
-						"$nin": data._groups
-					}
-				}]
-			}
-		];
-	}
-	if (data.public) {
-		if (condition.$or) {
-			condition.$or.push({"settings.acl.public.ro": {"$exists": true, "$eq": true}});
-		} else {
-			condition["settings.acl.public.ro"] = {"$exists": true, "$eq": true};
-		}
-	}
-	return condition;
+	return access.add_acl_2_condition (data, condition);
 };
 
 Marketplace.prototype.getItem = function (data, cb) {
@@ -512,28 +462,6 @@ Marketplace.prototype.getItem = function (data, cb) {
 		}
 		return cb(err, record);
 	});
-};
-
-Marketplace.prototype.getItem_by_ID = function (data, cb) {
-	let __self = this;
-	if (!data || !data.id) {
-		let error = new Error("Marketplace: id are required.");
-		return cb(error, null);
-	}
-	__self.validateId(data.id, (err, _id) => {
-		if (err) {
-			return cb(err, null);
-		}
-		let condition = {'_id':_id};
-		__self.mongoCore.findOne(colName, condition, null, (err, record) => {
-			if (err) {
-				return cb(err);
-			}
-			return cb(err, record);
-		});
-	});
-
-	
 };
 
 Marketplace.prototype.deleteItem = function (data, cb) {
@@ -561,7 +489,7 @@ Marketplace.prototype.deleteItem_source = function (data, cb) {
 		"src.owner": data.owner,
 		"src.repo": data.repo
 	};
-	__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
+	__self.mongoCore.deleteMany(colName, condition, {}, (err) => {
 		return cb(err);
 	});
 };
@@ -582,6 +510,41 @@ Marketplace.prototype.deleteItem_version = function (data, cb) {
 		}
 	};
 	__self.mongoCore.updateOne(colName, condition, fields, options, cb);
+};
+
+Marketplace.prototype.update_item_version_config = function (data, cb) {
+	let __self = this;
+	if (!data || !data.type || !data.name) {
+		let error = new Error("Marketplace: type and name are required.");
+		return cb(error, null);
+	}
+	let condition = {
+		name: data.name,
+		type: data.type
+	};
+	
+	__self.check_if_can_access(data, condition, {}, (error) => {
+		if (error) {
+			return cb(error);
+		}
+		let s = {
+			'$set': {
+				["versions.$.customByEnv." + data.env ]: data.settings
+			}
+		};
+		condition["versions.version"] = data.version;
+		let options = {'upsert': false, 'safe': true};
+		__self.mongoCore.updateOne(colName, condition, s, options, (err, record) => {
+			if (err) {
+				return cb(err);
+			}
+			if (!record || (record && !record.nModified)) {
+				let error = new Error("Marketplace: item [" + data.name + "] was not updated.");
+				return cb(error);
+			}
+			return cb(null, record.nModified);
+		});
+	});
 };
 
 Marketplace.prototype.validateId = function (id, cb) {

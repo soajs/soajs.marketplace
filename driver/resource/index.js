@@ -11,7 +11,7 @@ const async = require('async');
 
 let lib = {
 	"assignVersionConf": (opts, assignee) => {
-		if (assignee.profile) {
+		if (opts.profile) {
 			assignee.profile = opts.profile;
 		}
 		return null;

@@ -22,10 +22,10 @@ let lib = {
 		assignee.urac_Config = !!opts.urac_Config;
 		assignee.urac_GroupConfig = !!opts.urac_GroupConfig;
 		assignee.urac_Profile = !!opts.urac_Profile;
-		if (assignee.profile) {
+		if (opts.profile) {
 			assignee.profile = opts.profile;
 		}
-		if (assignee.interConnect) {
+		if (opts.interConnect) {
 			assignee.interConnect = opts.interConnect;
 		}
 		return null;

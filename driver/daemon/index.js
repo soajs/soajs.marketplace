@@ -12,7 +12,7 @@ const utils = require('../../utils/index.js');
 
 let lib = {
 	"assignVersionConf": (opts, assignee) => {
-		if (assignee.profile) {
+		if (opts.profile) {
 			assignee.profile = opts.profile;
 		}
 		if (opts.jobs){
