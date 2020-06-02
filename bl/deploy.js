@@ -58,7 +58,7 @@ let local = {
 			5- for all deployed env check if deployed from this branch
 			6- if not do nothing
 			7- if yes continue
-			8- call redeploy
+			8- call deploy
 			*/
 			return cb(null, true);
 		});
@@ -75,7 +75,6 @@ let local = {
 			if (!response) {
 				return cb(bl.handleError(soajs, 501, null));
 			}
-			// NOTE: only deploy rebuilds the computed env variable, is this what we want?
 			/*
 			1- check if u can deploy in this env
 			2- if not return an error
@@ -94,24 +93,17 @@ let local = {
 		});
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
-			if (err) {
-				return cb(bl.handleError(soajs, 602, err));
+		local.saveConfiguration(soajs, inputmaskData, options, (error, result)=>{
+			if (error){
+				//
 			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			/*
-			1- check if the recipe is allowed or no restriction
-			2- if yes validate recipe and settings
-			3- if not valid return an error
-			4- if valid save the deployment configuration and call deploy
-		    */
-			return cb(null, true);
+			local.deploy(soajs, inputmaskData, options, ()=>{
+				if (error){
+					//
+				}
+				//move on
+				return cb(null, true);
+			});
 		});
 	},
 	"saveConfiguration": (soajs, inputmaskData, options, cb) => {
@@ -130,6 +122,7 @@ let local = {
 			1- check if the recipe is allowed or no restriction
 			2- if yes validate recipe and settings
 			3- if valid save the deployment configuration
+				3.1 - validate if the used computed are supported
 			4- if not valid return an error
 		    */
 			return cb(null, true);
