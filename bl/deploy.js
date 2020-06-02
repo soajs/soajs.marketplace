@@ -13,12 +13,55 @@ let bl = null;
 let local = {
 	
 	"redeploy": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			/*
+			1- get item saved deploy configuration
+			2- set git info (branch & commit, or tag)
+			3- set image info (tag)
+			4- save item configuration
 		
-		return cb(null, true);
+			5- inspect item deployment from infra ms
+			
+			6- redeploy, this should call infra ms
+			 */
+			return cb(null, true);
+		});
 	},
 	"cd": (soajs, inputmaskData, options, cb) => {
-		
-		return cb(null, true);
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			/*
+			1- validate cd token
+			2- if not valid return error
+			3- if valid continue
+			
+			4- get item saved deploy configuration
+			5- for all deployed env check if deployed from this branch
+			6- if not do nothing
+			7- if yes continue
+			8- call redeploy
+			*/
+			return cb(null, true);
+		});
 	},
 	"deploy": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
@@ -32,20 +75,44 @@ let local = {
 			if (!response) {
 				return cb(bl.handleError(soajs, 501, null));
 			}
+			// NOTE: only deploy rebuilds the computed env variable, is this what we want?
 			/*
-			1- inspect item deployment from infra ms
-			2- check if API_REGISTRY is needed to inspect gateway from infra ms
-			3- get the computed env variables
+			1- check if u can deploy in this env
+			2- if not return an error
+			3- if yes continue
 			4- get item saved deploy configuration
-			5- resolve computed variables
-			6- deploy, this should call infra ms
+			5- inspect item deployment from infra ms
+			
+			6- check if API_REGISTRY is needed to inspect gateway from infra ms
+			7- get the computed env variables
+			8- resolve computed variables
+			
+			9- create recipe
+			10- deploy, this should call infra ms
 			 */
 			return cb(null, true);
 		});
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
-		
-		return cb(null, true);
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			/*
+			1- check if the recipe is allowed or no restriction
+			2- if yes validate recipe and settings
+			3- if not valid return an error
+			4- if valid save the deployment configuration and call deploy
+		    */
+			return cb(null, true);
+		});
 	},
 	"saveConfiguration": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {

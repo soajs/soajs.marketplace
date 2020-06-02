@@ -191,12 +191,12 @@ function run(serviceStartCb) {
 				});
 			});
 			service.put("/item/deploy/configure", function (req, res) {
-				bl.deploy.saveConfigurationAndDeploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				bl.deploy.saveConfiguration(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
-			service.put("/item/configure/deploy", function (req, res) {
-				bl.deploy.saveConfiguration(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+			service.put("/item/deploy/build", function (req, res) {
+				bl.deploy.saveConfigurationAndDeploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});

@@ -546,9 +546,9 @@ module.exports = {
 					}
 				}
 			},
-			"/item/deploy/configure": {
+			"/item//deploy/configure": {
 				"_apiInfo": {
-					"l": "This API updates the configure deployment of an item and deploy",
+					"l": "This API updates the configure deployment of an item",
 					"group": "Item deploy"
 				},
 				"type": {
@@ -568,9 +568,9 @@ module.exports = {
 					}
 				}
 			},
-			"/item/configure/deploy": {
+			"/item/deploy/build": {
 				"_apiInfo": {
-					"l": "This API updates the configure deployment of an item",
+					"l": "This API updates the configure deployment of an item and deploy",
 					"group": "Item deploy"
 				},
 				"type": {
