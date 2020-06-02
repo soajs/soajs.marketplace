@@ -12,28 +12,11 @@
 let bl = null;
 let local = {
 	
-	"saveConfiguration": (soajs, inputmaskData, options, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
-			if (err) {
-				return cb(bl.handleError(soajs, 602, err));
-			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			/*
-			1- check if the recipe is allowed or no restriction
-			2- if yes validate recipe and settings
-			3- if valid save the deployment configuration
-			4- if not valid return an error
-		    */
-			return cb(null, true);
-		});
+	"redeploy": (soajs, inputmaskData, options, cb) => {
+		
+		return cb(null, true);
 	},
-	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
+	"cd": (soajs, inputmaskData, options, cb) => {
 		
 		return cb(null, true);
 	},
@@ -60,10 +43,31 @@ let local = {
 			return cb(null, true);
 		});
 	},
-	"inspect": (soajs, inputmaskData, options, cb) => {
+	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
 		
 		return cb(null, true);
 	},
+	"saveConfiguration": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, response) => {
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			if (!response) {
+				return cb(bl.handleError(soajs, 501, null));
+			}
+			/*
+			1- check if the recipe is allowed or no restriction
+			2- if yes validate recipe and settings
+			3- if valid save the deployment configuration
+			4- if not valid return an error
+		    */
+			return cb(null, true);
+		});
+	}
 	
 };
 

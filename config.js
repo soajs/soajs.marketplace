@@ -17,14 +17,16 @@ const item_config_schema = require("./driver/config/validator.js");
 const item_soajs_schema = require("./driver/soajs/validator.js");
 
 module.exports = {
-	type: 'service',
+	"type": 'service',
+	'subType': 'soajs',
+	"description": "This service provides the ability to create a heterogeneous catalog capable to automatically adapt and onboard all kind of different type of components is the way to go.",
 	prerequisites: {
 		cpu: '',
 		memory: ''
 	},
 	"serviceVersion": "1",
 	"serviceName": "marketplace",
-	"serviceGroup": "SOAJS Core Services",
+	"serviceGroup": "Console",
 	"servicePort": 4007,
 	"requestTimeout": 30,
 	"requestTimeoutRenewal": 5,
@@ -512,25 +514,19 @@ module.exports = {
 			
 			"/item/deploy/redeploy": {
 				"_apiInfo": {
-					"l": "This API redeploy a deployed item",
-					"group": "Item deploy"
-				}
-			},
-			"/item/deploy/restart": {
-				"_apiInfo": {
-					"l": "This API restart a deployed item",
+					"l": "This API redeploys a deployed item",
 					"group": "Item deploy"
 				}
 			},
 			"/item/deploy/cd": {
 				"_apiInfo": {
-					"l": "This API deploy an item used by CI",
+					"l": "This API deploys an item used by CI",
 					"group": "Item deploy"
 				}
 			},
 			"/item/deploy": {
 				"_apiInfo": {
-					"l": "This API deploy an item",
+					"l": "This API deploys an item",
 					"group": "Item deploy"
 				},
 				"type": {
@@ -594,6 +590,7 @@ module.exports = {
 					}
 				}
 			},
+			
 			"/item/branch": {
 				"_apiInfo": {
 					"l": "This API appends an item by branch",
@@ -615,7 +612,6 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			
 			"/item/tag": {
 				"_apiInfo": {
 					"l": "This API appends an item by tag",
