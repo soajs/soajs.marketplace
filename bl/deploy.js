@@ -54,11 +54,16 @@ let local = {
 			2- if not valid return error
 			3- if valid continue
 			
-			4- get item saved deploy configuration
-			5- for all deployed env check if deployed from this branch
-			6- if not do nothing
-			7- if yes continue
-			8- call deploy
+			4- figure out what is the item from sent param (item info, repository info)
+			
+			6- get item saved deploy configuration
+			7- for all deployed env check if deployed from this branch
+				8- if not do nothing
+				9- if yes continue
+				10- if auto deploy is on
+				11- call deploy
+				12- if auto deploy is off
+				13- add to ledger
 			*/
 			return cb(null, true);
 		});
@@ -93,12 +98,13 @@ let local = {
 		});
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
-		local.saveConfiguration(soajs, inputmaskData, options, (error, result)=>{
-			if (error){
+		local.saveConfiguration(soajs, inputmaskData, options, (error, result) => {
+			console.log(result);
+			if (error) {
 				//
 			}
-			local.deploy(soajs, inputmaskData, options, ()=>{
-				if (error){
+			local.deploy(soajs, inputmaskData, options, () => {
+				if (error) {
 					//
 				}
 				//move on

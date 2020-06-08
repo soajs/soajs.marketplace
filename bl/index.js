@@ -18,8 +18,7 @@ const BLs = ["marketplace"];
 
 let BL = {
 	init: init,
-	marketplace: null,
-	marketplace_soajs: null
+	marketplace: null
 	
 };
 
