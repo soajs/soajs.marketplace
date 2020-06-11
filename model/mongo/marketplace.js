@@ -445,7 +445,7 @@ Marketplace.prototype.check_can_access = function (data, item, cb) {
 };
 
 Marketplace.prototype.add_acl_2_condition = function (data, condition) {
-	return access.add_acl_2_condition (data, condition);
+	return access.add_acl_2_condition(data, condition);
 };
 
 Marketplace.prototype.getItem = function (data, cb) {
@@ -456,6 +456,7 @@ Marketplace.prototype.getItem = function (data, cb) {
 	}
 	
 	let condition = {'type': data.type, 'name': data.name};
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.findOne(colName, condition, null, (err, record) => {
 		if (err) {
 			return cb(err);
@@ -472,6 +473,7 @@ Marketplace.prototype.deleteItem = function (data, cb) {
 	}
 	
 	let condition = {'type': data.type, 'name': data.name};
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.deleteOne(colName, condition, {}, (err) => {
 		return cb(err);
 	});
@@ -489,6 +491,7 @@ Marketplace.prototype.deleteItem_source = function (data, cb) {
 		"src.owner": data.owner,
 		"src.repo": data.repo
 	};
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.deleteMany(colName, condition, {}, (err) => {
 		return cb(err);
 	});
@@ -509,6 +512,7 @@ Marketplace.prototype.deleteItem_version = function (data, cb) {
 			versions: data.versions
 		}
 	};
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.updateOne(colName, condition, fields, options, cb);
 };
 
@@ -529,7 +533,7 @@ Marketplace.prototype.update_item_version_config = function (data, cb) {
 		}
 		let s = {
 			'$set': {
-				["versions.$.customByEnv." + data.env ]: data.settings
+				["versions.$.customByEnv." + data.env]: data.settings
 			}
 		};
 		condition["versions.version"] = data.version;
@@ -544,6 +548,54 @@ Marketplace.prototype.update_item_version_config = function (data, cb) {
 			}
 			return cb(null, record.nModified);
 		});
+	});
+};
+
+Marketplace.prototype.update_item_configuration = function (data, cb) {
+	let __self = this;
+	if (!data || !data.type || !data.name || !data.config) {
+		let error = new Error("Marketplace: type and name are required.");
+		return cb(error, null);
+	}
+	let condition = {
+		name: data.name,
+		type: data.type
+	};
+	let deploy = data.response.deploy || {};
+	let env = data.config.env.toLowerCase();
+	delete data.config.env;
+	if (!deploy[env]) {
+		deploy[env] = [];
+	}
+	if (deploy[env].length === 0) {
+		deploy[env].push(data.config);
+	} else {
+		let found = false;
+		deploy[env].forEach((one) => {
+			if (one.version === data.config.version) {
+				one = data.config;
+				found = true;
+			}
+		});
+		if (!found) {
+			deploy[env].push(data.config);
+		}
+	}
+	let s = {
+		'$set': {
+			deploy: deploy
+		}
+	};
+	let options = {'upsert': false, 'safe': true};
+	__self.mongoCore.updateOne(colName, condition, s, options, (err, record) => {
+		if (err) {
+			return cb(err);
+		}
+		if (!record || (record && !record.nModified)) {
+			let error = new Error("Marketplace: item [" + data.name + "] was not updated.");
+			return cb(error);
+		}
+		return cb(null, record.nModified);
 	});
 };
 

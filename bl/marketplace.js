@@ -163,6 +163,7 @@ let bl = {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		let modelObj = bl.mp.getModel(soajs, options);
+		inputmaskData._groups = getGroups(soajs);
 		modelObj.getItem(inputmaskData, (err, response) => {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
@@ -202,6 +203,7 @@ let bl = {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		let modelObj = bl.mp.getModel(soajs, options);
+		inputmaskData._groups = getGroups(soajs);
 		modelObj.getItem(inputmaskData, (err, response) => {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
@@ -250,6 +252,7 @@ let bl = {
 			return cb(bl.handleError(soajs, 400, null));
 		}
 		let modelObj = bl.mp.getModel(soajs, options);
+		inputmaskData._groups = getGroups(soajs);
 		modelObj.getItem(inputmaskData, (err, response) => {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
@@ -308,6 +311,7 @@ let bl = {
 			bl.mp.closeModel(modelObj);
 			return cb(bl.handleError(soajs, 402, null));
 		}
+		inputmaskData._groups = getGroups(soajs);
 		modelObj.getItem(opts, (err, response) => {
 			if (err) {
 				bl.mp.closeModel(modelObj);

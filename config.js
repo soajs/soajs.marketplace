@@ -20,7 +20,7 @@ module.exports = {
 	"type": 'service',
 	'subType': 'soajs',
 	"description": "This service provides the ability to create a heterogeneous catalog capable to automatically adapt and onboard all kind of different type of components is the way to go.",
-	prerequisites: {
+	"prerequisites": {
 		cpu: '',
 		memory: ''
 	},
@@ -42,7 +42,20 @@ module.exports = {
 			{"label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info"}
 		]
 	},
-	
+	"interConnect": [
+		{
+			"name": "dashboard",
+			"version": "1"
+		},
+		{
+			"name": "infra",
+			"version": "1"
+		},
+		{
+			"name": "repository",
+			"version": "1"
+		}
+	],
 	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
@@ -51,9 +64,19 @@ module.exports = {
 		402: "Branch or Tag is required",
 		403: "Branch not found",
 		404: "Tag not found",
+		405: "Recipe not allowed for this item!",
+		406: "You are not allowed to deploy this item in this environment!",
+		407: "The deploy configuration of this Environment was not found",
+		408: "User Input environment variable not found!",
+		409: "Secret environment variable not provided!",
+		410: "The deploy configuration of this version was not found",
+		411: "Gateway information not found!",
+		412: "Invalid git information",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
+		503: "Service Error",
+		
 		601: "Model not found",
 		602: "Model error: ",
 		
@@ -464,7 +487,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum":["service"]
+						"enum": ["service"]
 					}
 				},
 				"env": {
@@ -534,7 +557,6 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["resource"]
 					}
 				},
 				"name": {
@@ -543,6 +565,20 @@ module.exports = {
 					"validation": {
 						"type": "string",
 						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"env": {
+					"source": ['query.env'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"version": {
+					"source": ['query.version'],
+					"required": true,
+					"validation": {
+						"type": "string",
 					}
 				}
 			},
@@ -552,19 +588,217 @@ module.exports = {
 					"group": "Item deploy"
 				},
 				"type": {
-					"source": ['query.type'],
+					"source": ['query.type', 'body.type'],
 					"required": true,
 					"validation": {
-						"type": "string",
-						"enum": ["resource"]
+						"type": "string"
 					}
 				},
 				"name": {
-					"source": ['query.name'],
+					"source": ['body.name', 'query.name'],
 					"required": true,
 					"validation": {
 						"type": "string",
 						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"env": {
+								"required": true,
+								"type": "string"
+							},
+							"version": {
+								"required": true,
+								"type": "string"
+							},
+							"cd": {
+								"required": true,
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"strategy": {
+										"required": true,
+										"type": "string",
+										"enum": ["notify", "update"]
+									}
+								}
+							},
+							"settings": {
+								"required": true,
+								"additionalProperties": false,
+								"type": "object",
+								"properties": {
+									"memory": {
+										"required": true,
+										"type": "string",
+									},
+									"mode": {
+										"required": true,
+										"type": "string",
+										"enum": ["deployment", "daemonset", "cronJob"]
+									},
+									"replicas": {
+										"required": false,
+										"type": "integer",
+									}
+								}
+							},
+							"src": {
+								"type": "object",
+								"properties": {
+									"from": {
+										"type": "object",
+										"properties": {
+											"tag": {
+												"type": "string",
+												"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+												"minLength": 1
+											},
+											"branch": {
+												"type": "string",
+												"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+												"minLength": 1
+											},
+											"commit": {
+												"type": "string",
+												"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+												"minLength": 1
+											},
+										},
+										"oneOf": [
+											{
+												"required": ["tag"]
+											},
+											{
+												"required": ["branch", "commit"]
+											}
+										]
+									},
+									"id": {
+										"type": "string",
+									}
+								},
+								"required": ["from", "id"]
+							},
+							"autoScale": {
+								"type": "object",
+								"required": false,
+								"properties": {
+									"replicas": {
+										"required": true,
+										"type": "object",
+										"properties": {
+											"min": {"required": true, "type": "integer", "min": 1},
+											"max": {"required": true, "type": "integer", "min": 1}
+										},
+										"additionalProperties": false
+									},
+									"metrics": {
+										"required": true,
+										"type": "object",
+										"properties": {
+											"cpu": {
+												"required": true,
+												"type": "object",
+												"properties": {
+													"percent": {"required": true, "type": "number"}
+												},
+												"additionalProperties": false
+											}
+										},
+										"additionalProperties": false
+									}
+								},
+								"additionalProperties": false
+							},
+							"recipe": {
+								"required": true,
+								"additionalProperties": false,
+								"type": "object",
+								"properties": {
+									"id": {
+										"required": true,
+										"type": "string"
+									},
+									"image": {
+										"required": false,
+										"additionalProperties": false,
+										"type": "object",
+										"properties": {
+											"name": {
+												"required": true,
+												"type": "string"
+											},
+											"prefix": {
+												"required": true,
+												"type": "string"
+											},
+											"tag": {
+												"required": true,
+												"type": "string"
+											}
+										}
+									},
+									"ports": {
+										"required": false,
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"name": {
+													"type": "string",
+													"required": true
+												},
+												"target": {
+													"type": "integer",
+													"required": false
+												},
+												"isPublished": {
+													"type": "boolean",
+													"required": false
+												}
+											}
+										}
+									},
+									"env": {
+										"required": false,
+										"additionalProperties": false,
+										"type": "object",
+										"patternProperties": {
+											"^.*$": {
+												"anyOf": [
+													//normal
+													{
+														"type": "string",
+														"required": true,
+													},
+													//secret
+													{
+														"type": "object",
+														"properties": {
+															"secret": {
+																"type": "string",
+																"required": true,
+															},
+															"key": {
+																"type": "string",
+																"required": true,
+															}
+														}
+													}
+												]
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			},
