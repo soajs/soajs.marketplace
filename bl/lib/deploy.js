@@ -16,7 +16,7 @@ function computeErrorMessageFromService(body) {
 		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {
 				if (error === "") {
-					error += detail.message;
+					error += " " + detail.message;
 				} else {
 					error += " - " + detail.message;
 				}
@@ -114,8 +114,7 @@ let lib = {
 					request(options, (error, response, body) => {
 						if (!body.result) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
-						}
-						else {
+						} else {
 							return callback(null, body.data, res);
 						}
 						
@@ -140,30 +139,30 @@ let lib = {
 				});
 			}],
 			get_src: ['get_catalog_recipe', function (results, callback) {
-				if (!inputmaskData.src){
+				if (!results.get_deploy.src) {
 					return callback(null, null);
 				}
-				if (!results.get_catalog_recipe[0].deployOptions ||
-					!results.get_catalog_recipe[0].deployOptions.image ||
-					results.get_catalog_recipe[0].deployOptions.image.binary){
+				if (!results.get_catalog_recipe[0].recipe.deployOptions ||
+					!results.get_catalog_recipe[0].recipe.deployOptions.image ||
+					results.get_catalog_recipe[0].recipe.deployOptions.image.binary) {
 					//image is binary
 					return callback(null, null);
 				}
-				soajs.awareness.connect('infra', function (res) {
+				soajs.awareness.connect('repositories', function (res) {
 					let options = {
 						method: "get",
 						uri: "http://" + res.host + "/git/repo/",
 						headers: res.headers,
 						json: true,
 						qs: {
-							owner: inputmaskData.src.id,
+							id: results.get_deploy.src.id,
 						}
 					};
 					request(options, (error, response, repo) => {
-						if (!body.result) {
+						if (!repo.result) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
 						}
-						if (!repo && !repo.data.owner){
+						if (!repo && !repo.data.owner) {
 							return callback(bl.marketplace.handleError(soajs, 412, null));
 						}
 						options = {
@@ -172,12 +171,12 @@ let lib = {
 							headers: res.headers,
 							json: true,
 							qs: {
-								owner: repo.body.owner,
-								provider: inputmaskData.src.id,
+								owner: repo.data.source[0].name,
+								provider: repo.data.provider,
 							}
 						};
 						request(options, (error, response, owner) => {
-							if (!body.result) {
+							if (!owner.result) {
 								return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(owner)));
 							}
 							if (!config.env) {
@@ -185,41 +184,42 @@ let lib = {
 							}
 							let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
+								"name": "$" + env_variables[0],
 								"value": repo.data.owner
 							});
 							
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
-								"value":  results.get_deploy.src.branch
+								"name": "$" + env_variables[1],
+								"value": results.get_deploy.src.branch
 							});
 							
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]],
+								"name": "$" + env_variables[2],
 								"value": results.get_deploy.src.commit
 							});
 							
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[3]],
+								"name": "$" + env_variables[3],
 								"value": repo.data.repository
 							});
 							
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[4]],
-								"value":  repo.data.provider
+								"name": "$" + env_variables[4],
+								"value": repo.data.provider
 							});
+							
+							if (owner.data.token){
+								config.env.push({
+									"name": "$" + env_variables[5],
+									"value": owner.data.token
+								});
+							}
 							
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[5]],
-								"value":  owner.data.token
+								"name": "$" + env_variables[6],
+								"value": owner.data.domain
 							});
-							
-							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[6]],
-								"value":  owner.data.domain
-							});
-							
-							return callback(null, body.data);
+							return callback(null, owner.data, repo.data);
 						});
 					});
 				});
@@ -242,19 +242,19 @@ let lib = {
 								
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 									config.env.push({
-										"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
+										"name": "$" + env_variables[0],
 										"value": results.get_env_record.domain
 									});
 								}
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
 									config.env.push({
-										"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
+										"name": "$" + env_variables[1],
 										"value": results.get_env_record.sitePrefix + "." + results.get_env_record.domain
 									});
 								}
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
 									config.env.push({
-										"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]],
+										"name": "$" + env_variables[2],
 										"value": results.get_env_record.apiPrefix + "." + results.get_env_record.domain
 									});
 								}
@@ -268,7 +268,7 @@ let lib = {
 								
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 									config.env.push({
-										"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
+										"name": "$" + env_variables[0],
 										"value": results.get_item.configuration.port
 									});
 								}
@@ -278,24 +278,24 @@ let lib = {
 										&& results.get_item.configuration.maintenance.type) {
 										if (results.get_item.configuration.maintenance.type === "inherit") {
 											config.env.push({
-												"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
+												"name": "$" + env_variables[1],
 												"value": results.get_item.configuration.port
 											});
 										} else if (results.get_item.configuration.maintenance.type === "maintenance") {
 											config.env.push({
-												"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
+												"name": "$" + env_variables[1],
 												"value": results.get_item.configuration.port + results.get_env_record.services.config.ports.maintenanceInc
 											});
 										} else {
 											config.env.push({
-												"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
+												"name": "$" + env_variables[1],
 												"value": results.get_item.configuration.maintenance.value
 											});
 										}
 									}
 								} else {
 									config.env.push({
-										"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
+										"name": "$" + env_variables[1],
 										"value": results.get_item.configuration.port + results.get_env_record.services.config.ports.maintenanceInc
 									});
 								}
@@ -303,41 +303,45 @@ let lib = {
 							return call();
 						},
 						function (call) {
-							let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_PROFILE", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE"];
+							let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE", "SOAJS_DEPLOY_HA"];
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 								config.env.push({
-									"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
+									"name": "$" + env_variables[0],
 									"value": inputmaskData.env.toLowerCase()
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
 								//todo
 							}
+							
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
-								//todo
+								config.env.push({
+									"name": "$" + env_variables[2],
+									"value": inputmaskData.name
+								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[3]]) {
 								config.env.push({
-									"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[3]],
-									"value": inputmaskData.name
+									"name": "$" + env_variables[3],
+									"value": "1"
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[4]]) {
 								config.env.push({
-									"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[4]],
-									"value": "1"
+									"name": "$" + env_variables[4],
+									"value": soajs.registry.services.config.ports.controller
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[5]]) {
 								config.env.push({
-									"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[5]],
-									"value": soajs.registry.services.config.ports.controller
+									"name": "$" + env_variables[5],
+									"value": soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[6]]) {
 								config.env.push({
-									"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[6]],
-									"value": soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
+									"name": "$" + env_variables[6],
+									"value": results.get_env_record.deployer.selected.split(".")[1]
 								});
 							}
 							return call();
@@ -366,24 +370,20 @@ let lib = {
 									}
 									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 										config.env.push({
-											"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
-											"value": body.data.items[0].spec.clusterIP
-										});
-									}
-									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
-										config.env.push({
-											"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
+											"name": "$" + env_variables[0],
 											"value": body.data.items[0].spec.clusterIP
 										});
 									}
 									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
 										config.env.push({
-											"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]],
+											"name": "$" + env_variables[1],
 											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
 										});
 									}
 									return call();
 								});
+							} else {
+								return call();
 							}
 						},
 					], callback);
@@ -394,10 +394,13 @@ let lib = {
 			compute_extra: ['computeEnvVariables', 'get_src', function (results, callback) {
 				config.catalog = {
 					id: results.get_catalog_recipe[0]._id.toString(),
-					version: results.get_catalog_recipe[0].v,
+					version: results.get_catalog_recipe[0].v.toString(),
 				};
-				if (results.get_catalog_recipe[0].deployOptions.image.shell) {
-					config.catalog.shell = results.get_catalog_recipe[0].deployOptions.image.shell;
+				if (results.get_catalog_recipe[0].recipe.deployOptions.image.shell) {
+					config.catalog.shell = results.get_catalog_recipe[0].recipe.deployOptions.image.shell;
+				}
+				else {
+					config.catalog.shell = "shell/bin/bash"
 				}
 				config.item = {
 					env: inputmaskData.env.toLowerCase(),
@@ -405,7 +408,7 @@ let lib = {
 					type: inputmaskData.type,
 					version: inputmaskData.version
 				};
-				if (results.get_item.configuration && results.get_item.configuration) {
+				if (results.get_item.configuration) {
 					if (results.get_item.configuration.group) {
 						config.item.group = results.get_item.configuration.group;
 					}
@@ -416,17 +419,17 @@ let lib = {
 				
 				if (results.get_deploy.src) {
 					config.src = {
-						repo: results.get_deploy.src.repo,
-						owner: results.get_deploy.src.owner,
+						repo: results.get_src[1].name,
+						owner: results.get_src[1].owner,
 					};
 					if (results.get_deploy.src.tag) {
-						config.sr.tag = results.get_deploy.src.tag;
+						config.src.tag = results.get_deploy.src.tag;
 					} else {
 						if (results.get_deploy.src.branch) {
-							config.sr.branch = results.get_deploy.src.branch;
+							config.src.branch = results.get_deploy.src.branch;
 						}
 						if (results.get_deploy.src.commit) {
-							config.sr.commit = results.get_deploy.src.commit;
+							config.src.commit = results.get_deploy.src.commit;
 						}
 					}
 				}
@@ -482,7 +485,7 @@ let lib = {
 				if (results.get_catalog_recipe[0].recipe.deployOptions.ports && results.get_catalog_recipe[0].recipe.deployOptions.ports.length > 0) {
 					config.ports = [];
 					config.service = {
-						ports : []
+						ports: []
 					};
 					//merge with port in cd
 					results.get_catalog_recipe[0].recipe.deployOptions.ports.forEach((onePortEntry, portIndex) => {
@@ -518,15 +521,16 @@ let lib = {
 				}
 				//fill user Input env
 				if (results.get_deploy.recipe && results.get_deploy.recipe.env &&
-					Object.keys(results.get_deploy.recipe.env).length > 0){
-					if(!config.env){
+					Object.keys(results.get_deploy.recipe.env).length > 0) {
+					if (!config.env) {
 						config.env = [];
 					}
-					Object.keys(results.get_deploy.recipe.env).forEach((oneEnv)=>{
-						if (results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv]){
+					Object.keys(results.get_deploy.recipe.env).forEach((oneEnv) => {
+						if (results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv]) {
+							console.log(results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv])
 							config.env.push({
-								"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv],
-								"value":results.get_deploy.recipe.env[oneEnv]
+								"name": "$" + oneEnv,
+								"value": results.get_deploy.recipe.env[oneEnv]
 							});
 						}
 					});
@@ -535,21 +539,21 @@ let lib = {
 			}],
 			deploy: ['compute_extra', function (results, callback) {
 				let url = "/kubernetes/item/deploy/soajs";
-				if (results.compute_extra.mode === 'cronJob'){
+				if (results.compute_extra.mode === 'cronJob') {
 					url = "/kubernetes/item/deploy/cronjob";
 				}
 				soajs.awareness.connect('infra', function (res) {
 					let options = {
-						method: "get",
+						method: "post",
 						uri: "http://" + res.host + url,
 						headers: res.headers,
 						json: true,
 						qs: {
 							configuration: {
 								env: inputmaskData.env
-							},
-							recipe: results.compute_extra
-						}
+							}
+						},
+						body: {	recipe: results.compute_extra }
 					};
 					request(options, (error, response, body) => {
 						if (!body.result) {
@@ -560,7 +564,7 @@ let lib = {
 				});
 			}],
 		}, function (err) {
-			if (err){
+			if (err) {
 				return cb(err);
 			}
 			return cb(err, "Item Successfully deployed!");

@@ -641,7 +641,7 @@ module.exports = {
 									"mode": {
 										"required": true,
 										"type": "string",
-										"enum": ["deployment", "daemonset", "cronJob"]
+										"enum": ["Deployment", "Daemonset", "cronJob"]
 									},
 									"replicas": {
 										"required": false,
