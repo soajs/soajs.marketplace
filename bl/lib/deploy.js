@@ -184,39 +184,39 @@ let lib = {
 							}
 							let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
 							config.env.push({
-								"name": "$" + env_variables[0],
+								"name": env_variables[0],
 								"value": repo.data.owner
 							});
 							
 							config.env.push({
-								"name": "$" + env_variables[1],
+								"name": env_variables[1],
 								"value": results.get_deploy.src.branch
 							});
 							
 							config.env.push({
-								"name": "$" + env_variables[2],
+								"name": env_variables[2],
 								"value": results.get_deploy.src.commit
 							});
 							
 							config.env.push({
-								"name": "$" + env_variables[3],
+								"name": env_variables[3],
 								"value": repo.data.repository
 							});
 							
 							config.env.push({
-								"name": "$" + env_variables[4],
+								"name": env_variables[4],
 								"value": repo.data.provider
 							});
 							
 							if (owner.data.token){
 								config.env.push({
-									"name": "$" + env_variables[5],
+									"name": env_variables[5],
 									"value": owner.data.token
 								});
 							}
 							
 							config.env.push({
-								"name": "$" + env_variables[6],
+								"name": env_variables[6],
 								"value": owner.data.domain
 							});
 							return callback(null, owner.data, repo.data);
@@ -242,19 +242,19 @@ let lib = {
 								
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 									config.env.push({
-										"name": "$" + env_variables[0],
+										"name": env_variables[0],
 										"value": results.get_env_record.domain
 									});
 								}
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
 									config.env.push({
-										"name": "$" + env_variables[1],
+										"name": env_variables[1],
 										"value": results.get_env_record.sitePrefix + "." + results.get_env_record.domain
 									});
 								}
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
 									config.env.push({
-										"name": "$" + env_variables[2],
+										"name": env_variables[2],
 										"value": results.get_env_record.apiPrefix + "." + results.get_env_record.domain
 									});
 								}
@@ -268,7 +268,7 @@ let lib = {
 								
 								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 									config.env.push({
-										"name": "$" + env_variables[0],
+										"name": env_variables[0],
 										"value": results.get_item.configuration.port
 									});
 								}
@@ -278,24 +278,24 @@ let lib = {
 										&& results.get_item.configuration.maintenance.type) {
 										if (results.get_item.configuration.maintenance.type === "inherit") {
 											config.env.push({
-												"name": "$" + env_variables[1],
+												"name": env_variables[1],
 												"value": results.get_item.configuration.port
 											});
 										} else if (results.get_item.configuration.maintenance.type === "maintenance") {
 											config.env.push({
-												"name": "$" + env_variables[1],
+												"name": env_variables[1],
 												"value": results.get_item.configuration.port + results.get_env_record.services.config.ports.maintenanceInc
 											});
 										} else {
 											config.env.push({
-												"name": "$" + env_variables[1],
+												"name": env_variables[1],
 												"value": results.get_item.configuration.maintenance.value
 											});
 										}
 									}
 								} else {
 									config.env.push({
-										"name": "$" + env_variables[1],
+										"name": env_variables[1],
 										"value": results.get_item.configuration.port + results.get_env_record.services.config.ports.maintenanceInc
 									});
 								}
@@ -306,7 +306,7 @@ let lib = {
 							let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE", "SOAJS_DEPLOY_HA"];
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 								config.env.push({
-									"name": "$" + env_variables[0],
+									"name": env_variables[0],
 									"value": inputmaskData.env.toLowerCase()
 								});
 							}
@@ -316,31 +316,31 @@ let lib = {
 							
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
 								config.env.push({
-									"name": "$" + env_variables[2],
+									"name": env_variables[2],
 									"value": inputmaskData.name
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[3]]) {
 								config.env.push({
-									"name": "$" + env_variables[3],
+									"name": env_variables[3],
 									"value": "1"
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[4]]) {
 								config.env.push({
-									"name": "$" + env_variables[4],
+									"name": env_variables[4],
 									"value": soajs.registry.services.config.ports.controller
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[5]]) {
 								config.env.push({
-									"name": "$" + env_variables[5],
+									"name": env_variables[5],
 									"value": soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[6]]) {
 								config.env.push({
-									"name": "$" + env_variables[6],
+									"name": env_variables[6],
 									"value": results.get_env_record.deployer.selected.split(".")[1]
 								});
 							}
@@ -370,13 +370,13 @@ let lib = {
 									}
 									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 										config.env.push({
-											"name": "$" + env_variables[0],
+											"name": env_variables[0],
 											"value": body.data.items[0].spec.clusterIP
 										});
 									}
 									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
 										config.env.push({
-											"name": "$" + env_variables[1],
+											"name": env_variables[1],
 											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
 										});
 									}
@@ -527,9 +527,8 @@ let lib = {
 					}
 					Object.keys(results.get_deploy.recipe.env).forEach((oneEnv) => {
 						if (results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv]) {
-							console.log(results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv])
 							config.env.push({
-								"name": "$" + oneEnv,
+								"name": oneEnv,
 								"value": results.get_deploy.recipe.env[oneEnv]
 							});
 						}
