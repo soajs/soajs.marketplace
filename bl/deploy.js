@@ -9,7 +9,7 @@
  */
 
 let bl = null;
-const lib = require("./lib/deploy")(bl);
+const lib = require("./lib/deploy");
 
 function getGroups(soajs) {
 	let _groups = null;
@@ -80,7 +80,7 @@ let local = {
 		});
 	},
 	"deploy": (soajs, inputmaskData, options, cb) => {
-		lib.deploy(soajs, inputmaskData, options, cb);
+		lib.deploy(soajs, inputmaskData, options, bl, cb);
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
 		local.saveConfiguration(soajs, inputmaskData, options, (error, result) => {

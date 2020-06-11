@@ -9,7 +9,6 @@
  */
 const request = require("request");
 const async = require("async");
-let bl = null;
 
 function computeErrorMessageFromService(body) {
 	if (!body.result) {
@@ -29,7 +28,7 @@ function computeErrorMessageFromService(body) {
 
 let lib = {
 	
-	"deploy": (soajs, inputmaskData, options, cb) => {
+	"deploy": (soajs, inputmaskData, options, bl, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.marketplace.handleError(soajs, 400, null));
 		}
@@ -116,11 +115,14 @@ let lib = {
 						if (!body.result) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						}
-						return callback(null, body.data, res);
+						else {
+							return callback(null, body.data, res);
+						}
+						
 					});
 				});
 			}],
-			get_env_record: ['get_deploy', function (results, callback) {
+			get_env_record: ['get_deploy', 'get_catalog_recipe', function (results, callback) {
 				let options = {
 					method: "get",
 					uri: "http://" + results.get_catalog_recipe[1].host + "/environment",
@@ -305,7 +307,7 @@ let lib = {
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
 								config.env.push({
 									"name": "$" + results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]],
-									"value": inputmaskData.code.toLowerCase()
+									"value": inputmaskData.env.toLowerCase()
 								});
 							}
 							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
@@ -567,7 +569,4 @@ let lib = {
 };
 
 
-module.exports = function (_bl) {
-	bl = _bl;
-	return lib;
-};
+module.exports = lib;
