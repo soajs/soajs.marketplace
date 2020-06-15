@@ -9,7 +9,10 @@
  */
 
 let bl = null;
-const lib = require("./lib/deploy");
+const lib_deploy = require("./lib/deploy");
+const lib_redeploy = require("./lib/redeploy");
+const lib_cd = require("./lib/cd");
+const request = require("request");
 
 function getGroups(soajs) {
 	let _groups = null;
@@ -24,77 +27,21 @@ function getGroups(soajs) {
 let local = {
 	
 	"redeploy": (soajs, inputmaskData, options, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
-			if (err) {
-				return cb(bl.handleError(soajs, 602, err));
-			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			/*
-			1- get item saved deploy configuration
-			2- set git info (branch & commit, or tag)
-			3- set image info (tag)
-			4- save item configuration
-		
-			5- inspect item deployment from infra ms
-			
-			6- redeploy, this should call infra ms
-			 */
-			return cb(null, true);
-		});
+		lib_redeploy.redeploy(soajs, inputmaskData, options, bl, cb);
 	},
 	"cd": (soajs, inputmaskData, options, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.mp.getModel(soajs, options);
-		modelObj.getItem(inputmaskData, (err, response) => {
-			if (err) {
-				return cb(bl.handleError(soajs, 602, err));
-			}
-			if (!response) {
-				return cb(bl.handleError(soajs, 501, null));
-			}
-			/*
-			1- validate cd token
-			2- if not valid return error
-			3- if valid continue
-			
-			4- figure out what is the item from sent param (item info, repository info)
-			
-			6- get item saved deploy configuration
-			7- for all deployed env check if deployed from this branch
-				8- if not do nothing
-				9- if yes continue
-				10- if auto deploy is on
-				11- call deploy
-				12- if auto deploy is off
-				13- add to ledger
-			*/
-			return cb(null, true);
-		});
+		lib_cd.cd(soajs, inputmaskData, options, bl, local, cb);
 	},
 	"deploy": (soajs, inputmaskData, options, cb) => {
-		lib.deploy(soajs, inputmaskData, options, bl, cb);
+		lib_deploy.deploy(soajs, inputmaskData, options, bl, cb);
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
-		local.saveConfiguration(soajs, inputmaskData, options, (error, result) => {
-			console.log(result);
+		local.saveConfiguration(soajs, inputmaskData, options, (error, item) => {
 			if (error) {
-				//
+				return cb(error);
 			}
-			local.deploy(soajs, inputmaskData, options, () => {
-				if (error) {
-					//
-				}
-				//move on
-				return cb(null, true);
-			});
+			inputmaskData.env = inputmaskData.config.env;
+			lib_deploy.deploy(soajs, inputmaskData, item, bl, cb);
 		});
 	},
 	"saveConfiguration": (soajs, inputmaskData, options, cb) => {
@@ -110,6 +57,7 @@ let local = {
 			if (!response) {
 				return cb(bl.marketplace.handleError(soajs, 501, null));
 			}
+			
 			//1- check if the recipe is allowed or no restriction
 			if (response.settings) {
 				if (response.settings.recipes &&
@@ -132,6 +80,7 @@ let local = {
 					}
 				}
 			}
+			
 			soajs.awareness.connect('dashboard', function (res) {
 				let options = {
 					method: "get",
@@ -143,7 +92,7 @@ let local = {
 					}
 				};
 				request(options, (error, res, body) => {
-					if (!body.result) {
+					if (error || !body.result) {
 						return cb(bl.marketplace.handleError(soajs, body.errors, body.errors));
 					}
 					let userInputFound = false, secretFound = false;
@@ -163,6 +112,25 @@ let local = {
 							}
 						}
 					}
+					
+					if (!inputmaskData.config.recipe.image){
+						inputmaskData.config.recipe.image = {};
+					}
+					
+					if (!inputmaskData.config.recipe.image.prefix){
+						inputmaskData.config.recipe.image.prefix = body.data.recipe.deployOptions.image.prefix;
+					}
+					if (!inputmaskData.config.recipe.image.name){
+						inputmaskData.config.recipe.image.name = body.data.recipe.deployOptions.image.name;
+					}
+					if (!inputmaskData.config.recipe.image.tag){
+						inputmaskData.config.recipe.image.tag = body.data.recipe.deployOptions.image.tag;
+					}
+					if (inputmaskData.config.src) {
+						let src = inputmaskData.config.src.from;
+						src.id = inputmaskData.config.src.id;
+						inputmaskData.config.src = src;
+					}
 					if (userInputFound) {
 						return cb(bl.marketplace.handleError(soajs, 408, null));
 					}
@@ -170,7 +138,8 @@ let local = {
 						return cb(bl.marketplace.handleError(soajs, 409, null));
 					}
 					inputmaskData.response = response;
-					modelObj.update_item_configuration(inputmaskData, (err, response) => {
+					let opts = JSON.parse(JSON.stringify(inputmaskData));
+					modelObj.update_item_configuration(opts, (err) => {
 						if (err) {
 							return cb(bl.marketplace.handleError(soajs, 602, err));
 						}

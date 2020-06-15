@@ -72,6 +72,10 @@ module.exports = {
 		410: "The deploy configuration of this version was not found",
 		411: "Gateway information not found!",
 		412: "Invalid git information",
+		413: "Item not deployed!",
+		414: "Invalid Deploy Token!",
+		415: "Deploy Token is inactive!",
+		416: "Unable to find healthy configuration in registry.",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
@@ -539,12 +543,183 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API redeploys a deployed item",
 					"group": "Item deploy"
-				}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"env": {
+					"source": ['query.env'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"version": {
+					"source": ['query.version'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"image": {
+					"source": ['body.image'],
+					"required": false,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"tag": {
+								"type": "string",
+								"required": true,
+							}
+						}
+					}
+				},
+				"src": {
+					"source": ['body.src'],
+					"required": false,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"from": {
+								"type": "object",
+								"properties": {
+									"tag": {
+										"type": "string",
+										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+										"minLength": 1
+									},
+									"branch": {
+										"type": "string",
+										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+										"minLength": 1
+									},
+									"commit": {
+										"type": "string",
+										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+										"minLength": 1
+									},
+								},
+								"oneOf": [
+									{
+										"required": ["tag"]
+									},
+									{
+										"required": ["branch", "commit"]
+									}
+								]
+							},
+							"required": ["from"]
+						},
+					}
+				},
 			},
 			"/item/deploy/cd": {
 				"_apiInfo": {
 					"l": "This API deploys an item used by CI",
 					"group": "Item deploy"
+				},
+				"token": {
+					"source": ['query.token'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"repo_token": {
+					"source": ['query.repo_token'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"version": {
+					"source": ['query.version'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"config": {
+					"source": ["body.config"],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"required": ["from"],
+						"properties": {
+							"from": {
+								"type": "object",
+								"properties": {
+									"tag": {
+										"type": "string",
+										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+										"minLength": 1
+									},
+									"branch": {
+										"type": "string",
+										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+										"minLength": 1
+									},
+									"commit": {
+										"type": "string",
+										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+										"minLength": 1
+									},
+									"image_prefix": {
+										"type": "string"
+									},
+									"image_name": {
+										"type": "string"
+									},
+									"image_tag": {
+										"type": "string"
+									},
+									"env": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									}
+								},
+								"oneOf": [
+									{
+										"required": ["tag"]
+									},
+									{
+										"required": ["branch", "commit"]
+									},
+									{
+										"required": ["image_tag", "image_name", "image_prefix"]
+									}
+								]
+							},
+							
+						}
+					}
 				}
 			},
 			"/item/deploy": {
@@ -812,7 +987,6 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["resource"]
 					}
 				},
 				"name": {
@@ -821,6 +995,212 @@ module.exports = {
 					"validation": {
 						"type": "string",
 						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"version": {
+					"source": ['query.version'],
+					"required": true,
+					"validation": {
+						"type": "string",
+					}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"env": {
+								"required": true,
+								"type": "string"
+							},
+							"version": {
+								"required": true,
+								"type": "string"
+							},
+							"cd": {
+								"required": true,
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"strategy": {
+										"required": true,
+										"type": "string",
+										"enum": ["notify", "update"]
+									}
+								}
+							},
+							"settings": {
+								"required": true,
+								"additionalProperties": false,
+								"type": "object",
+								"properties": {
+									"memory": {
+										"required": true,
+										"type": "string",
+									},
+									"mode": {
+										"required": true,
+										"type": "string",
+										"enum": ["Deployment", "Daemonset", "cronJob"]
+									},
+									"replicas": {
+										"required": false,
+										"type": "integer",
+									}
+								}
+							},
+							"src": {
+								"type": "object",
+								"properties": {
+									"from": {
+										"type": "object",
+										"properties": {
+											"tag": {
+												"type": "string",
+												"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+												"minLength": 1
+											},
+											"branch": {
+												"type": "string",
+												"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+												"minLength": 1
+											},
+											"commit": {
+												"type": "string",
+												"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+												"minLength": 1
+											},
+										},
+										"oneOf": [
+											{
+												"required": ["tag"]
+											},
+											{
+												"required": ["branch", "commit"]
+											}
+										]
+									},
+									"id": {
+										"type": "string",
+									}
+								},
+								"required": ["from", "id"]
+							},
+							"autoScale": {
+								"type": "object",
+								"required": false,
+								"properties": {
+									"replicas": {
+										"required": true,
+										"type": "object",
+										"properties": {
+											"min": {"required": true, "type": "integer", "min": 1},
+											"max": {"required": true, "type": "integer", "min": 1}
+										},
+										"additionalProperties": false
+									},
+									"metrics": {
+										"required": true,
+										"type": "object",
+										"properties": {
+											"cpu": {
+												"required": true,
+												"type": "object",
+												"properties": {
+													"percent": {"required": true, "type": "number"}
+												},
+												"additionalProperties": false
+											}
+										},
+										"additionalProperties": false
+									}
+								},
+								"additionalProperties": false
+							},
+							"recipe": {
+								"required": true,
+								"additionalProperties": false,
+								"type": "object",
+								"properties": {
+									"id": {
+										"required": true,
+										"type": "string"
+									},
+									"image": {
+										"required": false,
+										"additionalProperties": false,
+										"type": "object",
+										"properties": {
+											"name": {
+												"required": true,
+												"type": "string"
+											},
+											"prefix": {
+												"required": true,
+												"type": "string"
+											},
+											"tag": {
+												"required": true,
+												"type": "string"
+											}
+										}
+									},
+									"ports": {
+										"required": false,
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"name": {
+													"type": "string",
+													"required": true
+												},
+												"target": {
+													"type": "integer",
+													"required": false
+												},
+												"isPublished": {
+													"type": "boolean",
+													"required": false
+												}
+											}
+										}
+									},
+									"env": {
+										"required": false,
+										"additionalProperties": false,
+										"type": "object",
+										"patternProperties": {
+											"^.*$": {
+												"anyOf": [
+													//normal
+													{
+														"type": "string",
+														"required": true,
+													},
+													//secret
+													{
+														"type": "object",
+														"properties": {
+															"secret": {
+																"type": "string",
+																"required": true,
+															},
+															"key": {
+																"type": "string",
+																"required": true,
+															}
+														}
+													}
+												]
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			},
@@ -868,6 +1248,6 @@ module.exports = {
 				}
 			},
 		}
-		
 	}
-};
+}
+;

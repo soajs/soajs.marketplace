@@ -564,21 +564,27 @@ Marketplace.prototype.update_item_configuration = function (data, cb) {
 	let deploy = data.response.deploy || {};
 	let env = data.config.env.toLowerCase();
 	delete data.config.env;
+	let newDeploy = [];
 	if (!deploy[env]) {
 		deploy[env] = [];
 	}
 	if (deploy[env].length === 0) {
-		deploy[env].push(data.config);
+		deploy[env] = [data.config];
 	} else {
 		let found = false;
 		deploy[env].forEach((one) => {
 			if (one.version === data.config.version) {
-				one = data.config;
+				newDeploy.push(data.config);
 				found = true;
+			}
+			else {
+				newDeploy.push(one);
 			}
 		});
 		if (!found) {
 			deploy[env].push(data.config);
+		} else {
+			deploy[env] = newDeploy;
 		}
 	}
 	let s = {

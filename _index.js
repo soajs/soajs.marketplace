@@ -14,6 +14,7 @@ let config = require('./config.js');
 config.packagejson = require("./package.json");
 
 const bl = require("./bl/index.js");
+const sdk = require("./lib/sdk.js");
 
 const service = new soajs.server.service(config);
 
@@ -177,7 +178,17 @@ function run(serviceStartCb) {
 			
 			service.put("/item/deploy/redeploy", function (req, res) {
 				bl.deploy.redeploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-					return res.json(req.soajs.buildResponse(error, data));
+					let response = req.soajs.buildResponse(error, data)
+					res.json(response);
+					let doc = {
+						"env": req.soajs.inputmaskData.env,
+						"type": "Deployment",
+						"section": "Catalog",
+						"locator": [req.soajs.inputmaskData.type],
+						"action": "updated"
+					};
+					sdk.ledger(req.soajs, doc, response, () => {
+					});
 				});
 			});
 			service.put("/item/deploy/cd", function (req, res) {
@@ -187,17 +198,47 @@ function run(serviceStartCb) {
 			});
 			service.put("/item/deploy", function (req, res) {
 				bl.deploy.deploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-					return res.json(req.soajs.buildResponse(error, data));
+					let response = req.soajs.buildResponse(error, data);
+					res.json(response);
+					let doc = {
+						"env": req.soajs.inputmaskData.config.env,
+						"type": "Deployment",
+						"section": "Catalog",
+						"locator": [req.soajs.inputmaskData.type],
+						"action": "updated"
+					};
+					sdk.ledger(req.soajs, doc, response, () => {
+					});
 				});
 			});
 			service.put("/item/deploy/configure", function (req, res) {
 				bl.deploy.saveConfiguration(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-					return res.json(req.soajs.buildResponse(error, data));
+					let response = req.soajs.buildResponse(error, data);
+					res.json(response);
+					let doc = {
+						"env": req.soajs.inputmaskData.configuration.env,
+						"type": "Deployment",
+						"section": "Catalog",
+						"locator": [req.soajs.inputmaskData.type],
+						"action": "updated"
+					};
+					sdk.ledger(req.soajs, doc, response, () => {
+					});
 				});
 			});
 			service.put("/item/deploy/build", function (req, res) {
 				bl.deploy.saveConfigurationAndDeploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-					return res.json(req.soajs.buildResponse(error, data));
+					let response = req.soajs.buildResponse(error, data);
+					res.json(response);
+					let doc = {
+						"env": req.soajs.inputmaskData.configuration.env,
+						"type": "Deployment",
+						"section": "Catalog",
+						"locator": ["workload", req.soajs.inputmaskData.mode],
+						"action": "updated"
+					};
+					sdk.ledger(req.soajs, doc, response, () => {
+					});
 				});
 			});
 			

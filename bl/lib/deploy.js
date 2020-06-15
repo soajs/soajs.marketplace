@@ -9,9 +9,10 @@
  */
 const request = require("request");
 const async = require("async");
+const soajsCore = require('soajs');
 
 function computeErrorMessageFromService(body) {
-	if (!body.result) {
+	if (body && !body.result) {
 		let error = "";
 		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {
@@ -24,68 +25,499 @@ function computeErrorMessageFromService(body) {
 		}
 		return new Error(error);
 	}
+	else {
+		return new Error(" Service not found");
+	}
 }
 
 let lib = {
 	
-	"deploy": (soajs, inputmaskData, options, bl, cb) => {
-		if (!inputmaskData) {
-			return cb(bl.marketplace.handleError(soajs, 400, null));
-		}
-		let modelObj = bl.marketplace.mp.getModel(soajs, options);
-		//  1- check if u can deploy in this env
-		// 	2- if not return an error
-		// 	3- if yes continue
-		/*
-			
-			4- get item saved deploy configuration
-			5- inspect item deployment from infra ms
-			
-			6- check if API_REGISTRY is needed to inspect gateway from infra ms
-			7- get the computed env variables
-			8- resolve computed variables
-			
-			9- create recipe
-			10- deploy, this should call infra ms
-			 */
+	"computeEnvVariables": (soajs, opts, config, bl, cb) => {
+		// let opts = {
+		// 	item: item,
+		// 	deploy: results.get_deploy,
+		// 	owner: results.get_src[0],
+		// 	repo: results.get_src[1],
+		// 	recipe: results.get_catalog_recipe,
+		// 	registry: results.get_env_record
+		// };
 		
+		if (!config.env) {
+			config.env = [];
+		}
+		if (opts.owner) {
+			let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
+			config.env.push({
+				"name": env_variables[0],
+				"value": opts.repo.owner
+			});
+			
+			config.env.push({
+				"name": env_variables[1],
+				"value": opts.deploy.src.branch || opts.deploy.src.tag
+			});
+			
+			if (opts.deploy.src.commit) {
+				config.env.push({
+					"name": env_variables[2],
+					"value": opts.deploy.src.commit
+				});
+			}
+			
+			config.env.push({
+				"name": env_variables[3],
+				"value": opts.repo.repository
+			});
+			
+			config.env.push({
+				"name": env_variables[4],
+				"value": opts.repo.provider
+			});
+			
+			if (opts.owner.token) {
+				config.env.push({
+					"name": env_variables[5],
+					"value": opts.owner.token
+				});
+			}
+			
+			config.env.push({
+				"name": env_variables[6],
+				"value": opts.owner.domain
+			});
+		}
+		if (opts.recipe.recipe &&
+			opts.recipe.recipe.buildOptions &&
+			opts.recipe.recipe.buildOptions.env &&
+			Object.keys(opts.recipe.recipe.buildOptions.env).length > 0
+		) {
+			async.parallel([
+				function (call) {
+					let env_variables = ["SOAJS_NX_DOMAIN", "SOAJS_NX_SITE_DOMAIN", "SOAJS_NX_API_DOMAIN"];
+					if (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
+						opts.recipe.recipe.buildOptions.env[env_variables[1]] ||
+						opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
+						
+						if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
+							config.env.push({
+								"name": env_variables[0],
+								"value": opts.registry.domain
+							});
+						}
+						if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+							config.env.push({
+								"name": env_variables[1],
+								"value": opts.registry.sitePrefix + "." + opts.registry.domain
+							});
+						}
+						if (opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
+							config.env.push({
+								"name": env_variables[2],
+								"value": opts.registry.apiPrefix + "." + opts.registry.domain
+							});
+						}
+					}
+					return call();
+				},
+				function (call) {
+					let env_variables = ["SOAJS_SRV_PORT", "SOAJS_SRV_PORT_MAINTENANCE"];
+					if (opts.item.type === "service" && opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
+						opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+						
+						if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
+							config.env.push({
+								"name": env_variables[0],
+								"value": opt.item.configuration.port
+							});
+						}
+						if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+							if (opts.item.configuration.maintenance
+								&& opts.item.configuration.maintenance.port
+								&& opts.item.configuration.maintenance.type) {
+								if (opts.item.configuration.maintenance.type === "inherit") {
+									config.env.push({
+										"name": env_variables[1],
+										"value": opts.item.configuration.port
+									});
+								} else if (item.configuration.maintenance.type === "maintenance") {
+									config.env.push({
+										"name": env_variables[1],
+										"value": opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc
+									});
+								} else {
+									config.env.push({
+										"name": env_variables[1],
+										"value": opts.item.configuration.maintenance.value
+									});
+								}
+							}
+						} else {
+							config.env.push({
+								"name": env_variables[1],
+								"value": opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc
+							});
+						}
+					}
+					return call();
+				},
+				function (call) {
+					let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE", "SOAJS_DEPLOY_HA"];
+					if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
+						config.env.push({
+							"name": env_variables[0],
+							"value": opts.registry.name.toLowerCase()
+						});
+					}
+					if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+						//todo
+					}
+					
+					if (opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
+						config.env.push({
+							"name": env_variables[2],
+							"value": opts.item.name
+						});
+					}
+					if (opts.recipe.recipe.buildOptions.env[env_variables[3]]) {
+						config.env.push({
+							"name": env_variables[3],
+							"value": "1"
+						});
+					}
+					if (opts.recipe.recipe.buildOptions.env[env_variables[4]]) {
+						config.env.push({
+							"name": env_variables[4],
+							"value": opts.registry.services.config.ports.controller
+						});
+					}
+					if (opts.recipe.recipe.buildOptions.env[env_variables[5]]) {
+						config.env.push({
+							"name": env_variables[5],
+							"value": opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc
+						});
+					}
+					if (opts.recipe.recipe.buildOptions.env[env_variables[6]]) {
+						config.env.push({
+							"name": env_variables[6],
+							"value": opts.registry.deployer.selected.split(".")[1]
+						});
+					}
+					return call();
+				},
+				function (call) {
+					let env_variables = ["SOAJS_NX_CONTROLLER_IP_1", "SOAJS_REGISTRY_API"];
+					if (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
+						opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+						soajs.awareness.connect("infra", "1", (response) => {
+							if (response && response.host) {
+								let options = {
+									method: "get",
+									uri: "http://" + response.host + "/kubernetes/services/Service",
+									headers: response.headers,
+									json: true,
+									qs: {
+										qs: {
+											configuration: {
+												env: opts.registry.name.toLowerCase()
+											}
+										},
+										filter: {
+											labelSelector: 'soajs.env.code=' + opts.registry.name.toLowerCase() + ', soajs.service.name=' + opts.registry.serviceConfig.ports.name || "controller"
+										},
+									}
+								};
+								request(options, (error, res, body) => {
+									if (error || !body.result) {
+										return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+									}
+									if (!body.data || !body.data.items || body.data.items.length === 0 || !body.data.items[0].metadata || !body.data.items[0].metadata.name) {
+										return call(bl.marketplace.handleError(soajs, 411, null));
+									}
+									if (results.get_catalog_recipe.recipe.buildOptions.env[env_variables[0]]) {
+										config.env.push({
+											"name": env_variables[0],
+											"value": body.data.items[0].spec.clusterIP
+										});
+									}
+									if (results.get_catalog_recipe.recipe.buildOptions.env[env_variables[1]]) {
+										config.env.push({
+											"name": env_variables[1],
+											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
+										});
+									}
+									return call();
+								});
+							} else {
+								return call();
+							}
+						});
+					} else {
+						return call();
+					}
+				},
+			], cb);
+		} else {
+			return cb(null, true);
+		}
+	},
+	
+	"computeDeployObject": (soajs, opts, config, bl, cb) => {
+		// let opts = {
+		// 	item: item,
+		// 	deploy: results.get_deploy,
+		// 	owner: results.get_src[0],
+		// 	repo: results.get_src[1],
+		// 	recipe: results.get_catalog_recipe,
+		// 	registry: results.get_env_record
+		// };
+		config.catalog = {
+			id: opts.recipe._id.toString(),
+			version: opts.recipe.v.toString(),
+		};
+		if (opts.recipe.recipe.deployOptions.image.shell) {
+			config.catalog.shell = opts.recipe.recipe.deployOptions.image.shell;
+		} else {
+			config.catalog.shell = "shell/bin/bash"
+		}
+		config.item = {
+			env: opts.registry.name.toLowerCase(),
+			name: opts.item.name,
+			type: opts.item.type,
+			version: opts.deploy.version
+		};
+		if (opts.item.configuration) {
+			if (opts.item.configuration.group) {
+				config.item.group = opts.item.configuration.group;
+			}
+			if (opts.item.configuration.subType) {
+				config.item.subtype = opts.item.configuration.subType;
+			}
+		}
+		
+		if (opts.deploy.src) {
+			config.src = {
+				repo: opts.repo.name.toLowerCase(),
+				owner: opts.repo.owner.toLowerCase(),
+				from: {}
+			};
+			if (opts.deploy.src.tag) {
+				config.src.from.tag = opts.deploy.src.tag.toLowerCase();
+			} else {
+				if (opts.deploy.src.branch) {
+					config.src.from.branch = opts.deploy.src.branch.toLowerCase();
+				}
+				if (opts.deploy.src.commit) {
+					config.src.from.commit = opts.deploy.src.commit;
+				}
+			}
+		}
+		
+		config.mode = opts.deploy.settings.mode;
+		if (opts.recipe.recipe.deployOptions.labels) {
+			config.labels = opts.recipe.recipe.deployOptions.labels;
+		}
+		config.image = {
+			name: opts.recipe.recipe.deployOptions.image.prefix + "/" + opts.recipe.recipe.deployOptions.image.name + ":" + opts.recipe.recipe.deployOptions.image.tag,
+			imagePullPolicy: opts.recipe.recipe.deployOptions.image.pullPolicy
+		};
+		if (opts.recipe.recipe.deployOptions.image.override && opts.deploy.recipe.image) {
+			config.image.name = opts.deploy.recipe.image.prefix + "/" + opts.deploy.recipe.image.name + ":" + opts.deploy.recipe.image.tag
+		}
+		if (opts.recipe.recipe.deployOptions.readinessProbe) {
+			config.readinessProbe = opts.recipe.recipe.deployOptions.readinessProbe;
+		}
+		if (opts.recipe.recipe.deployOptions.livenessProbe) {
+			config.livenessProbe = opts.recipe.recipe.deployOptions.livenessProbe;
+		}
+		if (opts.recipe.recipe.buildOptions.cmd) {
+			if (opts.recipe.recipe.buildOptions.cmd.command) {
+				config.command = opts.recipe.recipe.buildOptions.cmd.command;
+			}
+			if (opts.recipe.recipe.buildOptions.cmd.args) {
+				config.command = opts.recipe.recipe.buildOptions.cmd.args;
+			}
+		}
+		if (opts.recipe.recipe.deployOptions.container && opts.recipe.recipe.deployOptions.container.workingDir) {
+			config.workingDir = opts.recipe.recipe.deployOptions.container.workingDir;
+		}
+		if (opts.recipe.recipe.deployOptions.voluming && opts.recipe.recipe.deployOptions.voluming.length > 0) {
+			config.volume = {
+				volumeMounts: [],
+				volumes: []
+			};
+			opts.recipe.recipe.deployOptions.voluming.forEach((oneVolume) => {
+				if (oneVolume.kubernetes) {
+					if (oneVolume.kubernetes.volumeMounts) {
+						config.volume.volumeMounts.push(oneVolume.kubernetes.volumeMounts);
+					}
+					if (oneVolume.kubernetes.volume) {
+						config.volume.volume.push(oneVolume.kubernetes.volume);
+					}
+				}
+			});
+		}
+		if (opts.deploy.settings.replicas) {
+			config.replicas = opts.deploy.settings.replicas;
+		}
+		//fill ports
+		if (opts.recipe.recipe.deployOptions.ports && opts.recipe.recipe.deployOptions.ports.length > 0) {
+			config.ports = [];
+			config.service = {
+				ports: []
+			};
+			//merge with port in cd
+			opts.recipe.recipe.deployOptions.ports.forEach((onePortEntry, portIndex) => {
+				config.ports.push({
+					name: onePortEntry.name || 'port' + portIndex,
+					"containerPort": onePortEntry.target
+				});
+				let portConfig = {
+					protocol: ((onePortEntry.protocol) ? onePortEntry.protocol.toUpperCase() : 'TCP'),
+					name: onePortEntry.name || 'port' + portIndex,
+					port: onePortEntry.port || onePortEntry.target,
+					targetPort: onePortEntry.target,
+				};
+				if (onePortEntry.isPublished) {
+					if (!onePortEntry.published) {
+						config.service.type = 'LoadBalancer';
+						delete portConfig.nodePort;
+					} else {
+						if (!config.service.type || config.service.type !== 'NodePort') {
+							config.service.type = 'NodePort';
+						}
+						portConfig.nodePort = onePortEntry.published || portConfig.targetPort;
+					}
+					
+					portConfig.name = onePortEntry.name || 'published' + portConfig.name;
+					portConfig.name = portConfig.name.toLowerCase();
+					if (onePortEntry.preserveClientIP) {
+						config.service.externalTrafficPolicy = 'Local';
+					}
+				}
+				config.service.ports.push(portConfig);
+			});
+		}
+		//fill user Input env
+		if (opts.deploy.recipe && opts.deploy.recipe.env &&
+			Object.keys(opts.deploy.recipe.env).length > 0) {
+			if (!config.env) {
+				config.env = [];
+			}
+			Object.keys(opts.deploy.recipe.env).forEach((oneEnv) => {
+				if (opts.recipe.recipe.buildOptions.env[oneEnv]) {
+					config.env.push({
+						"name": oneEnv,
+						"value": opts.deploy.recipe.env[oneEnv]
+					});
+				}
+			});
+		}
+		cb(null, config);
+	},
+	
+	"getSourceInformation": (soajs, opts, bl, cb) => {
+		soajs.awareness.connect('repositories', function (res) {
+			let options = {
+				method: "get",
+				uri: "http://" + res.host + "/git/repo/",
+				headers: res.headers,
+				json: true,
+				qs: {
+					id: opts.deploy.src.id,
+				}
+			};
+			request(options, (error, response, repo) => {
+				if (error || !repo.result) {
+					return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
+				}
+				if (!repo && !repo.data.owner) {
+					return cb(bl.marketplace.handleError(soajs, 412, null));
+				}
+				options = {
+					method: "get",
+					uri: "http://" + res.host + "/git/account/owner",
+					headers: res.headers,
+					json: true,
+					qs: {
+						owner: repo.data.source[0].name,
+						provider: repo.data.provider,
+					}
+				};
+				request(options, (error, response, owner) => {
+					if (error || !owner.result) {
+						return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(owner)));
+					}
+					return cb(null, owner.data, repo.data);
+				});
+			});
+		});
+	},
+	
+	"deployObject": (soajs, opts, config, bl, cb) => {
+		let url = "/kubernetes/item/deploy/soajs";
+		if (config.mode === 'cronJob') {
+			url = "/kubernetes/item/deploy/cronjob";
+		}
+		let options = {
+			method: "post",
+			json: true,
+			qs: {
+				configuration: {
+					env: opts.env.toLowerCase()
+				}
+			},
+			body: {recipe: config}
+		};
+		if (opts.host.infra) {
+			options.uri = "http://" + opts.host.infra.host + url;
+			options.headers = opts.host.infra.headers;
+			request(options, (error, response, body) => {
+				if (error || !body.result) {
+					return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+				}
+				return cb(null, body.data);
+			});
+		} else {
+			soajs.awareness.connect('infra', '1', function (res) {
+				options.uri = "http://" + res.host + url;
+				options.headers =  res.headers;
+				request(options, (error, response, body) => {
+					if (error || !body.result) {
+						return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+					}
+					return cb(null, body.data);
+				});
+			});
+		}
+	},
+	
+	"startProcessing": (soajs, inputmaskData, item, bl, cb) => {
 		let config = {};
 		async.auto({
-			get_item: function (callback) {
-				modelObj.getItem(inputmaskData, (err, response) => {
-					if (err) {
-						return callback(bl.marketplace.handleError(soajs, 602, err));
-					}
-					if (!response) {
-						return callback(bl.marketplace.handleError(soajs, 501, null));
-					}
-					return callback(null, response);
-				});
-			},
-			check_acl: ['get_item', function (results, callback) {
-				if (results.get_item.settings) {
-					if (results.get_item.settings.environments &&
-						results.get_item.settings.environments.value) {
-						if (results.get_item.settings.environments.type === "whitelist") {
-							if (results.get_item.settings.environments.value.length > 0 &&
-								results.get_item.settings.environments.value.indexOf(inputmaskData.env.toUpperCase()) === -1) {
+			check_acl: function (callback) {
+				if (item.settings) {
+					if (item.settings.environments &&
+						item.settings.environments.value) {
+						if (item.settings.environments.type === "whitelist") {
+							if (item.settings.environments.value.length > 0 &&
+								item.settings.environments.value.indexOf(inputmaskData.env.toUpperCase()) === -1) {
 								return callback(bl.marketplace.handleError(soajs, 406, null));
 							}
 						} else {
-							if (results.get_item.settings.environments.value.length > 0 &&
-								results.get_item.settings.environments.value.indexOf(inputmaskData.toUpperCase()) > -1) {
+							if (item.settings.environments.value.length > 0 &&
+								item.settings.environments.value.indexOf(inputmaskData.env.toUpperCase()) > -1) {
 								return callback(bl.marketplace.handleError(soajs, 406, null));
 							}
 						}
 					}
 				}
 				return callback(null, true);
-			}],
+			},
 			get_deploy: ['check_acl', function (results, callback) {
-				if (results.get_item.deploy && results.get_item.deploy[inputmaskData.env]) {
+				if (item.deploy && item.deploy[inputmaskData.env]) {
 					let found = false;
 					let deploy;
-					results.get_item.deploy[inputmaskData.env].forEach((v) => {
+					item.deploy[inputmaskData.env].forEach((v) => {
 						if (v.version === inputmaskData.version) {
 							found = true;
 							deploy = v;
@@ -112,464 +544,95 @@ let lib = {
 						}
 					};
 					request(options, (error, response, body) => {
-						if (!body.result) {
+						if (error || !body.result) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						} else {
-							return callback(null, body.data, res);
+							return callback(null, body.data);
 						}
 						
 					});
 				});
 			}],
 			get_env_record: ['get_deploy', 'get_catalog_recipe', function (results, callback) {
-				let options = {
-					method: "get",
-					uri: "http://" + results.get_catalog_recipe[1].host + "/environment",
-					headers: results.get_catalog_recipe[1].headers,
-					json: true,
-					qs: {
-						code: inputmaskData.env,
+				soajsCore.core.registry.loadByEnv({envCode: inputmaskData.env}, (err, envRecord) => {
+					if (err) {
+						return callback(bl.marketplace.handleError(soajs, 416, err));
 					}
-				};
-				request(options, (error, res, body) => {
-					if (!body.result) {
-						return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+					if (!envRecord) {
+						return callback(bl.marketplace.handleError(soajs, 416, null));
 					}
-					return callback(null, body.data);
+					return callback(null, envRecord);
 				});
 			}],
 			get_src: ['get_catalog_recipe', function (results, callback) {
 				if (!results.get_deploy.src) {
 					return callback(null, null);
 				}
-				if (!results.get_catalog_recipe[0].recipe.deployOptions ||
-					!results.get_catalog_recipe[0].recipe.deployOptions.image ||
-					results.get_catalog_recipe[0].recipe.deployOptions.image.binary) {
+				if (!results.get_catalog_recipe.recipe.deployOptions ||
+					!results.get_catalog_recipe.recipe.deployOptions.image ||
+					results.get_catalog_recipe.recipe.deployOptions.image.binary) {
 					//image is binary
 					return callback(null, null);
 				}
-				soajs.awareness.connect('repositories', function (res) {
-					let options = {
-						method: "get",
-						uri: "http://" + res.host + "/git/repo/",
-						headers: res.headers,
-						json: true,
-						qs: {
-							id: results.get_deploy.src.id,
-						}
-					};
-					request(options, (error, response, repo) => {
-						if (!repo.result) {
-							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
-						}
-						if (!repo && !repo.data.owner) {
-							return callback(bl.marketplace.handleError(soajs, 412, null));
-						}
-						options = {
-							method: "get",
-							uri: "http://" + res.host + "/git/account/owner",
-							headers: res.headers,
-							json: true,
-							qs: {
-								owner: repo.data.source[0].name,
-								provider: repo.data.provider,
-							}
-						};
-						request(options, (error, response, owner) => {
-							if (!owner.result) {
-								return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(owner)));
-							}
-							if (!config.env) {
-								config.env = [];
-							}
-							let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
-							config.env.push({
-								"name": env_variables[0],
-								"value": repo.data.owner
-							});
-							
-							config.env.push({
-								"name": env_variables[1],
-								"value": results.get_deploy.src.branch
-							});
-							
-							config.env.push({
-								"name": env_variables[2],
-								"value": results.get_deploy.src.commit
-							});
-							
-							config.env.push({
-								"name": env_variables[3],
-								"value": repo.data.repository
-							});
-							
-							config.env.push({
-								"name": env_variables[4],
-								"value": repo.data.provider
-							});
-							
-							if (owner.data.token){
-								config.env.push({
-									"name": env_variables[5],
-									"value": owner.data.token
-								});
-							}
-							
-							config.env.push({
-								"name": env_variables[6],
-								"value": owner.data.domain
-							});
-							return callback(null, owner.data, repo.data);
-						});
-					});
-				});
+				let opts = {
+					deploy : results.get_deploy
+				};
+				lib.getSourceInformation(soajs, opts, bl, callback);
 			}],
-			computeEnvVariables: ['get_env_record', 'get_catalog_recipe', function (results, callback) {
-				if (results.get_catalog_recipe[0].recipe &&
-					results.get_catalog_recipe[0].recipe.buildOptions &&
-					results.get_catalog_recipe[0].recipe.buildOptions.env &&
-					Object.keys(results.get_catalog_recipe[0].recipe.buildOptions.env).length > 0
-				) {
-					if (!config.env) {
-						config.env = [];
-					}
-					async.parallel([
-						function (call) {
-							let env_variables = ["SOAJS_NX_DOMAIN", "SOAJS_NX_SITE_DOMAIN", "SOAJS_NX_API_DOMAIN"];
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]] ||
-								results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]] ||
-								results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
-								
-								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
-									config.env.push({
-										"name": env_variables[0],
-										"value": results.get_env_record.domain
-									});
-								}
-								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
-									config.env.push({
-										"name": env_variables[1],
-										"value": results.get_env_record.sitePrefix + "." + results.get_env_record.domain
-									});
-								}
-								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
-									config.env.push({
-										"name": env_variables[2],
-										"value": results.get_env_record.apiPrefix + "." + results.get_env_record.domain
-									});
-								}
-							}
-							return call();
-						},
-						function (call) {
-							let env_variables = ["SOAJS_SRV_PORT", "SOAJS_SRV_PORT_MAINTENANCE"];
-							if (results.get_item.type === "service" && results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]] ||
-								results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
-								
-								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
-									config.env.push({
-										"name": env_variables[0],
-										"value": results.get_item.configuration.port
-									});
-								}
-								if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
-									if (results.get_item.configuration.maintenance
-										&& results.get_item.configuration.maintenance.port
-										&& results.get_item.configuration.maintenance.type) {
-										if (results.get_item.configuration.maintenance.type === "inherit") {
-											config.env.push({
-												"name": env_variables[1],
-												"value": results.get_item.configuration.port
-											});
-										} else if (results.get_item.configuration.maintenance.type === "maintenance") {
-											config.env.push({
-												"name": env_variables[1],
-												"value": results.get_item.configuration.port + results.get_env_record.services.config.ports.maintenanceInc
-											});
-										} else {
-											config.env.push({
-												"name": env_variables[1],
-												"value": results.get_item.configuration.maintenance.value
-											});
-										}
-									}
-								} else {
-									config.env.push({
-										"name": env_variables[1],
-										"value": results.get_item.configuration.port + results.get_env_record.services.config.ports.maintenanceInc
-									});
-								}
-							}
-							return call();
-						},
-						function (call) {
-							let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE", "SOAJS_DEPLOY_HA"];
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
-								config.env.push({
-									"name": env_variables[0],
-									"value": inputmaskData.env.toLowerCase()
-								});
-							}
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
-								//todo
-							}
-							
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[2]]) {
-								config.env.push({
-									"name": env_variables[2],
-									"value": inputmaskData.name
-								});
-							}
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[3]]) {
-								config.env.push({
-									"name": env_variables[3],
-									"value": "1"
-								});
-							}
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[4]]) {
-								config.env.push({
-									"name": env_variables[4],
-									"value": soajs.registry.services.config.ports.controller
-								});
-							}
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[5]]) {
-								config.env.push({
-									"name": env_variables[5],
-									"value": soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
-								});
-							}
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[6]]) {
-								config.env.push({
-									"name": env_variables[6],
-									"value": results.get_env_record.deployer.selected.split(".")[1]
-								});
-							}
-							return call();
-						},
-						function (call) {
-							let env_variables = ["SOAJS_NX_CONTROLLER_IP_1", "SOAJS_REGISTRY_API"];
-							if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]] ||
-								results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
-								let options = {
-									method: "get",
-									uri: "http://" + results.get_catalog_recipe[1].host + "/kubernetes/services/Service",
-									headers: results.get_catalog_recipe[1].headers,
-									json: true,
-									qs: {
-										filter: {
-											labelSelector: 'soajs.env.code=' + inputmaskData.env.toLowerCase() + ', soajs.service.name=' + inputmaskData.name
-										},
-									}
-								};
-								request(options, (error, res, body) => {
-									if (!body.result) {
-										return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
-									}
-									if (!body.data || !body.data.items || body.data.items.length === 0 || !body.data.items[0].metadata || !body.data.items[0].metadata.name) {
-										return call(bl.marketplace.handleError(soajs, 411, null));
-									}
-									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[0]]) {
-										config.env.push({
-											"name": env_variables[0],
-											"value": body.data.items[0].spec.clusterIP
-										});
-									}
-									if (results.get_catalog_recipe[0].recipe.buildOptions.env[env_variables[1]]) {
-										config.env.push({
-											"name": env_variables[1],
-											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
-										});
-									}
-									return call();
-								});
-							} else {
-								return call();
-							}
-						},
-					], callback);
-				} else {
-					return callback(null, true);
-				}
+			computeEnvVariables: ['get_env_record', 'get_catalog_recipe', 'get_src', function (results, callback) {
+				let opts = {
+					item: item,
+					deploy: results.get_deploy,
+					owner: results.get_src[0],
+					repo: results.get_src[1],
+					recipe: results.get_catalog_recipe,
+					registry: results.get_env_record
+				};
+				lib.computeEnvVariables(soajs, opts, config, bl, callback);
 			}],
-			compute_extra: ['computeEnvVariables', 'get_src', function (results, callback) {
-				config.catalog = {
-					id: results.get_catalog_recipe[0]._id.toString(),
-					version: results.get_catalog_recipe[0].v.toString(),
+			compute_extra: ['computeEnvVariables', function (results, callback) {
+				let opts = {
+					item: item,
+					deploy: results.get_deploy,
+					owner: results.get_src[0],
+					repo: results.get_src[1],
+					recipe: results.get_catalog_recipe,
+					registry: results.get_env_record
 				};
-				if (results.get_catalog_recipe[0].recipe.deployOptions.image.shell) {
-					config.catalog.shell = results.get_catalog_recipe[0].recipe.deployOptions.image.shell;
-				}
-				else {
-					config.catalog.shell = "shell/bin/bash"
-				}
-				config.item = {
-					env: inputmaskData.env.toLowerCase(),
-					name: inputmaskData.name,
-					type: inputmaskData.type,
-					version: inputmaskData.version
-				};
-				if (results.get_item.configuration) {
-					if (results.get_item.configuration.group) {
-						config.item.group = results.get_item.configuration.group;
-					}
-					if (results.get_item.configuration.subType) {
-						config.item.subtype = results.get_item.configuration.subType;
-					}
-				}
-				
-				if (results.get_deploy.src) {
-					config.src = {
-						repo: results.get_src[1].name,
-						owner: results.get_src[1].owner,
-					};
-					if (results.get_deploy.src.tag) {
-						config.src.tag = results.get_deploy.src.tag;
-					} else {
-						if (results.get_deploy.src.branch) {
-							config.src.branch = results.get_deploy.src.branch;
-						}
-						if (results.get_deploy.src.commit) {
-							config.src.commit = results.get_deploy.src.commit;
-						}
-					}
-				}
-				
-				config.mode = results.get_deploy.settings.mode;
-				if (results.get_catalog_recipe[0].recipe.deployOptions.labels) {
-					config.labels = results.get_catalog_recipe[0].recipe.deployOptions.labels;
-				}
-				config.image = {
-					name: results.get_catalog_recipe[0].recipe.deployOptions.image.prefix + "/" + results.get_catalog_recipe[0].recipe.deployOptions.image.name + ":" + results.get_catalog_recipe[0].recipe.deployOptions.image.tag,
-					imagePullPolicy: results.get_catalog_recipe[0].recipe.deployOptions.image.pullPolicy
-				};
-				if (results.get_catalog_recipe[0].recipe.deployOptions.image.override && results.get_deploy.recipe.image) {
-					config.image = results.get_deploy.recipe.image.prefix + "/" + results.get_deploy.recipe.image.name + ":" + results.get_deploy.recipe.image.tag
-				}
-				if (results.get_catalog_recipe[0].recipe.deployOptions.readinessProbe) {
-					config.readinessProbe = results.get_catalog_recipe[0].recipe.deployOptions.readinessProbe;
-				}
-				if (results.get_catalog_recipe[0].recipe.deployOptions.livenessProbe) {
-					config.livenessProbe = results.get_catalog_recipe[0].recipe.deployOptions.livenessProbe;
-				}
-				if (results.get_catalog_recipe[0].recipe.buildOptions.cmd) {
-					if (results.get_catalog_recipe[0].recipe.buildOptions.cmd.command) {
-						config.command = results.get_catalog_recipe[0].recipe.buildOptions.cmd.command;
-					}
-					if (results.get_catalog_recipe[0].recipe.buildOptions.cmd.args) {
-						config.command = results.get_catalog_recipe[0].recipe.buildOptions.cmd.args;
-					}
-				}
-				if (results.get_catalog_recipe[0].recipe.deployOptions.container && results.get_catalog_recipe[0].recipe.deployOptions.container.workingDir) {
-					config.workingDir = results.get_catalog_recipe[0].recipe.deployOptions.container.workingDir;
-				}
-				if (results.get_catalog_recipe[0].recipe.deployOptions.voluming && results.get_catalog_recipe[0].recipe.deployOptions.voluming.length > 0) {
-					config.volume = {
-						volumeMounts: [],
-						volumes: []
-					};
-					results.get_catalog_recipe[0].recipe.deployOptions.voluming.forEach((oneVolume) => {
-						if (oneVolume.kubernetes) {
-							if (oneVolume.kubernetes.volumeMounts) {
-								config.volume.volumeMounts.push(oneVolume.kubernetes.volumeMounts);
-							}
-							if (oneVolume.kubernetes.volume) {
-								config.volume.volume.push(oneVolume.kubernetes.volume);
-							}
-						}
-					});
-				}
-				if (results.get_deploy.settings.replicas) {
-					config.replicas = results.get_deploy.settings.replicas;
-				}
-				//fill ports
-				if (results.get_catalog_recipe[0].recipe.deployOptions.ports && results.get_catalog_recipe[0].recipe.deployOptions.ports.length > 0) {
-					config.ports = [];
-					config.service = {
-						ports: []
-					};
-					//merge with port in cd
-					results.get_catalog_recipe[0].recipe.deployOptions.ports.forEach((onePortEntry, portIndex) => {
-						config.ports.push({
-							name: onePortEntry.name || 'port' + portIndex,
-							"containerPort": onePortEntry.target
-						});
-						let portConfig = {
-							protocol: ((onePortEntry.protocol) ? onePortEntry.protocol.toUpperCase() : 'TCP'),
-							name: onePortEntry.name || 'port' + portIndex,
-							port: onePortEntry.port || onePortEntry.target,
-							targetPort: onePortEntry.target,
-						};
-						if (onePortEntry.isPublished) {
-							if (!onePortEntry.published) {
-								config.service.type = 'LoadBalancer';
-								delete portConfig.nodePort;
-							} else {
-								if (!config.service.type || config.service.type !== 'NodePort') {
-									config.service.type = 'NodePort';
-								}
-								portConfig.nodePort = onePortEntry.published || portConfig.targetPort;
-							}
-							
-							portConfig.name = onePortEntry.name || 'published' + portConfig.name;
-							portConfig.name = portConfig.name.toLowerCase();
-							if (onePortEntry.preserveClientIP) {
-								config.service.externalTrafficPolicy = 'Local';
-							}
-						}
-						config.service.ports.push(portConfig);
-					});
-				}
-				//fill user Input env
-				if (results.get_deploy.recipe && results.get_deploy.recipe.env &&
-					Object.keys(results.get_deploy.recipe.env).length > 0) {
-					if (!config.env) {
-						config.env = [];
-					}
-					Object.keys(results.get_deploy.recipe.env).forEach((oneEnv) => {
-						if (results.get_catalog_recipe[0].recipe.buildOptions.env[oneEnv]) {
-							config.env.push({
-								"name": oneEnv,
-								"value": results.get_deploy.recipe.env[oneEnv]
-							});
-						}
-					});
-				}
-				callback(null, config);
+				lib.computeDeployObject(soajs, opts, config, bl, callback);
 			}],
 			deploy: ['compute_extra', function (results, callback) {
-				let url = "/kubernetes/item/deploy/soajs";
-				if (results.compute_extra.mode === 'cronJob') {
-					url = "/kubernetes/item/deploy/cronjob";
-				}
-				soajs.awareness.connect('infra', function (res) {
-					let options = {
-						method: "post",
-						uri: "http://" + res.host + url,
-						headers: res.headers,
-						json: true,
-						qs: {
-							configuration: {
-								env: inputmaskData.env
-							}
-						},
-						body: {	recipe: results.compute_extra }
-					};
-					request(options, (error, response, body) => {
-						if (!body.result) {
-							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
-						}
-						return callback(null, true);
-					});
-				});
+				let opts = {
+					env: results.get_env_record.name,
+					host: {
+						infra: results.computeEnvVariables && results.computeEnvVariables[1] ? results.computeEnvVariables[1] : null
+					}
+				};
+				lib.deployObject(soajs, opts, config, bl, callback);
 			}],
-		}, function (err) {
+		}, function (err, results) {
 			if (err) {
 				return cb(err);
 			}
-			return cb(err, "Item Successfully deployed!");
+			return cb(err, results.deploy);
+		});
+	},
+	
+	"deploy": (soajs, inputmaskData, options, bl, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.marketplace.handleError(soajs, 400, null));
+		}
+		let modelObj = bl.marketplace.mp.getModel(soajs, options);
+		modelObj.getItem(inputmaskData, (err, item) => {
+			if (err) {
+				return cb(bl.marketplace.handleError(soajs, 602, err));
+			}
+			if (!item) {
+				return cb(bl.marketplace.handleError(soajs, 501, null));
+			}
+			lib.startProcessing(soajs, inputmaskData, item, bl, cb);
 		});
 	}
 };
-
 
 module.exports = lib;
