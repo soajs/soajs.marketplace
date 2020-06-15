@@ -31,7 +31,7 @@ function computeErrorMessageFromService(body) {
 
 let helper = {
 	removeItem: function (arr, item) {
-		return arr.filter(f => f !== item)
+		return arr.filter(f => f !== item);
 	},
 	
 };
@@ -58,11 +58,10 @@ let lib = {
 				12- if auto deploy is off
 				13- add to ledger
 			*/
-		let config = {};
 		let report = {};
 		async.auto({
 			check_cd_token: function (callback) {
-				report["stage_1"] = {
+				report.stage_1 = {
 					"success": [],
 					"fail": []
 				};
@@ -82,14 +81,14 @@ let lib = {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						}
 						if (!body.data) {
-							report["stage_1"].fail.push("Deploy token not found!");
+							report.stage_1.fail.push("Deploy token not found!");
 							return cb(null, report);
 						}
 						if (body.data.status !== "active") {
-							report["stage_1"].fail.push("Deploy token not active!");
+							report.stage_1.fail.push("Deploy token not active!");
 							return cb(null, report);
 						}
-						report["stage_1"].success.push("Deploy token authenticated Successfully");
+						report.stage_1.success.push("Deploy token authenticated Successfully");
 						return callback(null, true);
 					});
 				});
@@ -98,7 +97,7 @@ let lib = {
 				return callback(null, true);
 			}],
 			get_item: ["check_repo_token", function (results, callback) {
-				report["stage_2"] = {
+				report.stage_2 = {
 					"success": [],
 					"fail": []
 				};
@@ -107,21 +106,21 @@ let lib = {
 						return callback(bl.marketplace.handleError(soajs, 602, err));
 					}
 					if (!response) {
-						report["stage_2"].fail.push("Item not found!");
+						report.stage_2.fail.push("Item not found!");
 						return cb(null, report);
 					}
-					report["stage_2"].success.push("Item found!");
+					report.stage_2.success.push("Item found!");
 					return callback(null, response);
 				});
 			}],
 			check_acl: ['get_item', function (results, callback) {
 				
-				report["stage_3"] = {
+				report.stage_3 = {
 					"success": [],
 					"fail": []
 				};
 				if (!results.get_item.deploy){
-					report["stage_3"].fail.push("No environments found!");
+					report.stage_3.fail.push("No environments found!");
 					return cb(null, report);
 				}
 				let selected_envs = Object.keys(results.get_item.deploy);
@@ -151,18 +150,18 @@ let lib = {
 					}
 				}
 				if (unsupported_acl.length > 0) {
-					report["stage_3"].fail.push("You have no access to the following environments", unsupported_acl.join(","));
+					report.stage_3.fail.push("You have no access to the following environments", unsupported_acl.join(","));
 					return cb(null, report);
 				}
 				if (selected_envs.length === 0) {
-					report["stage_3"].fail.push("No environments found!");
+					report.stage_3.fail.push("No environments found!");
 					return cb(null, report);
 				}
-				report["stage_3"].success.push(selected_envs.join(','), ' environments have been found');
+				report.stage_3.success.push(selected_envs.join(','), ' environments have been found');
 				return callback(null, selected_envs);
 			}],
 			create_deploy_notice: ["check_acl", function (results, callback) {
-				report["stage_4"] = {
+				report.stage_4 = {
 					success: [],
 					fail: []
 				};
@@ -193,7 +192,7 @@ let lib = {
 											deployObject: "commit"
 										});
 									}
-									report["stage_4"].success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
+									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
 								}
 							}
 							//case 3
@@ -218,7 +217,7 @@ let lib = {
 											deployObject: "tag"
 										});
 									}
-									report["stage_4"].success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
+									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
 								}
 							}
 							// case 4
@@ -262,7 +261,7 @@ let lib = {
 											deployObject: "image"
 										});
 									}
-									report["stage_4"].success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
+									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
 								}
 							}
 						}
@@ -270,14 +269,14 @@ let lib = {
 					}, miniCall);
 				}, () => {
 					if (deploy_object.length === 0 && notice_object.length === 0) {
-						report["stage_4"].fail.push("No items for selected version found!");
+						report.stage_4.fail.push("No items for selected version found!");
 						return cb(null, report);
 					}
 					return callback(null, deploy_object, notice_object);
 				});
 			}],
 			start_notice: ["create_deploy_notice", function (results, callback) {
-				report["stage_5"] = {
+				report.stage_5 = {
 					success: [],
 					fail: []
 				};
@@ -290,13 +289,13 @@ let lib = {
 						"action": "updated"
 					};
 					sdk.ledger(soajs, doc);
-					report["stage_5"].success.push("Notification sent for item " + notice.name +
+					report.stage_5.success.push("Notification sent for item " + notice.name +
 						" v " + notice.version + " with cd status " + notice.config.cd.strategy + " in environment " + notice.env);
 					miniCall();
 				}, callback);
 			}],
 			start_deploy: ["create_deploy_notice", function (results, callback) {
-				report["stage_5"] = {
+				report.stage_5 = {
 					success: [],
 					fail: []
 				};
@@ -340,7 +339,7 @@ let lib = {
 										"action": "updated"
 									};
 									sdk.ledger(soajs, doc, {result: false});
-									report["stage_5"].fail.push("Item " + results.computeInput[0].name + " v " + results.computeInput[0].version +
+									report.stage_5.fail.push("Item " + results.computeInput[0].name + " v " + results.computeInput[0].version +
 										" with cd status " + results.computeInput[0].config.cd.strategy + " in environment " + results.computeInput[0].env + " failed to deploy!");
 								}
 								return autoCall(null, response);
@@ -355,7 +354,7 @@ let lib = {
 								"action": "updated"
 							};
 							sdk.ledger(soajs, doc, {result: true});
-							report["stage_5"].success.push("Item " + results.computeInput[0].name + " v " + results.computeInput[0].version +
+							report.stage_5.success.push("Item " + results.computeInput[0].name + " v " + results.computeInput[0].version +
 								" with cd status " + results.computeInput[0].config.cd.strategy + " in environment " + results.computeInput[0].env + " has been successfully deployed");
 							return autoCall();
 						}]

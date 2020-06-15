@@ -957,7 +957,7 @@ module.exports = {
 													{
 														"type": "object",
 														"properties": {
-															"secret": {
+															"name": {
 																"type": "string",
 																"required": true,
 															},

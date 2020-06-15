@@ -47,7 +47,6 @@ let lib = {
 				6- redeploy, this should call infra ms
 				 */
 		
-		let config = {};
 		async.auto({
 			get_item: function (callback) {
 				modelObj.getItem(inputmaskData, (err, response) => {
