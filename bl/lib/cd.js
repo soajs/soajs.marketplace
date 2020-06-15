@@ -120,6 +120,10 @@ let lib = {
 					"success": [],
 					"fail": []
 				};
+				if (!results.get_item.deploy){
+					report["stage_3"].fail.push("No environments found!");
+					return cb(null, report);
+				}
 				let selected_envs = Object.keys(results.get_item.deploy);
 				let unsupported_acl = [];
 				if (results.get_item.settings) {
