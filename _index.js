@@ -178,7 +178,7 @@ function run(serviceStartCb) {
 			
 			service.put("/item/deploy/redeploy", function (req, res) {
 				bl.deploy.redeploy(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-					let response = req.soajs.buildResponse(error, data)
+					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
 						"env": req.soajs.inputmaskData.env,
