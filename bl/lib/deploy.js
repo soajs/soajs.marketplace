@@ -24,15 +24,14 @@ function computeErrorMessageFromService(body) {
 			});
 		}
 		return new Error(error);
-	}
-	else {
+	} else {
 		return new Error(" Service not found");
 	}
 }
 
 let lib = {
 	
-	"computeEnvVariables": (soajs, opts, config, bl, cb) => {
+	"computeEnvVariables": (soajs, computeEnvVariables, opts, config, bl, cb) => {
 		// let opts = {
 		// 	item: item,
 		// 	deploy: results.get_deploy,
@@ -255,6 +254,7 @@ let lib = {
 						return call();
 					}
 				},
+				
 			], cb);
 		} else {
 			return cb(null, true);
@@ -405,17 +405,16 @@ let lib = {
 			}
 			Object.keys(opts.deploy.recipe.env).forEach((oneEnv) => {
 				if (opts.recipe.recipe.buildOptions.env[oneEnv]) {
-					if (typeof opts.deploy.recipe.env[oneEnv] === "string"){
+					if (typeof opts.deploy.recipe.env[oneEnv] === "string") {
 						config.env.push({
 							"name": oneEnv,
 							"value": opts.deploy.recipe.env[oneEnv]
 						});
-					}
-					else {
+					} else {
 						config.env.push({
 							"name": oneEnv,
 							"valueFrom": {
-								"secretKeyRef" : opts.deploy.recipe.env[oneEnv]
+								"secretKeyRef": opts.deploy.recipe.env[oneEnv]
 							}
 						});
 					}
@@ -491,7 +490,7 @@ let lib = {
 		} else {
 			soajs.awareness.connect('infra', '1', function (res) {
 				options.uri = "http://" + res.host + url;
-				options.headers =  res.headers;
+				options.headers = res.headers;
 				request(options, (error, response, body) => {
 					if (error || !body.result) {
 						return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
@@ -502,7 +501,7 @@ let lib = {
 		}
 	},
 	
-	"startProcessing": (soajs, inputmaskData, item, bl, cb) => {
+	"startProcessing": (soajs, modelObj, inputmaskData, item, bl, cb) => {
 		let config = {};
 		async.auto({
 			check_acl: function (callback) {
@@ -586,7 +585,7 @@ let lib = {
 					return callback(null, null);
 				}
 				let opts = {
-					deploy : results.get_deploy
+					deploy: results.get_deploy
 				};
 				lib.getSourceInformation(soajs, opts, bl, callback);
 			}],
@@ -599,7 +598,7 @@ let lib = {
 					recipe: results.get_catalog_recipe,
 					registry: results.get_env_record
 				};
-				lib.computeEnvVariables(soajs, opts, config, bl, callback);
+				lib.computeEnvVariables(soajs, modelObj, opts, config, bl, callback);
 			}],
 			compute_extra: ['computeEnvVariables', function (results, callback) {
 				let opts = {
@@ -641,7 +640,7 @@ let lib = {
 			if (!item) {
 				return cb(bl.marketplace.handleError(soajs, 501, null));
 			}
-			lib.startProcessing(soajs, inputmaskData, item, bl, cb);
+			lib.startProcessing(soajs, modelObj, inputmaskData, item, bl, cb);
 		});
 	}
 };

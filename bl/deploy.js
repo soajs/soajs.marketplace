@@ -62,7 +62,7 @@ let local = {
 			if (response.settings) {
 				if (response.settings.recipes &&
 					response.settings.recipes.length > 0 &&
-					response.settings.recipe.indexOf(inputmaskData.config.recipe.id) === -1) {
+					response.settings.recipes.indexOf(inputmaskData.config.recipe.id) === -1) {
 					return cb(bl.marketplace.handleError(soajs, 405, null));
 				}
 				if (response.settings.environments &&

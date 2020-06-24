@@ -76,6 +76,7 @@ module.exports = {
 		414: "Invalid Deploy Token!",
 		415: "Deploy Token is inactive!",
 		416: "Unable to find healthy configuration in registry.",
+		417: "Config Item not found",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
@@ -166,6 +167,23 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API lists the items matching certain type with option to select a subtype.",
 					"group": "Item"
+				},
+				"commonFields": ["start", "limit"],
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"subtype": {
+					"source": ['query.subtype'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
+			'/items/type/all': {
+				"_apiInfo": {
+					"l": "This API lists all items matching certain type with option to select a subtype.",
+					"group": "Internal"
 				},
 				"commonFields": ["start", "limit"],
 				"type": {
@@ -970,6 +988,39 @@ module.exports = {
 												]
 											}
 										}
+									},
+									"sourceCode": {
+										"required": true,
+										"additionalProperties": false,
+										"type": "object",
+										"properties": {
+											"label": {
+												"type": "string"
+											},
+											"catalog": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"version": {
+												"type": "string"
+											},
+											"branch": {
+												"type": "string"
+											},
+											"tag": {
+												"type": "string"
+											}
+										},
+										"oneOf": [
+											{
+												"required": ["label", "catalog", "id", "version", "tag"]
+											},
+											{
+												"required": ["label", "catalog", "id", "version", "branch"]
+											}
+										]
 									}
 								}
 							}
@@ -1197,6 +1248,39 @@ module.exports = {
 												]
 											}
 										}
+									},
+									"sourceCode": {
+										"required": true,
+										"additionalProperties": false,
+										"type": "object",
+										"properties": {
+											"label": {
+												"type": "string"
+											},
+											"catalog": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"version": {
+												"type": "string"
+											},
+											"branch": {
+												"type": "string"
+											},
+											"tag": {
+												"type": "string"
+											}
+										},
+										"oneOf": [
+											{
+												"required": ["label", "catalog", "id", "version", "tag"]
+											},
+											{
+												"required": ["label", "catalog", "id", "version", "branch"]
+											}
+										]
 									}
 								}
 							}
@@ -1249,5 +1333,4 @@ module.exports = {
 			},
 		}
 	}
-}
-;
+};

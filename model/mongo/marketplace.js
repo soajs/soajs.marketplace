@@ -184,10 +184,11 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
 			condition["configuration.subType"] = data.subType;
 		} else {
-			condition["configuration.subType"] = {$ne: "soajs"};
+			if (!data.all){
+				condition["configuration.subType"] = {$ne: "soajs"};
+			}
 		}
 	}
-	
 	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {

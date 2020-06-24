@@ -49,6 +49,12 @@ function run(serviceStartCb) {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
+			service.get("/items/type/all", function (req, res) {
+				req.soajs.inputmaskData.all = true;
+				bl.marketplace.getItems_by_type_subtype(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
 			
 			service.get("/items/src", function (req, res) {
 				bl.marketplace.getItem_by_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -216,7 +222,7 @@ function run(serviceStartCb) {
 					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
-						"env": req.soajs.inputmaskData.configuration.env,
+						"env": req.soajs.inputmaskData.config.env,
 						"type": "Deployment",
 						"section": "Catalog",
 						"locator": [req.soajs.inputmaskData.type],
