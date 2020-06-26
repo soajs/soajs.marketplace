@@ -74,7 +74,6 @@ function run(serviceStartCb) {
 				});
 			});
 			
-			
 			//DELETE methods
 			service.delete("/item", function (req, res) {
 				bl.marketplace.deleteItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -247,7 +246,11 @@ function run(serviceStartCb) {
 					});
 				});
 			});
-			
+			service.put("/item/maintenance", function (req, res) {
+				bl.marketplace.maintenance(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
 			
 			//POST methods
 			

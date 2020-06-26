@@ -77,10 +77,16 @@ module.exports = {
 		415: "Deploy Token is inactive!",
 		416: "Unable to find healthy configuration in registry.",
 		417: "Config Item not found",
+		418: "Item version not found!",
+		419: "No maintenance operations found for this Item version",
+		420: "Maintenance operation not found for this item version!",
+		421: "Unable to connect to item",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
 		503: "Service Error",
+		
+		550: "loadByEnv empty. Unable to find registry",
 		
 		601: "Model not found",
 		602: "Model error: ",
@@ -1331,6 +1337,70 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
+			"/item/maintenance": {
+				"_apiInfo": {
+					"l": "This API trigger maintenance operation on a deployed item.",
+					"group": "Item management"
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"env": {
+					"source": ['query.env'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"version": {
+					"source": ['query.version'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"operation": {
+					"source": ['query.operation'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"port": {
+					"source": ['body.port'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"oneOf": [
+							{
+								"properties" :{
+									"portType": {
+										"required": true,
+										"type": "string",
+										"enum": ["custom"]
+									},
+									"portValue": {
+										"required": true,
+										"type": "number"
+									},
+								}
+							},
+							{
+								"properties" :{
+									"portType": {
+										"required": true,
+										"type": "string",
+										"enum": ["inherit", "maintenance"]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
 		}
 	}
 };

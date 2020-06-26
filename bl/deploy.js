@@ -44,6 +44,7 @@ let local = {
 			lib_deploy.deploy(soajs, inputmaskData, item, bl, cb);
 		});
 	},
+	
 	"saveConfiguration": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.marketplace.handleError(soajs, 400, null));

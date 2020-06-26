@@ -226,6 +226,7 @@ Marketplace.prototype.getItem_by_source = function (data, cb) {
 		"src.owner": data.owner,
 		"src.repo": data.repo
 	};
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, null, (err, record) => {
 		if (err) {
 			return cb(err);
@@ -245,7 +246,7 @@ Marketplace.prototype.getItem_by_type = function (data, cb) {
 		"name": data.name,
 		"type": data.type
 	};
-	
+	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.findOne(colName, condition, null, (err, record) => {
 		if (err) {
 			return cb(err);

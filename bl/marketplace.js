@@ -8,6 +8,10 @@
 
 'use strict';
 
+const soajsCore = require('soajs');
+const request = require('request');
+const async = require('async');
+
 function getGroups(soajs) {
 	let _groups = null;
 	if (soajs && soajs.urac && soajs.urac.groups) {
@@ -351,20 +355,154 @@ let bl = {
 		});
 	},
 	
-	"update_item_version_config": (soajs, inputmaskData, options, cb) => {
+	"maintenance": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		let modelObj = bl.mp.getModel(soajs, options);
 		inputmaskData._groups = getGroups(soajs);
-		
-		modelObj.update_item_version_config(inputmaskData, (err, response)=>{
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem_by_type(inputmaskData, (err, item) => {
 			bl.mp.closeModel(modelObj);
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, response);
+			if (!item || !item.versions || item.versions.length === 0) {
+				return cb(bl.handleError(soajs, 418, null));
+			}
+			async.detect(item.versions, function (v, callback) {
+				if (v.version === inputmaskData.version) {
+					
+					return callback(null, v);
+				} else {
+					return callback();
+				}
+			}, function (err, version) {
+				if (!version) {
+					return cb(bl.handleError(soajs, 418, null));
+				}
+				if (!version.maintenance || !version.maintenance.commands || version.maintenance.commands.length === 0) {
+					return cb(bl.handleError(soajs, 419, null));
+				}
+				async.detect(version.maintenance.commands, function (command, callback) {
+					if (command.path === inputmaskData.operation) {
+						return callback(null, command);
+					} else {
+						return callback();
+					}
+				}, function (err, command) {
+					if (!command) {
+						return cb(bl.handleError(soajs, 420, null));
+					}
+					soajsCore.core.registry.loadByEnv({envCode: inputmaskData.env}, (err, envRecord) => {
+						if (err) {
+							return cb(bl.handleError(soajs, 400, err));
+						}
+						if (!envRecord) {
+							return cb(bl.handleError(soajs, 550, null));
+						}
+						let deploymentType = envRecord.deployer.type;
+						
+						let opts = {
+							registry : envRecord
+						};
+						let computePort = ()=>{
+							if (inputmaskData.portType === 'inherit'){
+								return item.configuration.port;
+							}
+							else if (inputmaskData.portType === 'custom'){
+								return inputmaskData.portValue;
+							}
+							else {
+								return item.configuration.port + envRecord.serviceConfig.ports.maintenanceInc;
+							}
+						};
+						opts.port = computePort();
+						if (deploymentType === "manual"){
+							manualOperation(opts, cb);
+						}
+						else {
+							containerOperation(opts, cb);
+						}
+						
+						
+					});
+				});
+			});
 		});
+		function manualOperation(opts, callback){
+			let controller = {
+				port: opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc,
+				ip: opts.registry.awareness.host,
+			};
+			let requestOptions = {
+				uri: "http://" + controller.ip + ":" + controller.port + "/awarenessStat",
+				json: true
+			};
+			request(requestOptions, (error, response, body) => {
+				if (error || !body || !body.result) {
+					return cb(bl.handleError(soajs, 421, null));
+				}
+				if (!body.data.services || !body.data.services[inputmaskData.name] ||
+					!body.data.services[inputmaskData.name].hosts ||
+					!body.data.services[inputmaskData.name].hosts[inputmaskData.version] ||
+					body.data.services[inputmaskData.name].hosts[inputmaskData.version].length ===  0){
+					return cb(bl.handleError(soajs, 421, null));
+				}
+				
+				async.map(body.data.services[inputmaskData.name].hosts[inputmaskData.version], function(host, call) {
+					let requestOptions = {
+						uri: "http://" + host + ":" + opts.port + inputmaskData.operation,
+						json: true
+					};
+					request(requestOptions, (error, response, body) => {
+						if (error || !body || !body.result) {
+							return call(bl.handleError(soajs, 421, null));
+						}
+						return call(null, {
+							ip : host,
+							data: body.data
+						});
+					});
+				}, function(err, result) {
+					return callback(err, result);
+				});
+				
+			});
+		}
+		function containerOperation(opts, callback){
+			let technology = opts.registry.deployer.selected.split(":")[1];
+			soajs.awareness.connect("infra", "1", (response) => {
+				if (response && response.host) {
+					let options = {
+						uri: 'http://' + response.host + "/" + technology + "/item/maintenance",
+						headers: response.headers,
+						body: {
+							configuration : {
+								env: inputmaskData.env
+							},
+							item : {
+								env: inputmaskData.env,
+								name: inputmaskData.name,
+								version: inputmaskData.version
+							},
+							maintenancePort: opts.port,
+							operation: {
+								route: inputmaskData.operation
+							}
+						},
+						json: true
+					};
+					request.post(options, function (error, response, body) {
+						if (error || !body || !body.result) {
+							return callback(bl.handleError(soajs, 421, null));
+						}
+						return callback(null, body.data);
+					});
+				} else {
+					return callback(bl.handleError(soajs, 421, null));
+				}
+			});
+		}
 	}
 };
 
