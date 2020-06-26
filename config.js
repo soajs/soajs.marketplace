@@ -1256,7 +1256,7 @@ module.exports = {
 										}
 									},
 									"sourceCode": {
-										"required": true,
+										"required": false,
 										"additionalProperties": false,
 										"type": "object",
 										"properties": {

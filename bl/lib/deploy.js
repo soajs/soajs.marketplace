@@ -593,22 +593,26 @@ let lib = {
 				let opts = {
 					item: item,
 					deploy: results.get_deploy,
-					owner: results.get_src[0],
-					repo: results.get_src[1],
 					recipe: results.get_catalog_recipe,
 					registry: results.get_env_record
 				};
+				if (results.get_src){
+					opts.owner = results.get_src[0];
+					opts.repo = results.get_src[1];
+				}
 				lib.computeEnvVariables(soajs, modelObj, opts, config, bl, callback);
 			}],
 			compute_extra: ['computeEnvVariables', function (results, callback) {
 				let opts = {
 					item: item,
 					deploy: results.get_deploy,
-					owner: results.get_src[0],
-					repo: results.get_src[1],
 					recipe: results.get_catalog_recipe,
 					registry: results.get_env_record
 				};
+				if (results.get_src){
+					opts.owner = results.get_src[0];
+					opts.repo = results.get_src[1];
+				}
 				lib.computeDeployObject(soajs, opts, config, bl, callback);
 			}],
 			deploy: ['compute_extra', function (results, callback) {

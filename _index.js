@@ -236,10 +236,10 @@ function run(serviceStartCb) {
 					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
-						"env": req.soajs.inputmaskData.configuration.env,
+						"env": req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
-						"locator": ["workload", req.soajs.inputmaskData.mode],
+						"locator": ["workload", req.soajs.inputmaskData.config.settings.mode],
 						"action": "updated"
 					};
 					sdk.ledger(req.soajs, doc, response, () => {
