@@ -380,18 +380,9 @@ let bl = {
 				if (!version) {
 					return cb(bl.handleError(soajs, 418, null));
 				}
-				if (!version.maintenance || !version.maintenance.commands || version.maintenance.commands.length === 0) {
-					return cb(bl.handleError(soajs, 419, null));
-				}
-				async.detect(version.maintenance.commands, function (command, callback) {
-					if (command.path === inputmaskData.operation) {
-						return callback(null, command);
-					} else {
-						return callback();
-					}
-				}, function (err, command) {
-					if (!command) {
-						return cb(bl.handleError(soajs, 420, null));
+				checkCommand(version, (error) => {
+					if (error) {
+						return cb(error);
 					}
 					soajsCore.core.registry.loadByEnv({envCode: inputmaskData.env}, (err, envRecord) => {
 						if (err) {
@@ -403,24 +394,21 @@ let bl = {
 						let deploymentType = envRecord.deployer.type;
 						
 						let opts = {
-							registry : envRecord
+							registry: envRecord
 						};
-						let computePort = ()=>{
-							if (inputmaskData.portType === 'inherit'){
+						let computePort = () => {
+							if (inputmaskData.portType === 'inherit') {
 								return item.configuration.port;
-							}
-							else if (inputmaskData.portType === 'custom'){
+							} else if (inputmaskData.portType === 'custom') {
 								return inputmaskData.portValue;
-							}
-							else {
+							} else {
 								return item.configuration.port + envRecord.serviceConfig.ports.maintenanceInc;
 							}
 						};
 						opts.port = computePort();
-						if (deploymentType === "manual"){
+						if (deploymentType === "manual") {
 							manualOperation(opts, cb);
-						}
-						else {
+						} else {
 							containerOperation(opts, cb);
 						}
 						
@@ -429,7 +417,30 @@ let bl = {
 				});
 			});
 		});
-		function manualOperation(opts, callback){
+		
+		function checkCommand(version, callback) {
+			if (inputmaskData.operation === version.maintenance.readiness) {
+				return callback(null, true);
+			}
+			if (!version.maintenance || !version.maintenance.commands || version.maintenance.commands.length === 0) {
+				return cb(bl.handleError(soajs, 419, null));
+			}
+			async.detect(version.maintenance.commands, function (command, call) {
+				if (command.path === inputmaskData.operation) {
+					return call(null, command);
+				} else {
+					return call();
+				}
+			}, function (err, command) {
+				if (!command) {
+					return cb(bl.handleError(soajs, 420, null));
+				} else {
+					return callback(null, true);
+				}
+			});
+		}
+		
+		function manualOperation(opts, callback) {
 			let controller = {
 				port: opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc,
 				ip: opts.registry.awareness.host,
@@ -445,11 +456,11 @@ let bl = {
 				if (!body.data.services || !body.data.services[inputmaskData.name] ||
 					!body.data.services[inputmaskData.name].hosts ||
 					!body.data.services[inputmaskData.name].hosts[inputmaskData.version] ||
-					body.data.services[inputmaskData.name].hosts[inputmaskData.version].length ===  0){
+					body.data.services[inputmaskData.name].hosts[inputmaskData.version].length === 0) {
 					return cb(bl.handleError(soajs, 421, null));
 				}
 				
-				async.map(body.data.services[inputmaskData.name].hosts[inputmaskData.version], function(host, call) {
+				async.map(body.data.services[inputmaskData.name].hosts[inputmaskData.version], function (host, call) {
 					let requestOptions = {
 						uri: "http://" + host + ":" + opts.port + inputmaskData.operation,
 						json: true
@@ -459,17 +470,19 @@ let bl = {
 							return call(bl.handleError(soajs, 421, null));
 						}
 						return call(null, {
-							ip : host,
-							data: body.data
+							ip: host,
+							data: body.data || body,
+							
 						});
 					});
-				}, function(err, result) {
+				}, function (err, result) {
 					return callback(err, result);
 				});
 				
 			});
 		}
-		function containerOperation(opts, callback){
+		
+		function containerOperation(opts, callback) {
 			let technology = opts.registry.deployer.selected.split(":")[1];
 			soajs.awareness.connect("infra", "1", (response) => {
 				if (response && response.host) {
@@ -477,10 +490,10 @@ let bl = {
 						uri: 'http://' + response.host + "/" + technology + "/item/maintenance",
 						headers: response.headers,
 						body: {
-							configuration : {
+							configuration: {
 								env: inputmaskData.env
 							},
-							item : {
+							item: {
 								env: inputmaskData.env,
 								name: inputmaskData.name,
 								version: inputmaskData.version
