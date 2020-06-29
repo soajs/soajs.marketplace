@@ -90,6 +90,7 @@ module.exports = {
 		
 		601: "Model not found",
 		602: "Model error: ",
+		603: "Model item not updated!",
 		
 	},
 	"schema": {
@@ -996,7 +997,7 @@ module.exports = {
 										}
 									},
 									"sourceCode": {
-										"required": true,
+										"required": false,
 										"additionalProperties": false,
 										"type": "object",
 										"properties": {
@@ -1241,7 +1242,7 @@ module.exports = {
 													{
 														"type": "object",
 														"properties": {
-															"secret": {
+															"name": {
 																"type": "string",
 																"required": true,
 															},

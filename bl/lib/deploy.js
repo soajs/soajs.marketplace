@@ -31,7 +31,7 @@ function computeErrorMessageFromService(body) {
 
 let lib = {
 	
-	"computeEnvVariables": (soajs, computeEnvVariables, opts, config, bl, cb) => {
+	"computeEnvVariables": (soajs, modelObj, opts, config, bl, cb) => {
 		// let opts = {
 		// 	item: item,
 		// 	deploy: results.get_deploy,
@@ -41,6 +41,7 @@ let lib = {
 		// 	registry: results.get_env_record
 		// };
 		
+		let envVariables = [];
 		if (!config.env) {
 			config.env = [];
 		}
@@ -93,6 +94,7 @@ let lib = {
 			async.parallel([
 				function (call) {
 					let env_variables = ["SOAJS_NX_DOMAIN", "SOAJS_NX_SITE_DOMAIN", "SOAJS_NX_API_DOMAIN"];
+					envVariables = envVariables.concat(env_variables);
 					if (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
 						opts.recipe.recipe.buildOptions.env[env_variables[1]] ||
 						opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
@@ -120,6 +122,7 @@ let lib = {
 				},
 				function (call) {
 					let env_variables = ["SOAJS_SRV_PORT", "SOAJS_SRV_PORT_MAINTENANCE"];
+					envVariables = envVariables.concat(env_variables);
 					if (opts.item.type === "service" && opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
 						opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
 						
@@ -161,6 +164,7 @@ let lib = {
 				},
 				function (call) {
 					let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE", "SOAJS_DEPLOY_HA"];
+					envVariables = envVariables.concat(env_variables);
 					if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
 						config.env.push({
 							"name": env_variables[0],
@@ -205,6 +209,7 @@ let lib = {
 				},
 				function (call) {
 					let env_variables = ["SOAJS_NX_CONTROLLER_IP_1", "SOAJS_REGISTRY_API"];
+					envVariables = envVariables.concat(env_variables);
 					if (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
 						opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
 						soajs.awareness.connect("infra", "1", (response) => {
@@ -254,8 +259,38 @@ let lib = {
 						return call();
 					}
 				},
-				
-			], cb);
+			
+			], (err) => {
+				if (err) {
+					return (err);
+				}
+				async.forEachOf(opts.recipe.recipe.buildOptions.env, function (obj, key, callback) {
+					if (!envVariables.includes(key)) {
+						if (obj.type === 'static') {
+							config.env.push({
+								"name": key,
+								"value": obj.value
+							});
+						} else {
+							if (obj.type === 'userInput' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
+								config.env.push({
+									"name": key,
+									"value": opts.deploy.recipe.env[key]
+								});
+							}
+							else if (obj.type === 'secret' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
+								config.env.push({
+									"name": key,
+									"valueFrom": {
+										secretKeyRef : opts.deploy.recipe.env[key]
+									}
+								});
+							}
+						}
+					}
+					callback();
+				}, cb);
+			});
 		} else {
 			return cb(null, true);
 		}
@@ -329,12 +364,12 @@ let lib = {
 		if (opts.recipe.recipe.deployOptions.livenessProbe) {
 			config.livenessProbe = opts.recipe.recipe.deployOptions.livenessProbe;
 		}
-		if (opts.recipe.recipe.buildOptions.cmd) {
-			if (opts.recipe.recipe.buildOptions.cmd.command) {
-				config.command = opts.recipe.recipe.buildOptions.cmd.command;
+		if (opts.recipe.recipe.buildOptions.cmd && opts.recipe.recipe.buildOptions.cmd.deploy) {
+			if (opts.recipe.recipe.buildOptions.cmd.deploy.command) {
+				config.command = opts.recipe.recipe.buildOptions.cmd.deploy.command;
 			}
-			if (opts.recipe.recipe.buildOptions.cmd.args) {
-				config.command = opts.recipe.recipe.buildOptions.cmd.args;
+			if (opts.recipe.recipe.buildOptions.cmd.deploy.args) {
+				config.args = opts.recipe.recipe.buildOptions.cmd.deploy.args;
 			}
 		}
 		if (opts.recipe.recipe.deployOptions.container && opts.recipe.recipe.deployOptions.container.workingDir) {
@@ -351,7 +386,7 @@ let lib = {
 						config.volume.volumeMounts.push(oneVolume.kubernetes.volumeMounts);
 					}
 					if (oneVolume.kubernetes.volume) {
-						config.volume.volume.push(oneVolume.kubernetes.volume);
+						config.volume.volumes.push(oneVolume.kubernetes.volume);
 					}
 				}
 			});
@@ -395,31 +430,6 @@ let lib = {
 					}
 				}
 				config.service.ports.push(portConfig);
-			});
-		}
-		//fill user Input env
-		if (opts.deploy.recipe && opts.deploy.recipe.env &&
-			Object.keys(opts.deploy.recipe.env).length > 0) {
-			if (!config.env) {
-				config.env = [];
-			}
-			Object.keys(opts.deploy.recipe.env).forEach((oneEnv) => {
-				if (opts.recipe.recipe.buildOptions.env[oneEnv]) {
-					if (typeof opts.deploy.recipe.env[oneEnv] === "string") {
-						config.env.push({
-							"name": oneEnv,
-							"value": opts.deploy.recipe.env[oneEnv]
-						});
-					} else {
-						config.env.push({
-							"name": oneEnv,
-							"valueFrom": {
-								"secretKeyRef": opts.deploy.recipe.env[oneEnv]
-							}
-						});
-					}
-					
-				}
 			});
 		}
 		cb(null, config);
@@ -478,6 +488,7 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
+		console.log(JSON.stringify(config, null, 2))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
@@ -596,7 +607,7 @@ let lib = {
 					recipe: results.get_catalog_recipe,
 					registry: results.get_env_record
 				};
-				if (results.get_src){
+				if (results.get_src) {
 					opts.owner = results.get_src[0];
 					opts.repo = results.get_src[1];
 				}
@@ -609,7 +620,7 @@ let lib = {
 					recipe: results.get_catalog_recipe,
 					registry: results.get_env_record
 				};
-				if (results.get_src){
+				if (results.get_src) {
 					opts.owner = results.get_src[0];
 					opts.repo = results.get_src[1];
 				}

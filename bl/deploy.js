@@ -37,7 +37,7 @@ let local = {
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
 		local.saveConfiguration(soajs, inputmaskData, options, (error, item) => {
-			if (error) {
+			if (error && error.code !== 603) {
 				return cb(error);
 			}
 			inputmaskData.env = inputmaskData.config.env;
@@ -142,6 +142,9 @@ let local = {
 					let opts = JSON.parse(JSON.stringify(inputmaskData));
 					modelObj.update_item_configuration(opts, (err) => {
 						if (err) {
+							if (err.message && err.message === 'Marketplace: item [' + opts.name + '] was not updated.'){
+								return cb(bl.marketplace.handleError(soajs, 603, err));
+							}
 							return cb(bl.marketplace.handleError(soajs, 602, err));
 						}
 						return cb(null, "Catalog Item Configuration Successfully updated!");
