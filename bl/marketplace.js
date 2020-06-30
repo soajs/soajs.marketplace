@@ -470,8 +470,8 @@ let bl = {
 							return call(bl.handleError(soajs, 421, null));
 						}
 						return call(null, {
-							ip: host,
-							data: body.data || body,
+							id: host,
+							response: body.data || body,
 							
 						});
 					});
@@ -483,7 +483,7 @@ let bl = {
 		}
 		
 		function containerOperation(opts, callback) {
-			let technology = opts.registry.deployer.selected.split(":")[1];
+			let technology = opts.registry.deployer.selected.split(".")[1];
 			soajs.awareness.connect("infra", "1", (response) => {
 				if (response && response.host) {
 					let options = {
@@ -493,19 +493,21 @@ let bl = {
 							configuration: {
 								env: inputmaskData.env
 							},
-							item: {
-								env: inputmaskData.env,
-								name: inputmaskData.name,
-								version: inputmaskData.version
+							name : {
+								item: {
+									env: inputmaskData.env,
+									name: inputmaskData.name,
+									version: inputmaskData.version
+								},
 							},
-							maintenancePort: opts.port,
+							maintenancePort: opts.port.toString(),
 							operation: {
 								route: inputmaskData.operation
 							}
 						},
 						json: true
 					};
-					request.post(options, function (error, response, body) {
+					request.put(options, function (error, response, body) {
 						if (error || !body || !body.result) {
 							return callback(bl.handleError(soajs, 421, null));
 						}

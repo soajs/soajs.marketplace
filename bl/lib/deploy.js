@@ -35,8 +35,7 @@ let lib = {
 		// let opts = {
 		// 	item: item,
 		// 	deploy: results.get_deploy,
-		// 	owner: results.get_src[0],
-		// 	repo: results.get_src[1],
+		// 	repoInfo: results.get_src,
 		// 	recipe: results.get_catalog_recipe,
 		// 	registry: results.get_env_record
 		// };
@@ -49,7 +48,7 @@ let lib = {
 			let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
 			config.env.push({
 				"name": env_variables[0],
-				"value": opts.repo.owner
+				"value": opts.repoInfo.owner
 			});
 			
 			config.env.push({
@@ -66,24 +65,24 @@ let lib = {
 			
 			config.env.push({
 				"name": env_variables[3],
-				"value": opts.repo.repository
+				"value": opts.repoInfo.name
 			});
 			
 			config.env.push({
 				"name": env_variables[4],
-				"value": opts.repo.provider
+				"value": opts.repoInfo.provider
 			});
 			
 			if (opts.owner.token) {
 				config.env.push({
 					"name": env_variables[5],
-					"value": opts.owner.token
+					"value": opts.repoInfo.token
 				});
 			}
 			
 			config.env.push({
 				"name": env_variables[6],
-				"value": opts.owner.domain
+				"value": opts.repoInfo.domain
 			});
 		}
 		if (opts.recipe.recipe &&
@@ -259,10 +258,116 @@ let lib = {
 						return call();
 					}
 				},
-			
+				function (call) {
+					if (!opts.deploy.recipe.sourceCode) {
+						return call();
+					}
+					let options = {
+						name: opts.deploy.recipe.sourceCode.catalog,
+						type: "config"
+					};
+					modelObj.getItem(options, (err, configItem) => {
+						if (err) {
+							return call(bl.marketplace.handleError(soajs, 602, err));
+						}
+						if (!configItem) {
+							return call(bl.marketplace.handleError(soajs, 417, null));
+						}
+						if (!configItem.versions || configItem.versions.length === 0) {
+							return call(bl.marketplace.handleError(soajs, 417, null));
+						}
+						let found = false;
+						//check if branch and version is found in conf catalog item
+						configItem.versions.forEach((oneVersion) => {
+							if (oneVersion.version === opts.deploy.recipe.sourceCode.version) {
+								found = true;
+								if (opts.deploy.recipe.sourceCode.branch) {
+									if (!oneVersion.branches || oneVersion.branches.indexOf(opts.deploy.recipe.sourceCode.branch) === -1) {
+										found = false;
+									}
+									
+								} else if (opts.deploy.recipe.sourceCode.tag) {
+									if (!oneVersion.tags || oneVersion.tags.indexOf(opts.deploy.recipe.sourceCode.tag) === -1) {
+										found = false;
+									}
+								} else {
+									found = false;
+								}
+							}
+						});
+						if (!found) {
+							return call(bl.marketplace.handleError(soajs, 417, null));
+						}
+						soajs.awareness.connect('repositories', function (res) {
+							let options = {
+								method: "get",
+								uri: "http://" + res.host + "/git/repo/info",
+								headers: res.headers,
+								json: true,
+								qs: {
+									id: opts.deploy.recipe.sourceCode.id,
+								}
+							};
+							request(options, (error, response, repo) => {
+								if (error || !repo.result) {
+									return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
+								}
+								if (!repo && !repo.data.owner) {
+									return call(bl.marketplace.handleError(soajs, 412, null));
+								}
+								let env_variables = ["SOAJS_CONFIG_REPO_OWNER", "SOAJS_CONFIG_REPO_BRANCH", "SOAJS_CONFIG_REPO_COMMIT", "SOAJS_CONFIG_REPO_NAME", "SOAJS_CONFIG_REPO_PROVIDER", "SOAJS_CONFIG_REPO_TOKEN", "SOAJS_CONFIG_REPO_DOMAIN", "SOAJS_CONFIG_REPO_PATH"];
+								config.env.push({
+									"name": env_variables[0],
+									"value": repo.data.owner
+								});
+								
+								config.env.push({
+									"name": env_variables[1],
+									"value": opts.deploy.recipe.sourceCode.branch || opts.deploy.recipe.sourceCode.tag
+								});
+								
+								if (opts.deploy.src.commit) {
+									config.env.push({
+										"name": env_variables[2],
+										"value": opts.deploy.recipe.sourceCode.commit
+									});
+								}
+								
+								config.env.push({
+									"name": env_variables[3],
+									"value": repo.data.name
+								});
+								
+								config.env.push({
+									"name": env_variables[4],
+									"value": repo.data.provider
+								});
+								
+								if (repo.data.token) {
+									config.env.push({
+										"name": env_variables[5],
+										"value": repo.data.token
+									});
+								}
+								
+								config.env.push({
+									"name": env_variables[6],
+									"value": repo.data.domain
+								});
+								if (opts.deploy.recipe.sourceCode.path) {
+									config.env.push({
+										"name": env_variables[7],
+										"value": opts.deploy.recipe.sourceCode.path
+									});
+								}
+								return call();
+							});
+						});
+					});
+				},
 			], (err) => {
 				if (err) {
-					return (err);
+					return cb(err);
 				}
 				async.forEachOf(opts.recipe.recipe.buildOptions.env, function (obj, key, callback) {
 					if (!envVariables.includes(key)) {
@@ -277,12 +382,11 @@ let lib = {
 									"name": key,
 									"value": opts.deploy.recipe.env[key]
 								});
-							}
-							else if (obj.type === 'secret' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
+							} else if (obj.type === 'secret' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
 								config.env.push({
 									"name": key,
 									"valueFrom": {
-										secretKeyRef : opts.deploy.recipe.env[key]
+										secretKeyRef: opts.deploy.recipe.env[key]
 									}
 								});
 							}
@@ -300,8 +404,7 @@ let lib = {
 		// let opts = {
 		// 	item: item,
 		// 	deploy: results.get_deploy,
-		// 	owner: results.get_src[0],
-		// 	repo: results.get_src[1],
+		// 	repoInfo: results.get_src,
 		// 	recipe: results.get_catalog_recipe,
 		// 	registry: results.get_env_record
 		// };
@@ -331,8 +434,8 @@ let lib = {
 		
 		if (opts.deploy.src) {
 			config.src = {
-				repo: opts.repo.name.toLowerCase(),
-				owner: opts.repo.owner.toLowerCase(),
+				repo: opts.repoInfo.name.toLowerCase(),
+				owner: opts.repoInfo.owner.toLowerCase(),
 				from: {}
 			};
 			if (opts.deploy.src.tag) {
@@ -382,8 +485,8 @@ let lib = {
 			};
 			opts.recipe.recipe.deployOptions.voluming.forEach((oneVolume) => {
 				if (oneVolume.kubernetes) {
-					if (oneVolume.kubernetes.volumeMounts) {
-						config.volume.volumeMounts.push(oneVolume.kubernetes.volumeMounts);
+					if (oneVolume.kubernetes.volumeMount) {
+						config.volume.volumeMounts.push(oneVolume.kubernetes.volumeMount);
 					}
 					if (oneVolume.kubernetes.volume) {
 						config.volume.volumes.push(oneVolume.kubernetes.volume);
@@ -395,6 +498,7 @@ let lib = {
 			config.replicas = opts.deploy.settings.replicas;
 		}
 		//fill ports
+		
 		if (opts.recipe.recipe.deployOptions.ports && opts.recipe.recipe.deployOptions.ports.length > 0) {
 			config.ports = [];
 			config.service = {
@@ -402,6 +506,12 @@ let lib = {
 			};
 			//merge with port in cd
 			opts.recipe.recipe.deployOptions.ports.forEach((onePortEntry, portIndex) => {
+				if (opts.deploy.recipe.ports && opts.deploy.recipe.ports.length > 0) {
+					let temp = opts.deploy.recipe.ports.find(({name}) => name === onePortEntry.name);
+					if (temp) {
+						onePortEntry = temp;
+					}
+				}
 				config.ports.push({
 					name: onePortEntry.name || 'port' + portIndex,
 					"containerPort": onePortEntry.target
@@ -439,7 +549,7 @@ let lib = {
 		soajs.awareness.connect('repositories', function (res) {
 			let options = {
 				method: "get",
-				uri: "http://" + res.host + "/git/repo/",
+				uri: "http://" + res.host + "/git/repo/info",
 				headers: res.headers,
 				json: true,
 				qs: {
@@ -453,22 +563,7 @@ let lib = {
 				if (!repo && !repo.data.owner) {
 					return cb(bl.marketplace.handleError(soajs, 412, null));
 				}
-				options = {
-					method: "get",
-					uri: "http://" + res.host + "/git/account/owner",
-					headers: res.headers,
-					json: true,
-					qs: {
-						owner: repo.data.source[0].name,
-						provider: repo.data.provider,
-					}
-				};
-				request(options, (error, response, owner) => {
-					if (error || !owner.result) {
-						return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(owner)));
-					}
-					return cb(null, owner.data, repo.data);
-				});
+				return cb(null, repo.data);
 			});
 		});
 	},
@@ -488,7 +583,6 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
-		console.log(JSON.stringify(config, null, 2))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
@@ -608,8 +702,7 @@ let lib = {
 					registry: results.get_env_record
 				};
 				if (results.get_src) {
-					opts.owner = results.get_src[0];
-					opts.repo = results.get_src[1];
+					opts.repoInfo = results.get_src;
 				}
 				lib.computeEnvVariables(soajs, modelObj, opts, config, bl, callback);
 			}],
@@ -621,8 +714,7 @@ let lib = {
 					registry: results.get_env_record
 				};
 				if (results.get_src) {
-					opts.owner = results.get_src[0];
-					opts.repo = results.get_src[1];
+					opts.repoInfo = results.get_src;
 				}
 				lib.computeDeployObject(soajs, opts, config, bl, callback);
 			}],
