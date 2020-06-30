@@ -163,12 +163,14 @@ let lib = {
 				}
 				if (inputmaskData.image) {
 					config.image = inputmaskData.image;
-					opts.config.image.tag = inputmaskData.image.tag;
+					opts.config.recipe.image.tag = inputmaskData.image.tag;
 				}
 				
 				modelObj.update_item_configuration(opts, (err) => {
 					if (err) {
-						return cb(bl.marketplace.handleError(soajs, 602, err));
+						if (!err.message || err.message !== 'Marketplace: item [' + opts.name + '] was not updated.'){
+							return cb(bl.marketplace.handleError(soajs, 602, err));
+						}
 					}
 					return callback(null, config);
 				});

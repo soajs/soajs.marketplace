@@ -1018,6 +1018,9 @@ module.exports = {
 											},
 											"tag": {
 												"type": "string"
+											},
+											"commit": {
+												"type": "string"
 											}
 										},
 										"oneOf": [
@@ -1025,7 +1028,7 @@ module.exports = {
 												"required": ["label", "catalog", "id", "version", "tag"]
 											},
 											{
-												"required": ["label", "catalog", "id", "version", "branch"]
+												"required": ["label", "catalog", "id", "version", "branch", "commit"]
 											}
 										]
 									}
@@ -1278,6 +1281,9 @@ module.exports = {
 											},
 											"tag": {
 												"type": "string"
+											},
+											"commit": {
+												"type": "string"
 											}
 										},
 										"oneOf": [
@@ -1285,7 +1291,7 @@ module.exports = {
 												"required": ["label", "catalog", "id", "version", "tag"]
 											},
 											{
-												"required": ["label", "catalog", "id", "version", "branch"]
+												"required": ["label", "catalog", "id", "version", "branch", "commit"]
 											}
 										]
 									}
