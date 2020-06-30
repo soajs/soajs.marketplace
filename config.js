@@ -189,7 +189,7 @@ module.exports = {
 			},
 			'/items/type/all': {
 				"_apiInfo": {
-					"l": "This API lists all items matching certain type with option to select a subtype.",
+					"l": "This API lists all items matching certain type with option to select a subtype including soajs items.",
 					"group": "Internal"
 				},
 				"commonFields": ["start", "limit"],
@@ -207,7 +207,7 @@ module.exports = {
 			
 			'/items/src': {
 				"_apiInfo": {
-					"l": "This API gets an item by its source.",
+					"l": "This API gets the items by source.",
 					"group": "Item"
 				},
 				"provider": {
@@ -229,7 +229,7 @@ module.exports = {
 			
 			'/item/type': {
 				"_apiInfo": {
-					"l": "This API get one item by its name and type.",
+					"l": "This API gets one item by its name and type.",
 					"group": "Item"
 				},
 				"name": {
@@ -246,7 +246,7 @@ module.exports = {
 			
 			"/item/deploy/inspect": {
 				"_apiInfo": {
-					"l": "This API gets the configure deployment of an item including (allowed recipes, saved configuration, and kubernetes configuration for both service and deployment|daemonset)",
+					"l": "This API gets the configure deployment of an item including (allowed recipes, saved configuration, and kubernetes configuration for both service and deployment|daemonset|cronjob)",
 					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
@@ -652,7 +652,7 @@ module.exports = {
 			"/item/deploy/cd": {
 				"_apiInfo": {
 					"l": "This API deploys an item used by CI",
-					"group": "Item deploy"
+					"group": "Item deploy CI"
 				},
 				"token": {
 					"source": ['query.token'],
@@ -1341,7 +1341,7 @@ module.exports = {
 			"/item/maintenance": {
 				"_apiInfo": {
 					"l": "This API trigger maintenance operation on a deployed item.",
-					"group": "Item management"
+					"group": "Item deploy"
 				},
 				"name": {
 					"source": ['query.name'],
