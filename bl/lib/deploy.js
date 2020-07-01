@@ -315,7 +315,7 @@ let lib = {
 								if (!repo && !repo.data.owner) {
 									return call(bl.marketplace.handleError(soajs, 412, null));
 								}
-								let env_variables = ["SOAJS_CONFIG_REPO_OWNER", "SOAJS_CONFIG_REPO_BRANCH", "SOAJS_CONFIG_REPO_COMMIT", "SOAJS_CONFIG_REPO_NAME", "SOAJS_CONFIG_REPO_PROVIDER", "SOAJS_CONFIG_REPO_TOKEN", "SOAJS_CONFIG_REPO_DOMAIN", "SOAJS_CONFIG_REPO_PATH"];
+								let env_variables = ["SOAJS_CONFIG_REPO_OWNER", "SOAJS_CONFIG_REPO_BRANCH", "SOAJS_CONFIG_REPO_COMMIT", "SOAJS_CONFIG_REPO_NAME", "SOAJS_CONFIG_REPO_PROVIDER", "SOAJS_CONFIG_REPO_TOKEN", "SOAJS_CONFIG_REPO_DOMAIN"];
 								config.env.push({
 									"name": env_variables[0],
 									"value": repo.data.owner
@@ -354,12 +354,6 @@ let lib = {
 									"name": env_variables[6],
 									"value": repo.data.domain
 								});
-								if (opts.deploy.recipe.sourceCode.path) {
-									config.env.push({
-										"name": env_variables[7],
-										"value": opts.deploy.recipe.sourceCode.path
-									});
-								}
 								return call();
 							});
 						});
