@@ -189,7 +189,7 @@ function run(serviceStartCb) {
 						"env": req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
-						"locator": [req.soajs.inputmaskData.type],
+						"locator": ["deploy", req.soajs.inputmaskData.name],
 						"action": "updated"
 					};
 					sdk.ledger(req.soajs, doc, response, () => {
@@ -198,7 +198,17 @@ function run(serviceStartCb) {
 			});
 			service.put("/item/deploy/cd", function (req, res) {
 				bl.deploy.cd(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-					return res.json(req.soajs.buildResponse(error, data));
+					let response = req.soajs.buildResponse(error, data);
+					res.json(response);
+					//check
+					let doc = {
+						"type": "Deployment",
+						"section": "Continuous delivery",
+						"locator": ["configure", "deploy", req.soajs.inputmaskData.name],
+						"action": "updated"
+					};
+					sdk.ledger(req.soajs, doc, response, () => {
+					});
 				});
 			});
 			service.put("/item/deploy", function (req, res) {
@@ -209,7 +219,7 @@ function run(serviceStartCb) {
 						"env": req.soajs.inputmaskData.config.env,
 						"type": "Deployment",
 						"section": "Catalog",
-						"locator": [req.soajs.inputmaskData.type],
+						"locator": ["deploy", req.soajs.inputmaskData.name],
 						"action": "updated"
 					};
 					sdk.ledger(req.soajs, doc, response, () => {
@@ -224,7 +234,7 @@ function run(serviceStartCb) {
 						"env": req.soajs.inputmaskData.config.env,
 						"type": "Deployment",
 						"section": "Catalog",
-						"locator": [req.soajs.inputmaskData.type],
+						"locator": ["configure", req.soajs.inputmaskData.name],
 						"action": "updated"
 					};
 					sdk.ledger(req.soajs, doc, response, () => {
@@ -239,7 +249,7 @@ function run(serviceStartCb) {
 						"env": req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
-						"locator": ["workload", req.soajs.inputmaskData.config.settings.mode],
+						"locator": ["configure", "deploy", req.soajs.inputmaskData.name],
 						"action": "updated"
 					};
 					sdk.ledger(req.soajs, doc, response, () => {
