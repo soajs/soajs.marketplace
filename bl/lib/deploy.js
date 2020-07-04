@@ -565,7 +565,7 @@ let lib = {
 	"deployObject": (soajs, opts, config, bl, cb) => {
 		let url = "/kubernetes/item/deploy/soajs";
 		if (config.mode === 'cronJob') {
-			url = "/kubernetes/item/deploy/cronjob";
+			url = "/kubernetes/item/deploy/soajs/cronjob";
 		}
 		let options = {
 			method: "post",
@@ -577,6 +577,7 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
+		console.log(JSON.stringify(config))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
