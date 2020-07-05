@@ -599,20 +599,18 @@ module.exports = {
 				},
 				"image": {
 					"source": ['body.image'],
-					"required": false,
 					"validation": {
 						"type": "object",
 						"properties": {
 							"tag": {
-								"type": "string",
-								"required": true,
+								"type": "string"
 							}
-						}
+						},
+						"required": ["tag"]
 					}
 				},
 				"src": {
 					"source": ['body.src'],
-					"required": false,
 					"validation": {
 						"type": "object",
 						"properties": {
@@ -663,7 +661,6 @@ module.exports = {
 				},
 				"repo_token": {
 					"source": ['query.repo_token'],
-					"required": false,
 					"validation": {
 						"type": "string"
 					}
@@ -810,44 +807,38 @@ module.exports = {
 						"additionalProperties": false,
 						"properties": {
 							"env": {
-								"required": true,
 								"type": "string"
 							},
 							"version": {
-								"required": true,
 								"type": "string"
 							},
 							"cd": {
-								"required": true,
 								"type": "object",
 								"additionalProperties": false,
 								"properties": {
 									"strategy": {
-										"required": true,
 										"type": "string",
 										"enum": ["notify", "update"]
 									}
-								}
+								},
+								"required": ["strategy"]
 							},
 							"settings": {
-								"required": true,
 								"additionalProperties": false,
 								"type": "object",
 								"properties": {
 									"memory": {
-										"required": true,
 										"type": "string",
 									},
 									"mode": {
-										"required": true,
 										"type": "string",
 										"enum": ["Deployment", "Daemonset", "cronJob"]
 									},
 									"replicas": {
-										"required": false,
 										"type": "integer",
 									}
-								}
+								},
+								"required": ["memory", "mode"]
 							},
 							"src": {
 								"type": "object",
@@ -888,88 +879,79 @@ module.exports = {
 							},
 							"autoScale": {
 								"type": "object",
-								"required": false,
+								"additionalProperties": false,
 								"properties": {
 									"replicas": {
-										"required": true,
 										"type": "object",
+										"additionalProperties": false,
 										"properties": {
-											"min": {"required": true, "type": "integer", "min": 1},
-											"max": {"required": true, "type": "integer", "min": 1}
+											"min": {"type": "integer", "min": 1},
+											"max": {"type": "integer", "min": 1}
 										},
-										"additionalProperties": false
+										"required": ["min", "max"]
 									},
 									"metrics": {
-										"required": true,
 										"type": "object",
+										"additionalProperties": false,
 										"properties": {
 											"cpu": {
-												"required": true,
 												"type": "object",
+												"additionalProperties": false,
 												"properties": {
-													"percent": {"required": true, "type": "number"}
+													"percent": {"type": "number"}
 												},
-												"additionalProperties": false
+												"required": ["percent"]
 											}
 										},
-										"additionalProperties": false
+										"required": ["cpu"]
 									}
 								},
-								"additionalProperties": false
+								"required": ["replicas", "metrics"]
 							},
 							"recipe": {
-								"required": true,
 								"additionalProperties": false,
 								"type": "object",
 								"properties": {
 									"id": {
-										"required": true,
 										"type": "string"
 									},
 									"image": {
-										"required": false,
 										"additionalProperties": false,
 										"type": "object",
 										"properties": {
 											"name": {
-												"required": true,
 												"type": "string"
 											},
 											"prefix": {
-												"required": true,
 												"type": "string"
 											},
 											"tag": {
-												"required": true,
 												"type": "string"
 											}
-										}
+										},
+										"required": ["name", "prefix", "tag"]
 									},
 									"ports": {
-										"required": false,
 										"type": "array",
 										"items": {
 											"type": "object",
 											"properties": {
 												"name": {
-													"type": "string",
-													"required": true
+													"type": "string"
 												},
 												"target": {
-													"type": "integer",
-													"required": false
+													"type": "integer"
 												},
 												"isPublished": {
-													"type": "boolean",
-													"required": false
+													"type": "boolean"
 												}
-											}
+											},
+											"required": ["name"]
 										}
 									},
 									"env": {
-										"required": false,
-										"additionalProperties": false,
 										"type": "object",
+										"additionalProperties": false,
 										"patternProperties": {
 											"^.*$": {
 												"anyOf": [
@@ -983,23 +965,21 @@ module.exports = {
 														"type": "object",
 														"properties": {
 															"name": {
-																"type": "string",
-																"required": true,
+																"type": "string"
 															},
 															"key": {
-																"type": "string",
-																"required": true,
+																"type": "string"
 															}
-														}
+														},
+														"required": ["name", "key"]
 													}
 												]
 											}
 										}
 									},
 									"sourceCode": {
-										"required": false,
-										"additionalProperties": false,
 										"type": "object",
+										"additionalProperties": false,
 										"properties": {
 											"label": {
 												"type": "string"
@@ -1032,9 +1012,11 @@ module.exports = {
 											}
 										]
 									}
-								}
+								},
+								"required": ["id"]
 							}
-						}
+						},
+						"required": ["env", "version", "cd", "settings", "recipe"]
 					}
 				}
 			},
@@ -1073,44 +1055,38 @@ module.exports = {
 						"additionalProperties": false,
 						"properties": {
 							"env": {
-								"required": true,
 								"type": "string"
 							},
 							"version": {
-								"required": true,
 								"type": "string"
 							},
 							"cd": {
-								"required": true,
 								"type": "object",
 								"additionalProperties": false,
 								"properties": {
 									"strategy": {
-										"required": true,
 										"type": "string",
 										"enum": ["notify", "update"]
 									}
-								}
+								},
+								"required": ["strategy"]
 							},
 							"settings": {
-								"required": true,
-								"additionalProperties": false,
 								"type": "object",
+								"additionalProperties": false,
 								"properties": {
 									"memory": {
-										"required": true,
 										"type": "string",
 									},
 									"mode": {
-										"required": true,
 										"type": "string",
 										"enum": ["Deployment", "Daemonset", "cronJob"]
 									},
 									"replicas": {
-										"required": false,
 										"type": "integer",
 									}
-								}
+								},
+								"required": ["memory", "mode"]
 							},
 							"src": {
 								"type": "object",
@@ -1151,88 +1127,79 @@ module.exports = {
 							},
 							"autoScale": {
 								"type": "object",
-								"required": false,
+								"additionalProperties": false,
 								"properties": {
 									"replicas": {
-										"required": true,
 										"type": "object",
+										"additionalProperties": false,
 										"properties": {
-											"min": {"required": true, "type": "integer", "min": 1},
-											"max": {"required": true, "type": "integer", "min": 1}
+											"min": {"type": "integer", "min": 1},
+											"max": {"type": "integer", "min": 1}
 										},
-										"additionalProperties": false
+										"required": ["min", "max"]
 									},
 									"metrics": {
-										"required": true,
 										"type": "object",
+										"additionalProperties": false,
 										"properties": {
 											"cpu": {
-												"required": true,
 												"type": "object",
+												"additionalProperties": false,
 												"properties": {
-													"percent": {"required": true, "type": "number"}
+													"percent": {"type": "number"}
 												},
-												"additionalProperties": false
+												"required": ["percent"]
 											}
 										},
-										"additionalProperties": false
+										"required": ["cpu"]
 									}
 								},
-								"additionalProperties": false
+								"required": ["replicas", "metrics"]
 							},
 							"recipe": {
-								"required": true,
 								"additionalProperties": false,
 								"type": "object",
 								"properties": {
 									"id": {
-										"required": true,
 										"type": "string"
 									},
 									"image": {
-										"required": false,
 										"additionalProperties": false,
 										"type": "object",
 										"properties": {
 											"name": {
-												"required": true,
 												"type": "string"
 											},
 											"prefix": {
-												"required": true,
 												"type": "string"
 											},
 											"tag": {
-												"required": true,
 												"type": "string"
 											}
-										}
+										},
+										"required": ["name", "prefix", "tag"]
 									},
 									"ports": {
-										"required": false,
 										"type": "array",
 										"items": {
 											"type": "object",
 											"properties": {
 												"name": {
-													"type": "string",
-													"required": true
+													"type": "string"
 												},
 												"target": {
-													"type": "integer",
-													"required": false
+													"type": "integer"
 												},
 												"isPublished": {
-													"type": "boolean",
-													"required": false
+													"type": "boolean"
 												}
-											}
+											},
+											"required": ["name"]
 										}
 									},
 									"env": {
-										"required": false,
-										"additionalProperties": false,
 										"type": "object",
+										"additionalProperties": false,
 										"patternProperties": {
 											"^.*$": {
 												"anyOf": [
@@ -1246,23 +1213,21 @@ module.exports = {
 														"type": "object",
 														"properties": {
 															"name": {
-																"type": "string",
-																"required": true,
+																"type": "string"
 															},
 															"key": {
-																"type": "string",
-																"required": true,
+																"type": "string"
 															}
-														}
+														},
+														"required": ["name", "key"]
 													}
 												]
 											}
 										}
 									},
 									"sourceCode": {
-										"required": false,
-										"additionalProperties": false,
 										"type": "object",
+										"additionalProperties": false,
 										"properties": {
 											"label": {
 												"type": "string"
@@ -1295,9 +1260,11 @@ module.exports = {
 											}
 										]
 									}
-								}
+								},
+								"required": ["id"]
 							}
-						}
+						},
+						"required": ["env", "version", "cd", "settings", "recipe"]
 					}
 				}
 			},
@@ -1383,7 +1350,7 @@ module.exports = {
 						"type": "object",
 						"oneOf": [
 							{
-								"properties" :{
+								"properties": {
 									"portType": {
 										"required": true,
 										"type": "string",
@@ -1396,7 +1363,7 @@ module.exports = {
 								}
 							},
 							{
-								"properties" :{
+								"properties": {
 									"portType": {
 										"required": true,
 										"type": "string",
