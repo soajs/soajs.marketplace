@@ -493,48 +493,91 @@ let lib = {
 		}
 		//fill ports
 		
-		if (opts.recipe.recipe.deployOptions.ports && opts.recipe.recipe.deployOptions.ports.length > 0) {
-			config.ports = [];
+		if (opts.item.type === "service") {
 			config.service = {
 				ports: []
 			};
-			//merge with port in cd
-			opts.recipe.recipe.deployOptions.ports.forEach((onePortEntry, portIndex) => {
-				if (opts.deploy.recipe.ports && opts.deploy.recipe.ports.length > 0) {
-					let temp = opts.deploy.recipe.ports.find(({name}) => name === onePortEntry.name);
-					if (temp) {
-						onePortEntry = temp;
-					}
+			config.ports = [];
+			let maintenance;
+			opts.item.versions.forEach((one) => {
+				if (one.version === opts.deploy.version) {
+					maintenance = one.maintenance;
 				}
+			});
+			config.service.ports.push({
+				name: "service-port",
+				protocol: "TCP",
+				target: opts.item.configuration.port,
+				port: opts.item.configuration.port,
+			});
+			config.ports.push({
+				"name": 'service',
+				"containerPort": opts.item.configuration.port
+			});
+			if (maintenance && maintenance.port && maintenance.port.type) {
+				if (maintenance.port.type === "custom") {
+					config.service.ports.push({
+						name: "maintenance-port",
+						target: maintenance.port.value,
+						protocol: "TCP",
+						port: maintenance.port.value,
+					});
+					config.ports.push({
+						"name": 'maintenance',
+						"containerPort": maintenance.port.value
+					});
+				} else if (maintenance.port.type === "maintenance") {
+					config.service.ports.push({
+						name: "maintenance-port",
+						target: opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc,
+						protocol: "TCP",
+						port: opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc,
+					});
+					config.ports.push({
+						"name": 'maintenance',
+						"containerPort": opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc
+					});
+				}
+				//inherit do nothing
+			}
+		}
+		if (opts.deploy.recipe.ports && opts.deploy.recipe.ports.values && opts.deploy.recipe.ports.values.length > 0) {
+			if (!config.service) {
+				config.service = {
+					ports: []
+				};
+			}
+			if (!config.ports) {
+				config.ports = [];
+			}
+			config.service.type = opts.deploy.recipe.ports.portType;
+			if (opts.item.type === "service" || config.service.type === "Internal"){
+				delete config.service.type;
+			}
+			opts.deploy.recipe.ports.values.forEach((onePortEntry, portIndex) => {
 				config.ports.push({
 					name: onePortEntry.name || 'port' + portIndex,
 					"containerPort": onePortEntry.target
 				});
-				let portConfig = {
-					protocol: ((onePortEntry.protocol) ? onePortEntry.protocol.toUpperCase() : 'TCP'),
-					name: onePortEntry.name || 'port' + portIndex,
-					port: onePortEntry.port || onePortEntry.target,
-					targetPort: onePortEntry.target,
-				};
-				if (onePortEntry.isPublished) {
-					if (!onePortEntry.published) {
-						config.service.type = 'LoadBalancer';
-						delete portConfig.nodePort;
-					} else {
-						if (!config.service.type || config.service.type !== 'NodePort') {
-							config.service.type = 'NodePort';
-						}
+				if (opts.deploy.recipe.ports.portType){
+					let portConfig = {
+						protocol: ((onePortEntry.protocol) ? onePortEntry.protocol.toUpperCase() : 'TCP'),
+						name: onePortEntry.name || 'port' + portIndex,
+						port: onePortEntry.port || onePortEntry.target,
+						targetPort: onePortEntry.target,
+					};
+					if (config.service.type === "NodePort"){
 						portConfig.nodePort = onePortEntry.published || portConfig.targetPort;
 					}
-					
-					portConfig.name = onePortEntry.name || 'published' + portConfig.name;
-					portConfig.name = portConfig.name.toLowerCase();
-					if (onePortEntry.preserveClientIP) {
-						config.service.externalTrafficPolicy = 'Local';
+					if (opts.deploy.recipe.ports.externalTrafficPolicy) {
+						config.service.externalTrafficPolicy = opts.deploy.recipe.externalTrafficPolicy;
 					}
+					config.service.ports.push(portConfig);
 				}
-				config.service.ports.push(portConfig);
 			});
+			if (config.service.ports.length === 0){
+				delete config.service;
+			}
 		}
 		cb(null, config);
 	},
@@ -577,7 +620,6 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
-		console.log(JSON.stringify(config))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;

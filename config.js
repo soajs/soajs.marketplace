@@ -932,22 +932,36 @@ module.exports = {
 										"required": ["name", "prefix", "tag"]
 									},
 									"ports": {
-										"type": "array",
-										"items": {
-											"type": "object",
-											"properties": {
-												"name": {
-													"type": "string"
-												},
-												"target": {
-													"type": "integer"
-												},
-												"isPublished": {
-													"type": "boolean"
+										"additionalProperties": false,
+										"type": "object",
+										"properties": {
+											"type": {
+												"type": "string"
+											},
+											"portType": {
+												"type": "string",
+												"enum": ["LoadBalancer", "NodePort", "Internal"]
+											},
+											"values": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"target": {
+															"type": "integer"
+														},
+														"isPublished": {
+															"type": "boolean"
+														}
+													},
+													"required": ["name"]
 												}
 											},
-											"required": ["name"]
-										}
+										},
+										"required": ["type", "portType", "values"]
 									},
 									"env": {
 										"type": "object",
@@ -1180,22 +1194,36 @@ module.exports = {
 										"required": ["name", "prefix", "tag"]
 									},
 									"ports": {
-										"type": "array",
-										"items": {
-											"type": "object",
-											"properties": {
-												"name": {
-													"type": "string"
-												},
-												"target": {
-													"type": "integer"
-												},
-												"isPublished": {
-													"type": "boolean"
+										"additionalProperties": false,
+										"type": "object",
+										"properties": {
+											"type": {
+												"type": "string"
+											},
+											"portType": {
+												"type": "string",
+												"enum": ["LoadBalancer", "NodePort", "Internal"]
+											},
+											"values": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"target": {
+															"type": "integer"
+														},
+														"isPublished": {
+															"type": "boolean"
+														}
+													},
+													"required": ["name"]
 												}
 											},
-											"required": ["name"]
-										}
+										},
+										"required": ["type", "portType", "values"]
 									},
 									"env": {
 										"type": "object",
