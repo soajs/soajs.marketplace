@@ -128,7 +128,7 @@ let lib = {
 						if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
 							config.env.push({
 								"name": env_variables[0],
-								"value": opts.item.configuration.port
+								"value": opts.item.configuration.port.toString()
 							});
 						}
 						if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
@@ -138,24 +138,24 @@ let lib = {
 								if (opts.item.configuration.maintenance.type === "inherit") {
 									config.env.push({
 										"name": env_variables[1],
-										"value": opts.item.configuration.port
+										"value": opts.item.configuration.port.toString()
 									});
 								} else if (opts.item.configuration.maintenance.type === "maintenance") {
 									config.env.push({
 										"name": env_variables[1],
-										"value": opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc
+										"value": (opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc).toString()
 									});
 								} else {
 									config.env.push({
 										"name": env_variables[1],
-										"value": opts.item.configuration.maintenance.value
+										"value": opts.item.configuration.maintenance.value.toString()
 									});
 								}
 							}
 						} else {
 							config.env.push({
 								"name": env_variables[1],
-								"value": opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc
+								"value": (opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc).toString()
 							});
 						}
 					}
@@ -189,13 +189,13 @@ let lib = {
 					if (opts.recipe.recipe.buildOptions.env[env_variables[4]]) {
 						config.env.push({
 							"name": env_variables[4],
-							"value": opts.registry.serviceConfig.ports.controller
+							"value": opts.registry.serviceConfig.ports.controller.toString()
 						});
 					}
 					if (opts.recipe.recipe.buildOptions.env[env_variables[5]]) {
 						config.env.push({
 							"name": env_variables[5],
-							"value": opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc
+							"value": (opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc).toString()
 						});
 					}
 					if (opts.recipe.recipe.buildOptions.env[env_variables[6]]) {
