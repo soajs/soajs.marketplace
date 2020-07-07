@@ -34,7 +34,7 @@ let bl = {
 		}
 		return ({
 			"code": errCode,
-			"msg": bl.localConfig.errors[errCode] + ((err && (errCode === 602 || errCode === 503)) ? err.message : "")
+			"msg": bl.localConfig.errors[errCode] + ((err && (errCode === 602 || errCode === 503 || errCode === 422)) ? err.message : "")
 		});
 	},
 	

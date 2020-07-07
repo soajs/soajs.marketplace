@@ -81,6 +81,7 @@ module.exports = {
 		419: "No maintenance operations found for this Item version",
 		420: "Maintenance operation not found for this item version!",
 		421: "Unable to connect to item",
+		422: "Error: ",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",

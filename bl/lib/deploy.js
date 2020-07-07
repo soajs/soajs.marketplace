@@ -90,127 +90,162 @@ let lib = {
 			opts.recipe.recipe.buildOptions.env &&
 			Object.keys(opts.recipe.recipe.buildOptions.env).length > 0
 		) {
+			let computedEnvVariables = {};
+			for (let env in opts.recipe.recipe.buildOptions.env) {
+				if (opts.recipe.recipe.buildOptions.env[env] && opts.recipe.recipe.buildOptions.env.hasOwnProperty(env) &&
+					opts.recipe.recipe.buildOptions.env[env].type === "computed") {
+					computedEnvVariables[opts.recipe.recipe.buildOptions.env[env].value] = env;
+				}
+			}
 			async.parallel([
 				function (call) {
-					let env_variables = ["SOAJS_NX_DOMAIN", "SOAJS_NX_SITE_DOMAIN", "SOAJS_NX_API_DOMAIN"];
-					envVariables = envVariables.concat(env_variables);
-					if (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
-						opts.recipe.recipe.buildOptions.env[env_variables[1]] ||
-						opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
+					let env_variables = ["$SOAJS_NX_DOMAIN", "$SOAJS_NX_SITE_DOMAIN", "$SOAJS_NX_API_DOMAIN"];
+					if (computedEnvVariables[env_variables[0]] ||
+						computedEnvVariables[env_variables[1]] ||
+						computedEnvVariables[env_variables[2]]) {
 						
-						if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
+						if (computedEnvVariables[env_variables[0]]) {
 							config.env.push({
-								"name": env_variables[0],
+								"name": computedEnvVariables[env_variables[0]],
 								"value": opts.registry.domain
 							});
+							if (!opts.registry.domain) {
+								return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
+							}
 						}
-						if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+						if (computedEnvVariables[env_variables[1]]) {
 							config.env.push({
-								"name": env_variables[1],
+								"name": computedEnvVariables[env_variables[1]],
 								"value": opts.registry.sitePrefix + "." + opts.registry.domain
 							});
+							if (!opts.registry.sitePrefix || opts.registry.domain) {
+								return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[1]] + " computed variable was not found")));
+							}
 						}
-						if (opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
+						if (computedEnvVariables[env_variables[2]]) {
 							config.env.push({
-								"name": env_variables[2],
+								"name": computedEnvVariables[env_variables[2]],
 								"value": opts.registry.apiPrefix + "." + opts.registry.domain
 							});
+							if (!opts.registry.apiPrefix || opts.registry.domain) {
+								return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[2]] + " computed variable was not found")));
+							}
 						}
 					}
 					return call();
 				},
 				function (call) {
-					let env_variables = ["SOAJS_SRV_PORT", "SOAJS_SRV_PORT_MAINTENANCE"];
-					envVariables = envVariables.concat(env_variables);
+					let env_variables = ["$SOAJS_SRV_PORT", "$SOAJS_SRV_PORT_MAINTENANCE"];
 					if (opts.item.type === "service" && opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
-						opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+						computedEnvVariables[env_variables[1]]) {
 						
-						if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
+						if (computedEnvVariables[env_variables[0]]) {
 							config.env.push({
-								"name": env_variables[0],
+								"name": computedEnvVariables[env_variables[0]],
 								"value": opts.item.configuration.port.toString()
 							});
+							if (!opts.item.configuration.port.toString()) {
+								return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
+							}
 						}
-						if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+						let temp = {};
+						if (computedEnvVariables[env_variables[1]]) {
 							if (opts.item.configuration.maintenance &&
 								opts.item.configuration.maintenance.port &&
 								opts.item.configuration.maintenance.type) {
 								if (opts.item.configuration.maintenance.type === "inherit") {
-									config.env.push({
-										"name": env_variables[1],
+									temp = {
+										"name": computedEnvVariables[env_variables[1]],
 										"value": opts.item.configuration.port.toString()
-									});
+									};
 								} else if (opts.item.configuration.maintenance.type === "maintenance") {
-									config.env.push({
-										"name": env_variables[1],
+									temp = {
+										"name": computedEnvVariables[env_variables[1]],
 										"value": (opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc).toString()
-									});
+									};
 								} else {
-									config.env.push({
-										"name": env_variables[1],
+									temp = {
+										"name": computedEnvVariables[env_variables[1]],
 										"value": opts.item.configuration.maintenance.value.toString()
-									});
+									};
 								}
 							}
 						} else {
-							config.env.push({
-								"name": env_variables[1],
+							temp = {
+								"name": computedEnvVariables[env_variables[1]],
 								"value": (opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc).toString()
-							});
+							};
+						}
+						if (!temp.value) {
+							return call(bl.marketplace.handleError(soajs, 422, new Error(temp.name + " computed variable was not found")));
+						}
+						config.env.push(temp);
+					}
+					return call();
+				},
+				function (call) {
+					let env_variables = ["$SOAJS_ENV", "$SOAJS_DAEMON_GRP_CONF", "$SOAJS_SERVICE_NAME", "$SOAJS_NX_CONTROLLER_NB", "$SOAJS_NX_CONTROLLER_PORT", "$SOAJS_CONTROLLER_PORT_MAINTENANCE", "$SOAJS_DEPLOY_HA"];
+					if (computedEnvVariables[env_variables[0]]) {
+						config.env.push({
+							"name": computedEnvVariables[env_variables[0]],
+							"value": opts.registry.name.toLowerCase()
+						});
+						if (!opts.registry.name.toLowerCase()) {
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
+						}
+					}
+					if (computedEnvVariables[env_variables[1]]) {
+						//todo
+					}
+					
+					if (computedEnvVariables[env_variables[2]]) {
+						config.env.push({
+							"name": computedEnvVariables[env_variables[2]],
+							"value": opts.item.name
+						});
+						if (!opts.item.name) {
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[2]] + " computed variable was not found")));
+						}
+					}
+					if (computedEnvVariables[env_variables[3]]) {
+						config.env.push({
+							"name": computedEnvVariables[env_variables[3]],
+							"value": "1"
+						});
+					}
+					if (computedEnvVariables[env_variables[4]]) {
+						config.env.push({
+							"name": computedEnvVariables[env_variables[4]],
+							"value": opts.registry.serviceConfig.ports.controller.toString()
+						});
+						if (!opts.registry.serviceConfig.ports.controller) {
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[4]] + " computed variable was not found")));
+						}
+					}
+					if (computedEnvVariables[env_variables[5]]) {
+						config.env.push({
+							"name": computedEnvVariables[env_variables[5]],
+							"value": (opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc).toString()
+						});
+						if (!opts.registry.serviceConfig.ports.controller || opts.registry.serviceConfig.ports.maintenanceInc) {
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[5]] + " computed variable was not found")));
+						}
+					}
+					if (computedEnvVariables[env_variables[6]]) {
+						config.env.push({
+							"name": computedEnvVariables[env_variables[6]],
+							"value": opts.registry.deployer.selected.split(".")[1]
+						});
+						if (!opts.registry.deployer.selected || opts.registry.deployer.selected.split(".")[1]) {
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[6]] + " computed variable was not found")));
 						}
 					}
 					return call();
 				},
 				function (call) {
-					let env_variables = ["SOAJS_ENV", "SOAJS_DAEMON_GRP_CONF", "SOAJS_SERVICE_NAME", "SOAJS_NX_CONTROLLER_NB", "SOAJS_NX_CONTROLLER_PORT", "SOAJS_CONTROLLER_PORT_MAINTENANCE", "SOAJS_DEPLOY_HA"];
-					envVariables = envVariables.concat(env_variables);
-					if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
-						config.env.push({
-							"name": env_variables[0],
-							"value": opts.registry.name.toLowerCase()
-						});
-					}
-					if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
-						//todo
-					}
-					
-					if (opts.recipe.recipe.buildOptions.env[env_variables[2]]) {
-						config.env.push({
-							"name": env_variables[2],
-							"value": opts.item.name
-						});
-					}
-					if (opts.recipe.recipe.buildOptions.env[env_variables[3]]) {
-						config.env.push({
-							"name": env_variables[3],
-							"value": "1"
-						});
-					}
-					if (opts.recipe.recipe.buildOptions.env[env_variables[4]]) {
-						config.env.push({
-							"name": env_variables[4],
-							"value": opts.registry.serviceConfig.ports.controller.toString()
-						});
-					}
-					if (opts.recipe.recipe.buildOptions.env[env_variables[5]]) {
-						config.env.push({
-							"name": env_variables[5],
-							"value": (opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc).toString()
-						});
-					}
-					if (opts.recipe.recipe.buildOptions.env[env_variables[6]]) {
-						config.env.push({
-							"name": env_variables[6],
-							"value": opts.registry.deployer.selected.split(".")[1]
-						});
-					}
-					return call();
-				},
-				function (call) {
-					let env_variables = ["SOAJS_NX_CONTROLLER_IP_1", "SOAJS_REGISTRY_API"];
-					envVariables = envVariables.concat(env_variables);
-					if (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
-						opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+					let env_variables = ["$SOAJS_NX_CONTROLLER_IP_1", "$SOAJS_REGISTRY_API"];
+					if (computedEnvVariables[env_variables[0]] ||
+						computedEnvVariables[env_variables[1]]) {
 						soajs.awareness.connect("infra", "1", (response) => {
 							if (response && response.host) {
 								let options = {
@@ -236,17 +271,23 @@ let lib = {
 									if (!body.data || !body.data.items || body.data.items.length === 0 || !body.data.items[0].metadata || !body.data.items[0].metadata.name) {
 										return call(bl.marketplace.handleError(soajs, 411, null));
 									}
-									if (opts.recipe.recipe.buildOptions.env[env_variables[0]]) {
+									if (computedEnvVariables[env_variables[0]]) {
 										config.env.push({
-											"name": env_variables[0],
+											"name": computedEnvVariables[env_variables[0]],
 											"value": body.data.items[0].spec.clusterIP
 										});
+										if (!body.data.items[0].spec.clusterIP) {
+											return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
+										}
 									}
-									if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
+									if (computedEnvVariables[env_variables[1]]) {
 										config.env.push({
-											"name": env_variables[1],
+											"name": computedEnvVariables[env_variables[1]],
 											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.serviceConfig.ports.controller + soajs.registry.serviceConfig.ports.maintenanceInc
 										});
+										if (!body.data.items[0].spec.clusterIP || soajs.registry.serviceConfig.ports.controller || soajs.registry.serviceConfig.ports.maintenanceInc) {
+											return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[1]] + " computed variable was not found")));
+										}
 									}
 									return call();
 								});
@@ -363,27 +404,26 @@ let lib = {
 				if (err) {
 					return cb(err);
 				}
+				
 				async.forEachOf(opts.recipe.recipe.buildOptions.env, function (obj, key, callback) {
-					if (!envVariables.includes(key)) {
-						if (obj.type === 'static') {
+					if (obj.type === 'static') {
+						config.env.push({
+							"name": key,
+							"value": obj.value
+						});
+					} else {
+						if (obj.type === 'userInput' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
 							config.env.push({
 								"name": key,
-								"value": obj.value
+								"value": opts.deploy.recipe.env[key]
 							});
-						} else {
-							if (obj.type === 'userInput' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
-								config.env.push({
-									"name": key,
-									"value": opts.deploy.recipe.env[key]
-								});
-							} else if (obj.type === 'secret' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
-								config.env.push({
-									"name": key,
-									"valueFrom": {
-										secretKeyRef: opts.deploy.recipe.env[key]
-									}
-								});
-							}
+						} else if (obj.type === 'secret' && opts.deploy.recipe.env && opts.deploy.recipe.env[key]) {
+							config.env.push({
+								"name": key,
+								"valueFrom": {
+									secretKeyRef: opts.deploy.recipe.env[key]
+								}
+							});
 						}
 					}
 					callback();
@@ -565,7 +605,7 @@ let lib = {
 			if (config.service.type !== "Internal" && opts.deploy.recipe.ports.externalTrafficPolicy) {
 				config.service.externalTrafficPolicy = opts.deploy.recipe.ports.externalTrafficPolicy;
 			}
-			if (opts.item.type === "service" || config.service.type === "Internal"){
+			if (opts.item.type === "service" || config.service.type === "Internal") {
 				delete config.service.type;
 			}
 			opts.deploy.recipe.ports.values.forEach((onePortEntry, portIndex) => {
@@ -573,20 +613,20 @@ let lib = {
 					name: onePortEntry.name || 'port' + portIndex,
 					"containerPort": onePortEntry.target
 				});
-				if (opts.deploy.recipe.ports.portType){
+				if (opts.deploy.recipe.ports.portType) {
 					let portConfig = {
 						protocol: ((onePortEntry.protocol) ? onePortEntry.protocol.toUpperCase() : 'TCP'),
 						name: onePortEntry.name || 'port' + portIndex,
 						port: onePortEntry.port || onePortEntry.target,
 						targetPort: onePortEntry.target,
 					};
-					if (config.service.type === "NodePort"){
+					if (config.service.type === "NodePort") {
 						portConfig.nodePort = onePortEntry.published || portConfig.targetPort;
 					}
 					config.service.ports.push(portConfig);
 				}
 			});
-			if (config.service.ports.length === 0){
+			if (config.service.ports.length === 0) {
 				delete config.service;
 			}
 		}
@@ -631,6 +671,7 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
+		console.log(JSON.stringify(config, null, 2))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
