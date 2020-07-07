@@ -452,6 +452,9 @@ let lib = {
 			if (opts.deploy.settings.schedule) {
 				config.catalog.schedule = opts.deploy.settings.schedule;
 			}
+			if (opts.deploy.settings.restartPolicy) {
+				config.catalog.restartPolicy = opts.deploy.settings.restartPolicy;
+			}
 		}
 		if (opts.recipe.recipe.deployOptions.labels) {
 			config.labels = opts.recipe.recipe.deployOptions.labels;

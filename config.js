@@ -841,6 +841,10 @@ module.exports = {
 									"schedule": {
 										"type": "string",
 									},
+									"restartPolicy": {
+										"type": "string",
+										"enum": ["OnFailure", "Never"]
+									},
 									"replicas": {
 										"type": "integer",
 									}
@@ -1110,11 +1114,15 @@ module.exports = {
 									"schedule": {
 										"type": "string",
 									},
+									"restartPolicy": {
+										"type": "string",
+										"enum": ["OnFailure", "Never"]
+									},
 									"replicas": {
 										"type": "integer",
 									}
 								},
-								"required": ["memory", "mode", "concurrencyPolicy", "schedule"]
+								"required": ["memory", "mode"]
 							},
 							"src": {
 								"type": "object",
