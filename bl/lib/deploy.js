@@ -44,7 +44,7 @@ let lib = {
 		if (!config.env) {
 			config.env = [];
 		}
-		if (opts.owner) {
+		if (opts.repoInfo.owner) {
 			let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
 			config.env.push({
 				"name": env_variables[0],
@@ -73,7 +73,7 @@ let lib = {
 				"value": opts.repoInfo.provider
 			});
 			
-			if (opts.owner.token) {
+			if (opts.repoInfo.token) {
 				config.env.push({
 					"name": env_variables[5],
 					"value": opts.repoInfo.token
