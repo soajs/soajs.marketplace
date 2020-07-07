@@ -189,7 +189,7 @@ let lib = {
 					if (opts.recipe.recipe.buildOptions.env[env_variables[4]]) {
 						config.env.push({
 							"name": env_variables[4],
-							"value": opts.registry.services.config.ports.controller
+							"value": opts.registry.serviceConfig.ports.controller
 						});
 					}
 					if (opts.recipe.recipe.buildOptions.env[env_variables[5]]) {
@@ -245,7 +245,7 @@ let lib = {
 									if (opts.recipe.recipe.buildOptions.env[env_variables[1]]) {
 										config.env.push({
 											"name": env_variables[1],
-											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.services.config.ports.controller + soajs.registry.services.config.ports.maintenanceInc
+											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.serviceConfig.ports.controller + soajs.registry.serviceConfig.ports.maintenanceInc
 										});
 									}
 									return call();
