@@ -118,7 +118,7 @@ let lib = {
 								"name": computedEnvVariables[env_variables[1]],
 								"value": opts.registry.sitePrefix + "." + opts.registry.domain
 							});
-							if (!opts.registry.sitePrefix || opts.registry.domain) {
+							if (!opts.registry.sitePrefix || !opts.registry.domain) {
 								return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[1]] + " computed variable was not found")));
 							}
 						}
@@ -127,7 +127,7 @@ let lib = {
 								"name": computedEnvVariables[env_variables[2]],
 								"value": opts.registry.apiPrefix + "." + opts.registry.domain
 							});
-							if (!opts.registry.apiPrefix || opts.registry.domain) {
+							if (!opts.registry.apiPrefix || !opts.registry.domain) {
 								return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[2]] + " computed variable was not found")));
 							}
 						}
