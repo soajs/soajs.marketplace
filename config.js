@@ -54,6 +54,10 @@ module.exports = {
 		{
 			"name": "repository",
 			"version": "1"
+		},
+		{
+			"name": "console",
+			"version": "1"
 		}
 	],
 	//-------------------------------------
