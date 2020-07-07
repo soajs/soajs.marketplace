@@ -832,7 +832,7 @@ module.exports = {
 									},
 									"mode": {
 										"type": "string",
-										"enum": ["Deployment", "Daemonset", "CronJob"]
+										"enum": ["Deployment", "DaemonSet", "CronJob"]
 									},
 									"concurrencyPolicy": {
 										"type": "string",
@@ -1105,7 +1105,7 @@ module.exports = {
 									},
 									"mode": {
 										"type": "string",
-										"enum": ["Deployment", "Daemonset", "CronJob"]
+										"enum": ["Deployment", "DaemonSet", "CronJob"]
 									},
 									"concurrencyPolicy": {
 										"type": "string",
