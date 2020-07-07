@@ -562,6 +562,9 @@ let lib = {
 				config.ports = [];
 			}
 			config.service.type = opts.deploy.recipe.ports.portType;
+			if (config.service.type !== "Internal" && opts.deploy.recipe.ports.externalTrafficPolicy) {
+				config.service.externalTrafficPolicy = opts.deploy.recipe.ports.externalTrafficPolicy;
+			}
 			if (opts.item.type === "service" || config.service.type === "Internal"){
 				delete config.service.type;
 			}
@@ -579,9 +582,6 @@ let lib = {
 					};
 					if (config.service.type === "NodePort"){
 						portConfig.nodePort = onePortEntry.published || portConfig.targetPort;
-					}
-					if (opts.deploy.recipe.ports.externalTrafficPolicy) {
-						config.service.externalTrafficPolicy = opts.deploy.recipe.externalTrafficPolicy;
 					}
 					config.service.ports.push(portConfig);
 				}

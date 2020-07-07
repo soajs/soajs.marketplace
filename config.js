@@ -953,6 +953,10 @@ module.exports = {
 												"type": "string",
 												"enum": ["LoadBalancer", "NodePort", "Internal"]
 											},
+											"externalTrafficPolicy": {
+												"type": "string",
+												"enum": ["Local", "Cluster"]
+											},
 											"values": {
 												"type": "array",
 												"items": {
@@ -1225,6 +1229,10 @@ module.exports = {
 											"portType": {
 												"type": "string",
 												"enum": ["LoadBalancer", "NodePort", "Internal"]
+											},
+											"externalTrafficPolicy": {
+												"type": "string",
+												"enum": ["Local", "Cluster"]
 											},
 											"values": {
 												"type": "array",
