@@ -44,7 +44,7 @@ let lib = {
 		if (!config.env) {
 			config.env = [];
 		}
-		if (opts.owner) {
+		if (opts.repoInfo.owner) {
 			let env_variables = ["SOAJS_GIT_OWNER", "SOAJS_GIT_BRANCH", "SOAJS_GIT_COMMIT", "SOAJS_GIT_REPO", "SOAJS_GIT_PROVIDER", "SOAJS_GIT_TOKEN", "SOAJS_GIT_DOMAIN"];
 			config.env.push({
 				"name": env_variables[0],
@@ -73,7 +73,7 @@ let lib = {
 				"value": opts.repoInfo.provider
 			});
 			
-			if (opts.owner.token) {
+			if (opts.repoInfo.token) {
 				config.env.push({
 					"name": env_variables[5],
 					"value": opts.repoInfo.token
@@ -565,7 +565,7 @@ let lib = {
 			if (config.service.type !== "Internal" && opts.deploy.recipe.ports.externalTrafficPolicy) {
 				config.service.externalTrafficPolicy = opts.deploy.recipe.ports.externalTrafficPolicy;
 			}
-			if (opts.item.type === "service" || config.service.type === "Internal"){
+			if (opts.item.type === "service" || config.service.type === "Internal") {
 				delete config.service.type;
 			}
 			opts.deploy.recipe.ports.values.forEach((onePortEntry, portIndex) => {
@@ -573,20 +573,20 @@ let lib = {
 					name: onePortEntry.name || 'port' + portIndex,
 					"containerPort": onePortEntry.target
 				});
-				if (opts.deploy.recipe.ports.portType){
+				if (opts.deploy.recipe.ports.portType) {
 					let portConfig = {
 						protocol: ((onePortEntry.protocol) ? onePortEntry.protocol.toUpperCase() : 'TCP'),
 						name: onePortEntry.name || 'port' + portIndex,
 						port: onePortEntry.port || onePortEntry.target,
 						targetPort: onePortEntry.target,
 					};
-					if (config.service.type === "NodePort"){
+					if (config.service.type === "NodePort") {
 						portConfig.nodePort = onePortEntry.published || portConfig.targetPort;
 					}
 					config.service.ports.push(portConfig);
 				}
 			});
-			if (config.service.ports.length === 0){
+			if (config.service.ports.length === 0) {
 				delete config.service;
 			}
 		}
