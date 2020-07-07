@@ -445,6 +445,14 @@ let lib = {
 		}
 		
 		config.mode = opts.deploy.settings.mode;
+		if (config.mode === 'CronJob') {
+			if (opts.deploy.settings.concurrencyPolicy) {
+				config.catalog.concurrencyPolicy = opts.deploy.settings.concurrencyPolicy;
+			}
+			if (opts.deploy.settings.schedule) {
+				config.catalog.schedule = opts.deploy.settings.schedule;
+			}
+		}
 		if (opts.recipe.recipe.deployOptions.labels) {
 			config.labels = opts.recipe.recipe.deployOptions.labels;
 		}
@@ -607,7 +615,7 @@ let lib = {
 	
 	"deployObject": (soajs, opts, config, bl, cb) => {
 		let url = "/kubernetes/item/deploy/soajs";
-		if (config.mode === 'cronJob') {
+		if (config.mode === 'CronJob') {
 			url = "/kubernetes/item/deploy/soajs/cronjob";
 		}
 		let options = {
@@ -620,6 +628,7 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
+		console.log(JSON.stringify(config, null, 2))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;

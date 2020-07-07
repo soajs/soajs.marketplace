@@ -824,21 +824,28 @@ module.exports = {
 								"required": ["strategy"]
 							},
 							"settings": {
-								"additionalProperties": false,
 								"type": "object",
+								"additionalProperties": false,
 								"properties": {
 									"memory": {
 										"type": "string",
 									},
 									"mode": {
 										"type": "string",
-										"enum": ["Deployment", "Daemonset", "cronJob"]
+										"enum": ["Deployment", "Daemonset", "CronJob"]
+									},
+									"concurrencyPolicy": {
+										"type": "string",
+										"enum": ["Allow", "Forbid", "Replace"]
+									},
+									"schedule": {
+										"type": "string",
 									},
 									"replicas": {
 										"type": "integer",
 									}
 								},
-								"required": ["memory", "mode"]
+								"required": ["memory", "mode",]
 							},
 							"src": {
 								"type": "object",
@@ -1094,13 +1101,20 @@ module.exports = {
 									},
 									"mode": {
 										"type": "string",
-										"enum": ["Deployment", "Daemonset", "cronJob"]
+										"enum": ["Deployment", "Daemonset", "CronJob"]
+									},
+									"concurrencyPolicy": {
+										"type": "string",
+										"enum": ["Allow", "Forbid", "Replace"]
+									},
+									"schedule": {
+										"type": "string",
 									},
 									"replicas": {
 										"type": "integer",
 									}
 								},
-								"required": ["memory", "mode"]
+								"required": ["memory", "mode", "concurrencyPolicy", "schedule"]
 							},
 							"src": {
 								"type": "object",
