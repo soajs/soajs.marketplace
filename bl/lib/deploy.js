@@ -628,7 +628,6 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
-		console.log(JSON.stringify(config, null, 2))
 		if (opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
