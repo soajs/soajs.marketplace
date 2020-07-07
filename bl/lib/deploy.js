@@ -236,7 +236,7 @@ let lib = {
 							"name": computedEnvVariables[env_variables[6]],
 							"value": opts.registry.deployer.selected.split(".")[1]
 						});
-						if (!opts.registry.deployer.selected || opts.registry.deployer.selected.split(".")[1]) {
+						if (!opts.registry.deployer.selected || !opts.registry.deployer.selected.split(".")[1]) {
 							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[6]] + " computed variable was not found")));
 						}
 					}
