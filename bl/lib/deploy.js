@@ -237,7 +237,7 @@ let lib = {
 					return call();
 				},
 				function (call) {
-					let env_variables = ["$SOAJS_NX_CONTROLLER_IP_1", "$SOAJS_REGISTRY_API"];
+					let env_variables = ["$SOAJS_NX_CONTROLLER_IP", "$SOAJS_REGISTRY_API"];
 					if (computedEnvVariables[env_variables[0]] ||
 						computedEnvVariables[env_variables[1]]) {
 						soajs.awareness.connect("infra", "1", (response) => {
