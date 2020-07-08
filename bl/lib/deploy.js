@@ -254,14 +254,13 @@ let lib = {
 									headers: response.headers,
 									json: true,
 									qs: {
-										qs: {
-											configuration: {
-												env: opts.registry.name.toLowerCase()
-											}
+										configuration: {
+											env: opts.registry.name.toLowerCase()
 										},
 										filter: {
-											labelSelector: 'soajs.env.code=' + opts.registry.name.toLowerCase() + ', soajs.service.name=' + opts.registry.serviceConfig.ports.name || "controller"
+											labelSelector: 'soajs.env.code=' + opts.registry.name.toLowerCase() + ', soajs.service.name=' + opts.registry.services.controller.name || "controller"
 										},
+										limit: 100
 									}
 								};
 								request(options, (error, res, body) => {
@@ -272,22 +271,23 @@ let lib = {
 										return call(bl.marketplace.handleError(soajs, 411, null));
 									}
 									if (computedEnvVariables[env_variables[0]]) {
+										if (!body.data.items[0].spec.clusterIP) {
+											return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
+										}
 										config.env.push({
 											"name": computedEnvVariables[env_variables[0]],
 											"value": body.data.items[0].spec.clusterIP
 										});
-										if (!body.data.items[0].spec.clusterIP) {
-											return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
-										}
 									}
 									if (computedEnvVariables[env_variables[1]]) {
-										config.env.push({
-											"name": computedEnvVariables[env_variables[1]],
-											"value": body.data.items[0].spec.clusterIP + ":" + soajs.registry.serviceConfig.ports.controller + soajs.registry.serviceConfig.ports.maintenanceInc
-										});
-										if (!body.data.items[0].spec.clusterIP || soajs.registry.serviceConfig.ports.controller || soajs.registry.serviceConfig.ports.maintenanceInc) {
+										if (!body.data.items[0].spec.clusterIP || !soajs.registry.serviceConfig.ports.controller || !soajs.registry.serviceConfig.ports.maintenanceInc) {
 											return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[1]] + " computed variable was not found")));
 										}
+										let gatewayRegistryPort = soajs.registry.serviceConfig.ports.controller + soajs.registry.serviceConfig.ports.maintenanceInc;
+										config.env.push({
+											"name": computedEnvVariables[env_variables[1]],
+											"value": body.data.items[0].spec.clusterIP + ":" + gatewayRegistryPort
+										});
 									}
 									return call();
 								});
