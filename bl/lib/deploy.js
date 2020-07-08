@@ -184,7 +184,7 @@ let lib = {
 					return call();
 				},
 				function (call) {
-					let env_variables = ["$SOAJS_ENV", "$SOAJS_DAEMON_GRP_CONF", "$SOAJS_SERVICE_NAME", "$SOAJS_NX_CONTROLLER_NB", "$SOAJS_NX_CONTROLLER_PORT", "$SOAJS_CONTROLLER_PORT_MAINTENANCE", "$SOAJS_DEPLOY_HA"];
+					let env_variables = ["$SOAJS_ENV", "$SOAJS_DAEMON_GRP_CONF", "$SOAJS_SERVICE_NAME", "$SOAJS_NX_CONTROLLER_PORT", "$SOAJS_CONTROLLER_PORT_MAINTENANCE", "$SOAJS_DEPLOY_HA"];
 					if (computedEnvVariables[env_variables[0]]) {
 						config.env.push({
 							"name": computedEnvVariables[env_variables[0]],
@@ -210,30 +210,24 @@ let lib = {
 					if (computedEnvVariables[env_variables[3]]) {
 						config.env.push({
 							"name": computedEnvVariables[env_variables[3]],
-							"value": "1"
-						});
-					}
-					if (computedEnvVariables[env_variables[4]]) {
-						config.env.push({
-							"name": computedEnvVariables[env_variables[4]],
 							"value": opts.registry.serviceConfig.ports.controller.toString()
 						});
 						if (!opts.registry.serviceConfig.ports.controller) {
 							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[4]] + " computed variable was not found")));
 						}
 					}
-					if (computedEnvVariables[env_variables[5]]) {
+					if (computedEnvVariables[env_variables[4]]) {
 						config.env.push({
-							"name": computedEnvVariables[env_variables[5]],
+							"name": computedEnvVariables[env_variables[4]],
 							"value": (opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc).toString()
 						});
 						if (!opts.registry.serviceConfig.ports.controller || opts.registry.serviceConfig.ports.maintenanceInc) {
 							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[5]] + " computed variable was not found")));
 						}
 					}
-					if (computedEnvVariables[env_variables[6]]) {
+					if (computedEnvVariables[env_variables[5]]) {
 						config.env.push({
-							"name": computedEnvVariables[env_variables[6]],
+							"name": computedEnvVariables[env_variables[5]],
 							"value": opts.registry.deployer.selected.split(".")[1]
 						});
 						if (!opts.registry.deployer.selected || !opts.registry.deployer.selected.split(".")[1]) {
