@@ -403,7 +403,7 @@ let bl = {
 							let itemPort = item.configuration.port;
 							if (deploymentType === "manual") {
 								if (envRecord.services && envRecord.services[item.name] && envRecord.services[item.name].port) {
-									itemPort = envRecord.services[item.name].port
+									itemPort = envRecord.services[item.name].port;
 								}
 							}
 							if (inputmaskData.portType === 'inherit') {
