@@ -384,7 +384,10 @@ let bl = {
 					if (error) {
 						return cb(error);
 					}
-					soajsCore.core.registry.loadByEnv({envCode: inputmaskData.env}, (err, envRecord) => {
+					soajsCore.core.registry.loadByEnv({
+						"envCode": inputmaskData.env,
+						"name": item.name
+					}, (err, envRecord) => {
 						if (err) {
 							return cb(bl.handleError(soajs, 400, err));
 						}
@@ -397,12 +400,18 @@ let bl = {
 							registry: envRecord
 						};
 						let computePort = () => {
+							let itemPort = item.configuration.port;
+							if (deploymentType === "manual") {
+								if (envRecord.services && envRecord.services[item.name] && envRecord.services[item.name].port) {
+									itemPort = envRecord.services[item.name].port
+								}
+							}
 							if (inputmaskData.portType === 'inherit') {
-								return item.configuration.port;
+								return itemPort;
 							} else if (inputmaskData.portType === 'custom') {
 								return inputmaskData.portValue;
 							} else {
-								return item.configuration.port + envRecord.serviceConfig.ports.maintenanceInc;
+								return itemPort + envRecord.serviceConfig.ports.maintenanceInc;
 							}
 						};
 						opts.port = computePort();
@@ -493,7 +502,7 @@ let bl = {
 							configuration: {
 								env: inputmaskData.env
 							},
-							name : {
+							name: {
 								item: {
 									env: inputmaskData.env,
 									name: inputmaskData.name,
