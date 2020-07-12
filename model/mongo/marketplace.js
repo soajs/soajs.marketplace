@@ -134,6 +134,9 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 	if (data.type) {
 		condition.type = data.type;
 	}
+	if (data.types && Array.isArray(data.types)) {
+		condition.type = {$in: data.types};
+	}
 	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
@@ -184,7 +187,7 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		if (data.subType && data.subType.toLocaleLowerCase() !== "soajs") {
 			condition["configuration.subType"] = data.subType;
 		} else {
-			if (!data.all){
+			if (!data.all) {
 				condition["configuration.subType"] = {$ne: "soajs"};
 			}
 		}

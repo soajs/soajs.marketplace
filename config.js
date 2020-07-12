@@ -137,7 +137,18 @@ module.exports = {
 					"l": "This API lists the items matching certain keywords from soajs catalog only.",
 					"group": "SOAJS",
 				},
-				"commonFields": ["start", "limit", "keywords"]
+				"commonFields": ["start", "limit", "keywords"],
+				"types": {
+					"source": ['query.types'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
+				},
 			},
 			
 			'/public/items': {
