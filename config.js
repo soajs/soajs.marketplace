@@ -149,6 +149,11 @@ module.exports = {
 						}
 					}
 				},
+				"type": {
+					"source": ['query.type'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
 			},
 			
 			'/public/items': {
@@ -166,6 +171,17 @@ module.exports = {
 					"source": ['query.subtype'],
 					"required": false,
 					"validation": {"type": "string"}
+				},
+				"types": {
+					"source": ['query.types'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
 				}
 			},
 			
@@ -184,6 +200,17 @@ module.exports = {
 					"source": ['query.subtype'],
 					"required": false,
 					"validation": {"type": "string"}
+				},
+				"types": {
+					"source": ['query.types'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
 				}
 			},
 			'/items/type': {
@@ -201,6 +228,17 @@ module.exports = {
 					"source": ['query.subtype'],
 					"required": false,
 					"validation": {"type": "string"}
+				},
+				"types": {
+					"source": ['query.types'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
 				}
 			},
 			'/items/type/all': {
@@ -218,6 +256,17 @@ module.exports = {
 					"source": ['query.subtype'],
 					"required": false,
 					"validation": {"type": "string"}
+				},
+				"types": {
+					"source": ['query.types'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
 				}
 			},
 			

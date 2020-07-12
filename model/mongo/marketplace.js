@@ -164,8 +164,8 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 
 Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 	let __self = this;
-	if (!data || !data.type) {
-		let error = new Error("Marketplace: type is required.");
+	if (!data || (!data.type && !data.types)) {
+		let error = new Error("Marketplace: type or types is required.");
 		return cb(error, null);
 	}
 	let options = {
@@ -181,6 +181,9 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 	}
 	
 	let condition = {"type": data.type};
+	if (data.types && Array.isArray(data.types)) {
+		condition.type = {$in: data.types};
+	}
 	if (data.soajs) {
 		condition["configuration.subType"] = "soajs";
 	} else {
