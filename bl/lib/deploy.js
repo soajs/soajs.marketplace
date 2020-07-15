@@ -99,6 +99,53 @@ let lib = {
 			}
 			async.parallel([
 				function (call) {
+					let env_variables = ["$SOAJS_EXTKEY"];
+					if (computedEnvVariables[env_variables[0]]) {
+						
+						soajs.awareness.connect('multitenant', "1", function (res) {
+							let options = {
+								method: "get",
+								uri: "http://" + res.host + "/console/tenant",
+								headers: res.headers,
+								json: true,
+								qs: {
+									code: "DBTN"
+								}
+							};
+							request(options, (error, response, tenant) => {
+								if (error || !tenant.result) {
+									return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(tenant)));
+								}
+								let extKey = null;
+								if (tenant.data && tenant.data.applications) {
+									let app = tenant.data.applications[0];
+									if (app.keys) {
+										let key = app.keys[0];
+										if (key.extKeys) {
+											let oneKey = key.extKeys[0];
+											extKey = oneKey.extKey;
+										}
+									}
+								}
+								
+								if (computedEnvVariables[env_variables[0]]) {
+									config.env.push({
+										"name": computedEnvVariables[env_variables[0]],
+										"value": extKey
+									});
+									if (!extKey) {
+										return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
+									}
+								}
+								return call();
+							});
+						});
+					}
+					else {
+						return call();
+					}
+				},
+				function (call) {
 					let env_variables = ["$SOAJS_NX_DOMAIN", "$SOAJS_NX_SITE_DOMAIN", "$SOAJS_NX_API_DOMAIN"];
 					if (computedEnvVariables[env_variables[0]] ||
 						computedEnvVariables[env_variables[1]] ||

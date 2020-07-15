@@ -58,6 +58,10 @@ module.exports = {
 		{
 			"name": "console",
 			"version": "1"
+		},
+		{
+			"name": "multitenant",
+			"version": "1"
 		}
 	],
 	//-------------------------------------
