@@ -274,6 +274,30 @@ module.exports = {
 				}
 			},
 			
+			'/items/type/name': {
+				"_apiInfo": {
+					"l": "This API lists all item names matching certain types",
+					"group": "Item"
+				},
+				"commonFields": ["start", "limit"],
+				"subtype": {
+					"source": ['query.subtype'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"types": {
+					"source": ['query.types'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			
 			'/items/src': {
 				"_apiInfo": {
 					"l": "This API gets the items by source.",

@@ -55,6 +55,13 @@ function run(serviceStartCb) {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
+			service.get("/items/type/name", function (req, res) {
+				req.soajs.inputmaskData.all = true;
+				req.soajs.inputmaskData.name = true;
+				bl.marketplace.getItems_by_type_subtype(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
 			
 			service.get("/items/src", function (req, res) {
 				bl.marketplace.getItem_by_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {

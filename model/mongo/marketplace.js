@@ -195,6 +195,11 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 			}
 		}
 	}
+	if (data.name){
+		options.projection = {
+			name : 1
+		};
+	}
 	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
