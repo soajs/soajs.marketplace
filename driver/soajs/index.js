@@ -66,9 +66,9 @@ let lib = {
 			if (soa.requestTimeoutRenewal) {
 				catalog.configuration.requestTimeoutRenewal = soa.requestTimeoutRenewal;
 			}
-			if (soa.maintenance) {
-				catalog.configuration.maintenance = soa.maintenance;
-			}
+			// if (soa.maintenance) {
+			// 	catalog.configuration.maintenance = soa.maintenance;
+			// }
 			catalog.configuration.subType = "soajs";
 			
 			//metadata
@@ -136,6 +136,9 @@ let lib = {
 					if (data.documentation.release) {
 						temp.documentation.release = data.documentation.release;
 					}
+				}
+				if (soa.maintenance) {
+					temp.maintenance = soa.maintenance;
 				}
 				catalog.versions.push(temp);
 				return cb(catalog);

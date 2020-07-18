@@ -57,9 +57,9 @@ let lib = {
 			if (soa.requestTimeoutRenewal) {
 				catalog.configuration.requestTimeoutRenewal = soa.requestTimeoutRenewal;
 			}
-			if (soa.maintenance) {
-				catalog.configuration.maintenance = soa.maintenance;
-			}
+			// if (soa.maintenance) {
+			// 	catalog.configuration.maintenance = soa.maintenance;
+			// }
 			if (soa.subType) {
 				catalog.configuration.subType = soa.subType;
 			}
@@ -129,6 +129,9 @@ let lib = {
 					if (data.documentation.release) {
 						temp.documentation.release = data.documentation.release;
 					}
+				}
+				if (soa.maintenance) {
+					temp.maintenance = soa.maintenance;
 				}
 				if (data.swagger) {
 					temp.swagger = JSON.stringify(data.swagger);
