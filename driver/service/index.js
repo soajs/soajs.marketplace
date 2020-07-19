@@ -7,6 +7,7 @@
  */
 
 "use strict";
+ let SOAJS_framework = require('soajs');
 const async = require('async');
 const utils = require('../../utils/index.js');
 
@@ -31,8 +32,18 @@ let lib = {
 	},
 	"createCatalog": (data, cb) => {
 		let catalog = {};
+		let soa = data.soa;
+		if (data.apiList){
+			if (data.apiList.type === "swagger"){
+				data.swagger = data.apiList.swagger;
+			}
+			else if (data.apiList.type === "schema"){
+				data.schema = SOAJS_framework.extractAPIsList(data.apiList.schema);
+			}
+		}
+		
 		utils.generateSchemas(data, () => {
-			let soa = data.soa;
+			//let soa = data.soa;
 			if (data.oldCatalog) {
 				delete data.oldCatalog._id;
 				catalog = JSON.parse(JSON.stringify(data.oldCatalog));
