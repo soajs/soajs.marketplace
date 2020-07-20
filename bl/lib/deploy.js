@@ -547,11 +547,11 @@ let lib = {
 		if (opts.recipe.recipe.deployOptions.image.override && opts.deploy.recipe.image) {
 			config.image.name = opts.deploy.recipe.image.prefix + "/" + opts.deploy.recipe.image.name + ":" + opts.deploy.recipe.image.tag;
 		}
-		if (opts.recipe.recipe.deployOptions.readinessProbe) {
-			config.readinessProbe = opts.recipe.recipe.deployOptions.readinessProbe;
+		if (opts.deploy.recipe.readinessProbe) {
+			config.readinessProbe = opts.deploy.recipe.readinessProbe;
 		}
-		if (opts.recipe.recipe.deployOptions.livenessProbe) {
-			config.livenessProbe = opts.recipe.recipe.deployOptions.livenessProbe;
+		if (opts.deploy.recipe.livenessProbe) {
+			config.livenessProbe = opts.deploy.recipe.livenessProbe;
 		}
 		if (opts.recipe.recipe.buildOptions.cmd && opts.recipe.recipe.buildOptions.cmd.deploy) {
 			if (opts.recipe.recipe.buildOptions.cmd.deploy.command) {

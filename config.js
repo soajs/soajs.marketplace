@@ -1035,6 +1035,12 @@ module.exports = {
 										},
 										"required": ["name", "prefix", "tag"]
 									},
+									"readinessProbe": {
+										"type": "object"
+									},
+									"livenessProbe": {
+										"type": "object"
+									},
 									"ports": {
 										"additionalProperties": false,
 										"type": "object",
@@ -1135,7 +1141,7 @@ module.exports = {
 										]
 									}
 								},
-								"required": ["id"]
+								"required": ["id", "readinessProbe"]
 							}
 						},
 						"required": ["env", "version", "cd", "settings", "recipe"]
@@ -1312,6 +1318,12 @@ module.exports = {
 										},
 										"required": ["name", "prefix", "tag"]
 									},
+									"readinessProbe": {
+										"type": "object"
+									},
+									"livenessProbe": {
+										"type": "object"
+									},
 									"ports": {
 										"additionalProperties": false,
 										"type": "object",
@@ -1412,7 +1424,7 @@ module.exports = {
 										]
 									}
 								},
-								"required": ["id"]
+								"required": ["id", "readinessProbe"]
 							}
 						},
 						"required": ["env", "version", "cd", "settings", "recipe"]
