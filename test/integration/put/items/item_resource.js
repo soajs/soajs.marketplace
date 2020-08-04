@@ -59,4 +59,48 @@ describe("Testing API: PUT /item/resource", () => {
 		});
 	});
 	
+	it("Success - update item resource_2 of type resource to the catalog", (done) => {
+		let params = {
+			body: {"item": _data.resource_2.item}
+		};
+		requester('/item/resource', 'put', params, (error, body) => {
+			assert.ok(body);
+			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
+			
+			//let check = validator.validate(body, listUsersSchema);
+			//assert.deepEqual(check.valid, true);
+			//assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - update item resource_2_1 of type resource to the catalog", (done) => {
+		let params = {
+			body: {"item": _data.resource_2_1.item}
+		};
+		requester('/item/resource', 'put', params, (error, body) => {
+			assert.ok(body);
+			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
+			
+			//let check = validator.validate(body, listUsersSchema);
+			//assert.deepEqual(check.valid, true);
+			//assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - update item resource_2_2 of type resource to the catalog", (done) => {
+		let params = {
+			body: {"item": _data.resource_2_2.item}
+		};
+		requester('/item/resource', 'put', params, (error, body) => {
+			assert.ok(body);
+			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
+			
+			//let check = validator.validate(body, listUsersSchema);
+			//assert.deepEqual(check.valid, true);
+			//assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
 });
