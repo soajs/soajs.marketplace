@@ -566,8 +566,12 @@ Marketplace.prototype.update_item_version_config = function (data, cb) {
 
 Marketplace.prototype.update_item_configuration = function (data, cb) {
 	let __self = this;
-	if (!data || !data.type || !data.name || !data.config) {
-		let error = new Error("Marketplace: type and name are required.");
+	if (!data || !data.type || !data.name || !data.config || !data.response) {
+		let error = new Error("Marketplace: type, name, response, and config are required.");
+		return cb(error, null);
+	}
+	if (!data.response || !data.config.env) {
+		let error = new Error("Marketplace: Bad configuration are required.");
 		return cb(error, null);
 	}
 	let condition = {

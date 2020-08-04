@@ -43,6 +43,8 @@ describe("starting integration tests", () => {
 		require("./get/public_items.js");
 		require("./get/items.js");
 		require("./get/item_type.js");
+		require("./get/items_type_all.js");
+		require("./get/items_type_name.js");
 		require("./get/items_src.js");
 		require("./get/items_type.js");
 		require("./get/soajs_items.js");
@@ -51,13 +53,23 @@ describe("starting integration tests", () => {
 		require("./put/soajs_item_recipes.js");
 		require("./put/soajs_item_acl.js");
 		
+		require("./put/item_environments.js");
+		require("./put/item_recipes.js");
+		require("./put/item_acl.js");
+		
+		require("./put/item_version_configuration.js");
+		require("./put/item_branch.js");
+		require("./put/item_tag.js");
+
+		require("./put/items/item_service_soajs.js");
+		
 		require("./put/items/item_service.js");
 		require("./put/items/item_config.js");
 		require("./put/items/item_custom.js");
 		require("./put/items/item_resource.js");
 		require("./put/items/item_daemon.js");
 		require("./put/items/item_static.js");
-		
+
 		require("./delete/item_resource.js");
 		require("./delete/items_src.js");
 		done();

@@ -355,6 +355,21 @@ let bl = {
 		});
 	},
 	
+	"update_item_version_config": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		inputmaskData._groups = getGroups(soajs);
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.update_item_version_config(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
+	
 	"maintenance": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));

@@ -32,11 +32,6 @@ describe("Testing API: GET /items", () => {
                 id_array.push(body.data.records[i]._id);
             }
             assert.deepEqual(id_array.includes('5e409c82c5a59210a815262b'), true);
-            
-            //let check = validator.validate(body, listUsersSchema);
-            //assert.deepEqual(check.valid, true);
-            //assert.deepEqual(check.errors, []);
-	        
             done();
         });
     });
