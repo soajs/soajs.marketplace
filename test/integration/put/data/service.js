@@ -2360,6 +2360,15 @@ module.exports = {
 					"release": "RELEASE.md"
 				},
 				"swaggerFilename": "swagger.json",
+				"tags": ["tag1"],
+				"program": ["program1"],
+				"attributes": {
+					"attrib": "1"
+				},
+				"tab": {
+					"main" : "mainTab",
+					"sub" : "subtab"
+				},
 				"maintenance": {
 					"port": {
 						"type": "inherit"

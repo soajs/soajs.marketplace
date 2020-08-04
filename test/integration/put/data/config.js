@@ -48,6 +48,15 @@ module.exports = {
 					"readme": "README.md",
 					"release": "RELEASE.md"
 				},
+				"tab": {
+					"main" : "maintab",
+					"sub" : "subtab"
+				},
+				"tags": ["tag1"],
+				"program": ["program1"],
+				"attributes": {
+					"attrib": "1"
+				},
 				"swaggerFilename": "swagger.json",
 			},
 			"documentation": {

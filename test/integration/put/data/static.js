@@ -20,10 +20,14 @@ module.exports = {
 					"release": "RELEASE.md"
 				},
 				"tags": ["tag1"],
-				"programs": "program1",
+				"program": ["program1"],
 				"attributes": {
 					"attrib": "1"
-				}
+				},
+				"tab": {
+					"main" : "mainTab",
+					"sub" : "subtab"
+				},
 			},
 			"documentation": {
 				"release": "Release: V1",

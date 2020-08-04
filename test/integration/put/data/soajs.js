@@ -4893,13 +4893,13 @@ module.exports = {
 				"provision_ACL": false,
 				"type": "service",
 				"tags": ["tag1"],
-				"program": "program1",
+				"program": ["program1"],
 				"attributes": {
 					"attrib": "1"
 				},
 				"tab": {
-					"main" : "main-Tab",
-					"sub" : "sub-tab"
+					"main" : "mainTab",
+					"sub" : "subtab"
 				},
 				"interConnect": [{
 					"name": "example2"

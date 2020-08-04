@@ -32,9 +32,13 @@ module.exports = {
 					"name": "example2"
 				}],
 				"tags": ["tag1"],
-				"programs": "program1",
+				"program": ["program1"],
 				"attributes": {
 					"attrib": "1"
+				},
+				"tab": {
+					"main" : "mainTab",
+					"sub" : "subtab"
 				},
 				"prerequisites": {
 					"cpu": " ",
