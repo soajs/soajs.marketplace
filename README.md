@@ -3,7 +3,7 @@
 SOAJS repositories is a service that manages everything related to Catalogs.
 
 ### Complete Documentation
-More information is available on SOAJS website under the section for [Marketplace](https://soajsorg.atlassian.net/wiki/spaces/MIC/overview).
+More information is available on SOAJS website under the section for [Marketplace](https://soajsorg.atlassian.net/wiki/x/AQD3Wg).
 
 ### License
 *Copyright SOAJS All Rights Reserved.*

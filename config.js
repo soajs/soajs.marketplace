@@ -64,6 +64,18 @@ module.exports = {
 			"version": "1"
 		}
 	],
+	
+	"tags": ["marketplace", "catalog"],
+	"attributes": {
+		"catalogs": ["api", "daemon", "custom", "resource", "front end"],
+		"resources": ["native", "item from catalog"]
+	},
+	"program": ["soajs"],
+	"documentation": {
+		"readme": "/README.md",
+		"release": "/RELEASE.md"
+	},
+	
 	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
