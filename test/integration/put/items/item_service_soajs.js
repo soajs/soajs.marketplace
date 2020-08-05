@@ -2,6 +2,10 @@
 const assert = require('assert');
 const requester = require('../../requester');
 const _data = require("../data/soajs.js");
+const core = require('soajs').core;
+let validator = new core.validator.Validator();
+
+const validatorSchema = require("../schemas/service.js");
 
 describe("Testing API: PUT /item/service/soajs", () => {
 	
@@ -21,7 +25,19 @@ describe("Testing API: PUT /item/service/soajs", () => {
 		requester('/item/service/soajs', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
-			done();
+			params = {
+				qs: {
+					"name": _data.soajs_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -32,7 +48,19 @@ describe("Testing API: PUT /item/service/soajs", () => {
 		requester('/item/service/soajs', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			done();
+			params = {
+				qs: {
+					"name": _data.soajs_1_2.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -42,9 +70,20 @@ describe("Testing API: PUT /item/service/soajs", () => {
 		};
 		requester('/item/service/soajs', 'put', params, (error, body) => {
 			assert.ok(body);
-			console.log(JSON.stringify(body, null, 2))
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			done();
+			params = {
+				qs: {
+					"name": _data.soajs_1_3.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -55,7 +94,19 @@ describe("Testing API: PUT /item/service/soajs", () => {
 		requester('/item/service/soajs', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
-			done();
+			params = {
+				qs: {
+					"name": _data.soajs_2.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -66,7 +117,19 @@ describe("Testing API: PUT /item/service/soajs", () => {
 		requester('/item/service/soajs', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			done();
+			params = {
+				qs: {
+					"name": _data.soajs_2_2.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -76,9 +139,20 @@ describe("Testing API: PUT /item/service/soajs", () => {
 		};
 		requester('/item/service/soajs', 'put', params, (error, body) => {
 			assert.ok(body);
-			console.log(JSON.stringify(body, null, 2))
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			done();
+			params = {
+				qs: {
+					"name": _data.soajs_2_3.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	

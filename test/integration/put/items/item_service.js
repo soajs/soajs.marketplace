@@ -2,6 +2,10 @@
 const assert = require('assert');
 const requester = require('../../requester');
 const _data = require("../data/service.js");
+const core = require('soajs').core;
+let validator = new core.validator.Validator();
+
+const validatorSchema = require("../schemas/service.js");
 
 describe("Testing API: PUT /item/service", () => {
 	
@@ -21,11 +25,19 @@ describe("Testing API: PUT /item/service", () => {
 		requester('/item/service', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.service_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -36,11 +48,19 @@ describe("Testing API: PUT /item/service", () => {
 		requester('/item/service', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.service_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -51,11 +71,19 @@ describe("Testing API: PUT /item/service", () => {
 		requester('/item/service', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.service_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -66,11 +94,19 @@ describe("Testing API: PUT /item/service", () => {
 		requester('/item/service', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.service_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -81,11 +117,19 @@ describe("Testing API: PUT /item/service", () => {
 		requester('/item/service', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.service_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -96,11 +140,19 @@ describe("Testing API: PUT /item/service", () => {
 		requester('/item/service', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.service_1.item.soa.name,
+					"type": 'service',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	

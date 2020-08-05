@@ -252,9 +252,20 @@ let validator = {
 				}
 			}
 		},
-		"swagger": {
+		"apiList": {
 			"type": "object",
-			"required": false
+			"required": false,
+			"properties": {
+				"type" : {
+					"required": true,
+					"type": "string",
+					"enum": ["swagger", "schema"]
+				},
+				"schema" : {
+					"required": true,
+					"type": "object"
+				}
+			}
 		},
 		"documentation": {
 			"type": "object",

@@ -35,7 +35,7 @@ let lib = {
 		let soa = data.soa;
 		if (data.apiList){
 			if (data.apiList.type === "swagger"){
-				data.swagger = data.apiList.swagger;
+				data.swagger = data.apiList.schema;
 			}
 			else if (data.apiList.type === "schema"){
 				data.schema = SOAJS_framework.extractAPIsList(data.apiList.schema);
@@ -114,7 +114,7 @@ let lib = {
 						"ts": ts
 					},
 					"soa": JSON.stringify(soa),
-					"apis": data.schema || {}
+					"apis": data.schema || []
 				};
 				
 				lib.assignVersionConf(data.soa, temp);
@@ -171,7 +171,7 @@ let lib = {
 							}
 						}
 						oneVersion.soa = JSON.stringify(soa);
-						oneVersion.apis = data.schema || {};
+						oneVersion.apis = data.schema || [];
 						if (data.documentation) {
 							if (!oneVersion.documentation) {
 								oneVersion.documentation = {};
@@ -217,7 +217,7 @@ let lib = {
 								"ts": ts
 							},
 							"soa": JSON.stringify(soa),
-							"apis": data.schema || {},
+							"apis": data.schema || [],
 						};
 						lib.assignVersionConf(data.soa, temp);
 						if (data.src.branch) {

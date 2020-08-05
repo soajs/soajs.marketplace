@@ -98,7 +98,7 @@ let lib = {
 						"ts": ts
 					},
 					"soa": JSON.stringify(soa),
-					"apis": data.schema || {}
+					"apis":data.schema || []
 				};
 				lib.assignVersionConf(data.soa, temp);
 				if (data.src.branch) {
@@ -155,7 +155,7 @@ let lib = {
 							}
 						}
 						oneVersion.soa = JSON.stringify(soa);
-						oneVersion.apis = data.schema  || {};
+						oneVersion.apis = data.schema  || [];
 						if (data.swagger) {
 							oneVersion.swagger = JSON.stringify(data.swagger);
 							catalog.configuration.swagger = true;
@@ -205,7 +205,7 @@ let lib = {
 								"ts":ts
 							},
 							"soa": JSON.stringify(soa),
-							"apis": data.schema || {},
+							"apis":data.schema || [],
 						};
 						lib.assignVersionConf(data.soa, temp);
 						if (data.src.branch) {

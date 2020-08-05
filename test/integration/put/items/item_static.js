@@ -2,6 +2,10 @@
 const assert = require('assert');
 const requester = require('../../requester');
 const _data = require("../data/static.js");
+const core = require('soajs').core;
+let validator = new core.validator.Validator();
+
+const validatorSchema = require("../schemas/static.js");
 
 describe("Testing API: PUT /item/static", () => {
 	
@@ -21,11 +25,19 @@ describe("Testing API: PUT /item/static", () => {
 		requester('/item/static', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.static_1.item.soa.name,
+					"type": 'static',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -36,11 +48,19 @@ describe("Testing API: PUT /item/static", () => {
 		requester('/item/static', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.static_1_2.item.soa.name,
+					"type": 'static',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -51,11 +71,19 @@ describe("Testing API: PUT /item/static", () => {
 		requester('/item/static', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.static_1_3.item.soa.name,
+					"type": 'static',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -66,11 +94,19 @@ describe("Testing API: PUT /item/static", () => {
 		requester('/item/static', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.static_2.item.soa.name,
+					"type": 'static',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -81,11 +117,19 @@ describe("Testing API: PUT /item/static", () => {
 		requester('/item/static', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.static_2_2.item.soa.name,
+					"type": 'static',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
@@ -96,11 +140,19 @@ describe("Testing API: PUT /item/static", () => {
 		requester('/item/static', 'put', params, (error, body) => {
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully updated!");
-			
-			//let check = validator.validate(body, listUsersSchema);
-			//assert.deepEqual(check.valid, true);
-			//assert.deepEqual(check.errors, []);
-			done();
+			params = {
+				qs: {
+					"name": _data.static_2_3.item.soa.name,
+					"type": 'static',
+				}
+			};
+			requester('/item/type', 'get', params, (error, body) => {
+				delete body.data._id;
+				let check = validator.validate(body.data, validatorSchema);
+				assert.deepEqual(check.valid, true);
+				assert.deepEqual(check.errors, []);
+				done();
+			});
 		});
 	});
 	
