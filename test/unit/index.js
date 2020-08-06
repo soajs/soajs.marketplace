@@ -25,11 +25,15 @@ describe("Starting Unit test", () => {
 	});
 	
 	it("Unit test for BL", (done) => {
+		require("./bl/deploy.js");
 		done();
 	});
 	
 	it("Unit test for Model", (done) => {
 		require("./model/mongo/marketplace.js");
+		done();
+	});
+	it("Unit test for lib", (done) => {
 		require("./lib/sdk.js");
 		done();
 	});

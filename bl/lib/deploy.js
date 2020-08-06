@@ -777,7 +777,7 @@ let lib = {
 				}
 			}],
 			get_catalog_recipe: ['get_deploy', function (results, callback) {
-				soajs.awareness.connect('dashboard', function (res) {
+				soajs.awareness.connect('dashboard', "1", function (res) {
 					let options = {
 						method: "get",
 						uri: "http://" + res.host + "/catalog/recipes/get",

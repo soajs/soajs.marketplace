@@ -6,12 +6,6 @@ const assert = require('assert');
 const nock = require("nock");
 
 describe("Unit test for: lib/sdk.js - marketplace", function () {
-	before((done) => {
-		done();
-	});
-	after((done) => {
-		done();
-	});
 	
 	it("call ledger- empty doc", function (done) {
 		let soajs = {
