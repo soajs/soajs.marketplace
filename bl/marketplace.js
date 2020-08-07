@@ -345,7 +345,7 @@ let bl = {
 						if (err) {
 							return cb(bl.handleError(soajs, 602, err));
 						}
-						if (result.n === 0) {
+						if (!result || result.n === 0) {
 							return cb(bl.handleError(soajs, 500, null));
 						}
 						return cb(null, response ? "Catalog Entry Successfully updated!" : "Catalog Entry Successfully Added!");

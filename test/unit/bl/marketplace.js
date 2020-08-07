@@ -406,6 +406,7 @@ describe("Unit test for: BL - marketplace", () => {
 			done();
 		});
 	});
+	
 	it("deleteItem - fail no item found", function (done) {
 		BL.modelObj = {
 			getItem: (data, cb) => {
@@ -421,6 +422,7 @@ describe("Unit test for: BL - marketplace", () => {
 			done();
 		});
 	});
+	
 	it("deleteItem - fail item locked", function (done) {
 		BL.modelObj = {
 			getItem: (data, cb) => {
@@ -1156,7 +1158,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -1209,9 +1211,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						marketplace :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						marketplace: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -1277,7 +1279,7 @@ describe("Unit test for: BL - marketplace", () => {
 			assert.ok(response);
 			assert.deepEqual(response, [{
 				id: "192.168.5.6",
-				response : [{
+				response: [{
 					"id": "127.0.0.1",
 					"response": {
 						"result": true,
@@ -1310,7 +1312,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -1363,9 +1365,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						marketplace :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						marketplace: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -1430,7 +1432,7 @@ describe("Unit test for: BL - marketplace", () => {
 			assert.ok(response);
 			assert.deepEqual(response, [{
 				id: "192.168.5.6",
-				response : [{
+				response: [{
 					"id": "127.0.0.1",
 					"response": {
 						"result": true,
@@ -1463,7 +1465,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -1517,9 +1519,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						marketplace :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						marketplace: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -1584,7 +1586,7 @@ describe("Unit test for: BL - marketplace", () => {
 			assert.ok(response);
 			assert.deepEqual(response, [{
 				id: "192.168.5.6",
-				response : [{
+				response: [{
 					"id": "127.0.0.1",
 					"response": {
 						"result": true,
@@ -1617,7 +1619,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -1650,9 +1652,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						marketplace :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						marketplace: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -1733,7 +1735,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -1766,9 +1768,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						marketplace :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						marketplace: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -1849,7 +1851,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -1899,7 +1901,8 @@ describe("Unit test for: BL - marketplace", () => {
 		nock('http://192.168.5.5:5000')
 			.get('/awarenessStat')
 			.reply(200, {
-				"result": false});
+				"result": false
+			});
 		
 		nock('http://192.168.5.6:5007')
 			.get('/heartbeat')
@@ -1975,7 +1978,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2028,9 +2031,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						console :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						console: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -2111,7 +2114,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 10000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2164,9 +2167,9 @@ describe("Unit test for: BL - marketplace", () => {
 				"result": true,
 				"data": {
 					services: {
-						marketplace :{
-							hosts : {
-								"1" :["192.168.5.6"]
+						marketplace: {
+							hosts: {
+								"1": ["192.168.5.6"]
 							}
 						}
 					}
@@ -2238,7 +2241,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 4000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2356,7 +2359,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 4000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2474,7 +2477,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 4000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2593,7 +2596,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 4000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2676,7 +2679,7 @@ describe("Unit test for: BL - marketplace", () => {
 					config: {
 						ports: {
 							controller: 4000,
-							maintenanceInc:1000,
+							maintenanceInc: 1000,
 							randomInc: 100
 						}
 					}
@@ -2770,6 +2773,340 @@ describe("Unit test for: BL - marketplace", () => {
 		BL.maintenance(soajs, inputmaskData, null, null, (error) => {
 			assert.ok(error);
 			assert.deepEqual(error.code, 421);
+			done();
+		});
+	});
+	
+	//addItem
+	it("addItem - fail no inputmaskData", function (done) {
+		const service = helper.requireModule('driver/service/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 1});
+			}
+		};
+		BL.addItem(soajs, null, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 400);
+			done();
+		});
+	});
+	
+	it("addItem - item not found success", function (done) {
+		const service = helper.requireModule('driver/service/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 1});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error, response) => {
+			assert.ifError(error);
+			assert.deepEqual(response, "Catalog Entry Successfully Added!");
+			done();
+		});
+	});
+	
+	it("addItem - item found success", function (done) {
+		const service = helper.requireModule('driver/service/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, {"_id": 1});
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 1});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error, response) => {
+			assert.ifError(error);
+			assert.deepEqual(response, "Catalog Entry Successfully updated!");
+			done();
+		});
+	});
+	
+	it("addItem - subtype soajs success", function (done) {
+		const service = helper.requireModule('driver/soajs/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 1});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service",
+					"subType": "soajs"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error, response) => {
+			assert.ifError(error);
+			assert.deepEqual(response, "Catalog Entry Successfully Added!");
+			done();
+		});
+	});
+	
+	it("addItem - fail missing tag or branch", function (done) {
+		const service = helper.requireModule('driver/soajs/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 1});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service",
+					"subType": "soajs"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 402);
+			done();
+		});
+	});
+	
+	it("addItem - fail mongo error getItem", function (done) {
+		const service = helper.requireModule('driver/soajs/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(new Error("mongo error"), null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 1});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service",
+					"subType": "soajs"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 602);
+			done();
+		});
+	});
+	
+	it("addItem - fail mongo error addItem", function (done) {
+		const service = helper.requireModule('driver/soajs/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(new Error("mongo error"), {n: 1});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service",
+					"subType": "soajs"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 602);
+			done();
+		});
+	});
+	
+	it("addItem - fail no change addItem", function (done) {
+		const service = helper.requireModule('driver/soajs/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(null);
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 0});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service",
+					"subType": "soajs"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 500);
+			done();
+		});
+	});
+	
+	it("addItem - checkCanUpdate fail", function (done) {
+		const service = helper.requireModule('driver/soajs/index.js');
+		sinon.stub(service, 'checkCanUpdate').callsFake(function fakeFn(data, cb) {
+			return cb(new Error("can not be updated!"));
+		});
+		sinon.stub(service, 'createCatalog').callsFake(function fakeFn(data, cb) {
+			return cb({"name": "test"});
+		});
+		
+		BL.modelObj = {
+			getItem: (data, cb) => {
+				return cb(null, null);
+			},
+			addItem: (data, cb) => {
+				return cb(null, {n: 0});
+			}
+		};
+		let inputmaskData = {
+			"item": {
+				"src": {
+					"provider": "github",
+					"owner": "test",
+					"repo": "soajs.test",
+					"branch": "master"
+				},
+				"soa" :{
+					"name": "test",
+					"type": "service",
+					"subType": "soajs"
+				}
+			}
+		};
+		BL.addItem(soajs, inputmaskData, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 401);
 			done();
 		});
 	});
