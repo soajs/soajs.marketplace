@@ -629,7 +629,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 					}
 				]
 			}
-		}
+		};
 		bl.marketplace.mp = {
 			getModel: () => {
 				return {
