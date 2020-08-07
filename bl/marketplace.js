@@ -415,7 +415,7 @@ let bl = {
 						};
 						computePort(opts, item,(err) => {
 							if (err) {
-								return cb(error);
+								return cb(err);
 							}
 							if (deploymentType === "manual") {
 								manualOperation(opts, cb);
@@ -456,8 +456,8 @@ let bl = {
 				});
 			} else {
 				if (inputmaskData.port.portType === 'maintenance') {
-					itemPort = itemPort + opts.registry.envRecord.services.config.ports.maintenanceInc;
-				} else if (inputmaskData.portType === 'custom') {
+					itemPort = itemPort + opts.registry.services.config.ports.maintenanceInc;
+				} else if (inputmaskData.port.portType === 'custom') {
 					itemPort = inputmaskData.port.portValue;
 				}
 				opts.port = itemPort;
@@ -498,7 +498,7 @@ let bl = {
 			};
 			request(requestOptions, (error, response, body) => {
 				if (error || !body || !body.result) {
-					return callback(bl.handleError(soajs, 421, null));
+					return callback(bl.handleError(soajs, 421, error));
 				}
 				if (!body.data.services || !body.data.services[inputmaskData.name] ||
 					!body.data.services[inputmaskData.name].hosts ||
@@ -514,7 +514,7 @@ let bl = {
 					};
 					request(requestOptions, (error, response, body) => {
 						if (error || !body || !body.result) {
-							return call(bl.handleError(soajs, 421, null));
+							return call(bl.handleError(soajs, 421, error));
 						}
 						return call(null, {
 							id: host,
@@ -555,7 +555,7 @@ let bl = {
 					};
 					request.put(options, function (error, response, body) {
 						if (error || !body || !body.result) {
-							return callback(bl.handleError(soajs, 421, null));
+							return callback(bl.handleError(soajs, 421, error));
 						}
 						return callback(null, body.data);
 					});
