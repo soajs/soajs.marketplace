@@ -14,6 +14,10 @@ const assert = require('assert');
 const nock = require("nock");
 
 describe("Unit test for: lib/sdk.js - marketplace", function () {
+	afterEach((done) => {
+		nock.cleanAll();
+		done();
+	});
 	
 	it("call ledger- empty doc", function (done) {
 		let soajs = {
@@ -114,7 +118,6 @@ describe("Unit test for: lib/sdk.js - marketplace", function () {
 			});
 		sdk.ledger(soajs, doc, response, (error) => {
 			setTimeout(function () {
-				nock.cleanAll();
 				assert.ifError(error);
 				done();
 			}, 300);
@@ -180,10 +183,158 @@ describe("Unit test for: lib/sdk.js - marketplace", function () {
 			});
 		sdk.ledger(soajs, doc, response, (error) => {
 			setTimeout(function () {
-				nock.cleanAll();
 				assert.ifError(error);
 				done();
 			}, 300);
+		});
+	});
+	
+	it("call get_env_registry, succeeded response", function (done) {
+		let soajs = {
+			awareness: {
+				connect: (service, version, cb) => {
+					return cb({
+						headers: {},
+						host: "www.example.com"
+					});
+				}
+			},
+			log: {
+				error: (error) => {
+					console.log(error);
+				}
+			}
+		};
+		let data = {
+			"env": "new",
+		};
+		nock('http://www.example.com')
+			.get('/registry?env=new')
+			.reply(200, {
+				"result": true,
+				"data": {
+					"code": "DEV"
+				}
+			});
+		sdk.get_env_registry(soajs, data, (error) => {
+			assert.ifError(error);
+			done();
+		});
+	});
+	
+	it("call get_env_registry, fail no env", function (done) {
+		let soajs = {
+			awareness: {
+				connect: (service, version, cb) => {
+					return cb({
+						headers: {},
+						host: "www.example.com"
+					});
+				}
+			},
+			log: {
+				error: (error) => {
+					console.log(error);
+				}
+			}
+		};
+		let data = {
+		};
+		nock('http://www.example.com')
+			.get('/registry')
+			.reply(200, {
+				"result": true,
+			});
+		sdk.get_env_registry(soajs, data, (error) => {
+			assert.ifError(error);
+			done();
+		});
+	});
+	
+	it("call get_env_registry, fail error in response", function (done) {
+		let soajs = {
+			awareness: {
+				connect: (service, version, cb) => {
+					return cb({
+						headers: {},
+						host: "www.example.com"
+					});
+				}
+			},
+			log: {
+				error: (error) => {
+					console.log(error);
+				}
+			}
+		};
+		let data = {
+			"env": "new",
+		};
+		nock('http://www.example.com')
+			.get('/registry?env=new')
+			.reply(200, {
+				"result": false,
+			});
+		sdk.get_env_registry(soajs, data, (error) => {
+			assert.ifError(error);
+			done();
+		});
+	});
+	
+	it("call get_env_registry, fail error in request", function (done) {
+		let soajs = {
+			awareness: {
+				connect: (service, version, cb) => {
+					return cb({
+						headers: {},
+						host: "www.example.com"
+					});
+				}
+			},
+			log: {
+				error: (error) => {
+					console.log(error);
+				}
+			}
+		};
+		let data = {
+			"env": "new",
+		};
+		nock('http://www.example.com')
+			.get('/registry')
+			.reply(200, {
+				"result": false,
+			});
+		sdk.get_env_registry(soajs, data, (error) => {
+			assert.ifError(error);
+			done();
+		});
+	});
+	
+	it("call get_env_registry, fail no connect to infra", function (done) {
+		let soajs = {
+			awareness: {
+				connect: (service, version, cb) => {
+					return cb(null);
+				}
+			},
+			log: {
+				error: (error) => {
+					console.log(error);
+				}
+			}
+		};
+		let data = {
+			"env": "new",
+		};
+		nock('http://www.example.com')
+			.get('/registry')
+			.reply(200, {
+				"result": true,
+			});
+		sdk.get_env_registry(soajs, data, (error) => {
+			assert.ifError(error);
+			done();
 		});
 	});
 });
