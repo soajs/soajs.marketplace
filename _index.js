@@ -264,7 +264,7 @@ function run(serviceStartCb) {
 				});
 			});
 			service.put("/item/maintenance", function (req, res) {
-				bl.marketplace.maintenance(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				bl.marketplace.maintenance(req.soajs, req.soajs.inputmaskData, null, soajs, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
