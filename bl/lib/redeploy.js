@@ -11,7 +11,7 @@ const request = require("request");
 const async = require("async");
 
 function computeErrorMessageFromService(body) {
-	if (body && !body.result) {
+	if (body || (body && !body.result)) {
 		let error = "";
 		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {
@@ -70,7 +70,7 @@ let lib = {
 							}
 						} else {
 							if (results.get_item.settings.environments.value.length > 0 &&
-								results.get_item.settings.environments.value.indexOf(inputmaskData.toUpperCase()) > -1) {
+								results.get_item.settings.environments.value.indexOf(inputmaskData.env.toUpperCase()) > -1) {
 								return callback(bl.marketplace.handleError(soajs, 406, null));
 							}
 						}
@@ -99,7 +99,10 @@ let lib = {
 			}],
 			inspect_item: ["get_deploy", function (results, callback) {
 				let url = "/kubernetes/item/inspect";
-				soajs.awareness.connect('infra', function (res) {
+				soajs.awareness.connect('infra', '1', function (res) {
+					if (!res){
+						return callback(bl.marketplace.handleError(soajs, 421, null));
+					}
 					let options = {
 						method: "get",
 						uri: "http://" + res.host + url,
@@ -117,7 +120,7 @@ let lib = {
 						}
 					};
 					request(options, (error, response, body) => {
-						if (!body.result) {
+						if (!body || !body.result) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						}
 						//check if item is deployed
@@ -150,6 +153,9 @@ let lib = {
 				};
 				opts.config.env = inputmaskData.env;
 				if (inputmaskData.src) {
+					if (!opts.config.src){
+						return callback(bl.marketplace.handleError(soajs, 423, null));
+					}
 					config.src = inputmaskData.src;
 					if (inputmaskData.src.from.tag) {
 						opts.config.src.tag = inputmaskData.src.from.tag;
@@ -190,7 +196,7 @@ let lib = {
 					body: results.save_deploy
 				};
 				request(options, (error, response, body) => {
-					if (!body.result) {
+					if (!body || !body.result) {
 						return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 					}
 					return callback(null, true);
