@@ -12,7 +12,7 @@ const async = require("async");
 const soajsCore = require('soajs');
 
 function computeErrorMessageFromService(body) {
-	if (body && !body.result) {
+	if (body || (body && !body.result)) {
 		let error = "";
 		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {

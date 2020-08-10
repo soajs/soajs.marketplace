@@ -727,10 +727,8 @@ describe("Unit test for: BL - lib/redeploy", () => {
 							}
 						},
 						"src": {
-							"from": {
-								"branch": "master",
-								"commit": "123"
-							}
+							"branch": "master",
+							"commit": "123"
 						},
 						settings: {
 							memory: "0",
@@ -846,10 +844,8 @@ describe("Unit test for: BL - lib/redeploy", () => {
 							}
 						},
 						"src": {
-							"from": {
-								"branch": "master",
-								"commit": "123"
-							}
+							"branch": "master",
+							"commit": "123"
 						},
 						settings: {
 							memory: "0",
@@ -1085,9 +1081,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 							strategy: "notify"
 						},
 						"src": {
-							"from": {
-								"tag": "1"
-							}
+							"tag": "1"
 						},
 						version: "1"
 					}
@@ -1202,9 +1196,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 							strategy: "notify"
 						},
 						"src": {
-							"from": {
-								"tag": "1"
-							}
+							"tag": "1"
 						},
 						version: "1"
 					}

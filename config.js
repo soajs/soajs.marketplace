@@ -832,8 +832,7 @@ module.exports = {
 										"required": ["image_tag", "image_name", "image_prefix"]
 									}
 								]
-							},
-							
+							}
 						}
 					}
 				}

@@ -52,8 +52,8 @@ describe("Unit test for: model - marketplace", function () {
 		}
 	};
 	before((done) => {
-		
-		modelObj = new Model(service);
+		//custom index for unit mongo tests cases
+		modelObj = new Model(service, {index : "test"});
 		
 		done();
 	});
