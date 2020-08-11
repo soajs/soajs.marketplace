@@ -9,7 +9,7 @@
  */
 const request = require("request");
 const async = require("async");
-const soajsCore = require('soajs');
+const sdk = require('../../lib/sdk');
 
 function computeErrorMessageFromService(body) {
 	if (body || (body && !body.result)) {
@@ -140,8 +140,7 @@ let lib = {
 								return call();
 							});
 						});
-					}
-					else {
+					} else {
 						return call();
 					}
 				},
@@ -197,36 +196,37 @@ let lib = {
 						}
 						let temp = {};
 						if (computedEnvVariables[env_variables[1]]) {
-							if (opts.item.configuration.maintenance &&
-								opts.item.configuration.maintenance.port &&
-								opts.item.configuration.maintenance.type) {
-								if (opts.item.configuration.maintenance.type === "inherit") {
+							if (opts.version.maintenance &&
+								opts.version.maintenance.port &&
+								opts.version.maintenance.type) {
+								if (opts.version.maintenance.type === "inherit") {
 									temp = {
 										"name": computedEnvVariables[env_variables[1]],
-										"value": opts.item.configuration.port.toString()
+										"value": opts.version.port.toString()
 									};
-								} else if (opts.item.configuration.maintenance.type === "maintenance") {
+								} else if (opts.version.maintenance.type === "maintenance") {
 									temp = {
 										"name": computedEnvVariables[env_variables[1]],
-										"value": (opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc).toString()
+										"value": (opts.version.port + opts.registry.services.config.ports.maintenanceInc).toString()
 									};
 								} else {
 									temp = {
 										"name": computedEnvVariables[env_variables[1]],
-										"value": opts.item.configuration.maintenance.value.toString()
+										"value": opts.version.maintenance.value.toString()
 									};
 								}
+								
+							} else {
+								temp = {
+									"name": computedEnvVariables[env_variables[1]],
+									"value": (opts.version.port + opts.registry.services.config.ports.maintenanceInc).toString()
+								};
 							}
-						} else {
-							temp = {
-								"name": computedEnvVariables[env_variables[1]],
-								"value": (opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc).toString()
-							};
+							if (!temp.value) {
+								return call(bl.marketplace.handleError(soajs, 422, new Error(temp.name + " computed variable was not found")));
+							}
+							config.env.push(temp);
 						}
-						if (!temp.value) {
-							return call(bl.marketplace.handleError(soajs, 422, new Error(temp.name + " computed variable was not found")));
-						}
-						config.env.push(temp);
 					}
 					return call();
 				},
@@ -235,9 +235,9 @@ let lib = {
 					if (computedEnvVariables[env_variables[0]]) {
 						config.env.push({
 							"name": computedEnvVariables[env_variables[0]],
-							"value": opts.registry.name.toLowerCase()
+							"value": opts.registry.code.toLowerCase()
 						});
-						if (!opts.registry.name.toLowerCase()) {
+						if (!opts.registry.code.toLowerCase()) {
 							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[0]] + " computed variable was not found")));
 						}
 					}
@@ -257,18 +257,18 @@ let lib = {
 					if (computedEnvVariables[env_variables[3]]) {
 						config.env.push({
 							"name": computedEnvVariables[env_variables[3]],
-							"value": opts.registry.serviceConfig.ports.controller.toString()
+							"value": opts.registry.services.config.ports.controller.toString()
 						});
-						if (!opts.registry.serviceConfig.ports.controller) {
+						if (!opts.registry.services.config.ports.controller) {
 							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[4]] + " computed variable was not found")));
 						}
 					}
 					if (computedEnvVariables[env_variables[4]]) {
 						config.env.push({
 							"name": computedEnvVariables[env_variables[4]],
-							"value": (opts.registry.serviceConfig.ports.controller + opts.registry.serviceConfig.ports.maintenanceInc).toString()
+							"value": (opts.registry.services.config.ports.controller + opts.registry.services.config.ports.maintenanceInc).toString()
 						});
-						if (!opts.registry.serviceConfig.ports.controller || opts.registry.serviceConfig.ports.maintenanceInc) {
+						if (!opts.registry.services.config.ports.controller || !opts.registry.services.config.ports.maintenanceInc) {
 							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[5]] + " computed variable was not found")));
 						}
 					}
@@ -289,6 +289,13 @@ let lib = {
 						computedEnvVariables[env_variables[1]]) {
 						soajs.awareness.connect("infra", "1", (response) => {
 							if (response && response.host) {
+								let labelSelector;
+								if (opts.registry.services.config.ports.name) {
+									labelSelector = 'soajs.env.code=' + opts.registry.code.toLowerCase() + ', soajs.service.name=' + opts.registry.services.config.ports.name;
+								}
+								else {
+									labelSelector = 'soajs.env.code=' + opts.registry.code.toLowerCase() + ', soajs.service.name=' + "controller";
+								}
 								let options = {
 									method: "get",
 									uri: "http://" + response.host + "/kubernetes/services/Service",
@@ -296,10 +303,10 @@ let lib = {
 									json: true,
 									qs: {
 										configuration: {
-											env: opts.registry.name.toLowerCase()
+											env: opts.registry.code.toLowerCase()
 										},
 										filter: {
-											labelSelector: 'soajs.env.code=' + opts.registry.name.toLowerCase() + ', soajs.service.name=' + opts.registry.services.controller.name || "controller"
+											labelSelector
 										},
 										limit: 100
 									}
@@ -308,7 +315,9 @@ let lib = {
 									if (error || !body.result) {
 										return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 									}
-									if (!body.data || !body.data.items || body.data.items.length === 0 || !body.data.items[0].metadata || !body.data.items[0].metadata.name) {
+									if (!body.data || !body.data.items || body.data.items.length === 0 ||
+										!body.data.items[0].metadata || !body.data.items[0].metadata.name ||
+										!body.data.items[0].spec ) {
 										return call(bl.marketplace.handleError(soajs, 411, null));
 									}
 									if (computedEnvVariables[env_variables[0]]) {
@@ -321,10 +330,10 @@ let lib = {
 										});
 									}
 									if (computedEnvVariables[env_variables[1]]) {
-										if (!body.data.items[0].spec.clusterIP || !soajs.registry.serviceConfig.ports.controller || !soajs.registry.serviceConfig.ports.maintenanceInc) {
+										if (!body.data.items[0].spec.clusterIP || !opts.registry.services.config.ports.controller || !opts.registry.services.config.ports.maintenanceInc) {
 											return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[1]] + " computed variable was not found")));
 										}
-										let gatewayRegistryPort = soajs.registry.serviceConfig.ports.controller + soajs.registry.serviceConfig.ports.maintenanceInc;
+										let gatewayRegistryPort = opts.registry.services.config.ports.controller + opts.registry.services.config.ports.maintenanceInc;
 										config.env.push({
 											"name": computedEnvVariables[env_variables[1]],
 											"value": body.data.items[0].spec.clusterIP + ":" + gatewayRegistryPort
@@ -380,7 +389,7 @@ let lib = {
 						if (!found) {
 							return call(bl.marketplace.handleError(soajs, 417, null));
 						}
-						soajs.awareness.connect('repositories', function (res) {
+						soajs.awareness.connect('repositories', '1', function (res) {
 							let options = {
 								method: "get",
 								uri: "http://" + res.host + "/git/repo/info",
@@ -485,7 +494,7 @@ let lib = {
 		// };
 		config.catalog = {
 			id: opts.recipe._id.toString(),
-			version: opts.recipe.v.toString(),
+			version: opts.recipe.v ? opts.recipe.v.toString() : "1",
 		};
 		if (opts.recipe.recipe.deployOptions.image.shell) {
 			config.catalog.shell = opts.recipe.recipe.deployOptions.image.shell;
@@ -493,7 +502,7 @@ let lib = {
 			config.catalog.shell = "shell/bin/bash";
 		}
 		config.item = {
-			env: opts.registry.name.toLowerCase(),
+			env: opts.registry.code.toLowerCase(),
 			name: opts.item.name,
 			type: opts.item.type,
 			version: opts.deploy.version
@@ -621,13 +630,13 @@ let lib = {
 				} else if (maintenance.port.type === "maintenance") {
 					config.service.ports.push({
 						name: "maintenance-port",
-						target: opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc,
+						target: opts.item.configuration.port + opts.registry.services.config.ports.maintenanceInc,
 						protocol: "TCP",
-						port: opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc,
+						port: opts.item.configuration.port + opts.registry.services.config.ports.maintenanceInc,
 					});
 					config.ports.push({
 						"name": 'maintenance',
-						"containerPort": opts.item.configuration.port + opts.registry.serviceConfig.ports.maintenanceInc
+						"containerPort": opts.item.configuration.port + opts.registry.services.config.ports.maintenanceInc
 					});
 				}
 				//inherit do nothing
@@ -675,7 +684,7 @@ let lib = {
 	},
 	
 	"getSourceInformation": (soajs, opts, bl, cb) => {
-		soajs.awareness.connect('repositories', function (res) {
+		soajs.awareness.connect('repositories', '1', function (res) {
 			let options = {
 				method: "get",
 				uri: "http://" + res.host + "/git/repo/info",
@@ -689,7 +698,7 @@ let lib = {
 				if (error || !repo.result) {
 					return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
 				}
-				if (!repo && !repo.data.owner) {
+				if (!repo || !repo.data || !repo.data.owner) {
 					return cb(bl.marketplace.handleError(soajs, 412, null));
 				}
 				return cb(null, repo.data);
@@ -757,7 +766,26 @@ let lib = {
 				}
 				return callback(null, true);
 			},
-			get_deploy: ['check_acl', function (results, callback) {
+			get_version: ['check_acl', function (results, callback) {
+				if (item.versions && item.versions.length > 0) {
+					let found = false;
+					let version;
+					item.versions.forEach((v) => {
+						if (v.version === inputmaskData.version) {
+							found = true;
+							version = v;
+						}
+					});
+					if (!found) {
+						return callback(bl.marketplace.handleError(soajs, 418, null));
+					} else {
+						return callback(null, version);
+					}
+				} else {
+					return callback(bl.marketplace.handleError(soajs, 418, null));
+				}
+			}],
+			get_deploy: ['get_version', function (results, callback) {
 				if (item.deploy && item.deploy[inputmaskData.env]) {
 					let found = false;
 					let deploy;
@@ -790,6 +818,8 @@ let lib = {
 					request(options, (error, response, body) => {
 						if (error || !body.result) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+						} else if (!body.data || !body.data.recipe) {
+							return callback(bl.marketplace.handleError(soajs, 417, null));
 						} else {
 							return callback(null, body.data);
 						}
@@ -798,7 +828,7 @@ let lib = {
 				});
 			}],
 			get_env_record: ['get_deploy', 'get_catalog_recipe', function (results, callback) {
-				soajsCore.core.registry.loadByEnv({envCode: inputmaskData.env}, (err, envRecord) => {
+				sdk.get_env_registry(soajs, {envCode: inputmaskData.env}, (err, envRecord) => {
 					if (err) {
 						return callback(bl.marketplace.handleError(soajs, 416, err));
 					}
@@ -825,6 +855,7 @@ let lib = {
 			}],
 			computeEnvVariables: ['get_env_record', 'get_catalog_recipe', 'get_src', function (results, callback) {
 				let opts = {
+					version: results.get_version,
 					item: item,
 					deploy: results.get_deploy,
 					recipe: results.get_catalog_recipe,
@@ -849,7 +880,7 @@ let lib = {
 			}],
 			deploy: ['compute_extra', function (results, callback) {
 				let opts = {
-					env: results.get_env_record.name,
+					env: results.get_env_record.code,
 					host: {
 						infra: results.computeEnvVariables && results.computeEnvVariables[1] ? results.computeEnvVariables[1] : null
 					}

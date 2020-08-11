@@ -30,6 +30,7 @@ describe("Starting Unit test", () => {
 
 		require("./bl/lib/redeploy.js");
 		require("./bl/lib/cd.js");
+		require("./bl/lib/deploy.js");
 		done();
 	});
 	
