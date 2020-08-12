@@ -194,10 +194,6 @@ let validator = {
 				}
 			}
 		},
-		"swagger": {
-			"type": "object",
-			"required": false
-		},
 		"documentation": {
 			"type": "object",
 			"required": false,

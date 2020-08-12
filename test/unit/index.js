@@ -33,13 +33,29 @@ describe("Starting Unit test", () => {
 		require("./bl/lib/deploy.js");
 		done();
 	});
-	
+
+	it("Unit test for driver", (done) => {
+		require("./driver/config/index.js");
+		require("./driver/custom/index.js");
+		require("./driver/daemon/index.js");
+		require("./driver/resource/index.js");
+		require("./driver/soajs/index.js");
+		require("./driver/service/index.js");
+		require("./driver/static/index.js");
+		done();
+	});
+
+	it("Unit test for lib", (done) => {
+		require("./lib/sdk.js");
+		done();
+	});
+
 	it("Unit test for Model", (done) => {
 		require("./model/mongo/marketplace.js");
 		done();
 	});
-	it("Unit test for lib", (done) => {
-		require("./lib/sdk.js");
+	it("Unit test for utils", (done) => {
+		require("./utils/index.js");
 		done();
 	});
 	

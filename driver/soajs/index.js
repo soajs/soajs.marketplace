@@ -187,7 +187,7 @@ let lib = {
 					} else {
 						if (data.src.branch) {
 							if (oneVersion.branches) {
-								let index = oneVersion.branches.indexOf(v);
+								let index = oneVersion.branches.indexOf(data.src.branch);
 								if (index > -1) {
 									oneVersion.branches = oneVersion.branches.splice(index, 1);
 								}
@@ -197,7 +197,7 @@ let lib = {
 							}
 						} else if (data.src.tag) {
 							if (oneVersion.tags) {
-								let index = oneVersion.tags.indexOf(v);
+								let index = oneVersion.tags.indexOf(data.src.tag);
 								if (index > -1) {
 									oneVersion.tags = oneVersion.tags.splice(index, 1);
 								}
