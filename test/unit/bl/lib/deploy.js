@@ -44,7 +44,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 			"handleError": (soajs, errCode, err) => {
 				return ({
 					"code": errCode,
-					"message":err && err.message?  err.message : err
+					"message": err && err.message ? err.message : err
 				});
 			},
 		}
@@ -183,7 +183,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 						return cb(null, {
 							"_id": "123",
 							"name": "marketplace",
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"settings": {
@@ -279,7 +279,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -339,7 +339,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -399,7 +399,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -456,7 +456,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -515,7 +515,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -574,7 +574,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -627,7 +627,6 @@ describe("Unit test for: BL - lib/deploy", () => {
 								pullPolicy: "Always",
 								repositoryType: "public",
 								override: true,
-								shell: "shell/bin/bash",
 								binary: false
 							},
 							sourceCode: {},
@@ -750,7 +749,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 							"settings": {
 								"environments": {}
 							},
-							"versions" :[{
+							"versions": [{
 								"version": "1"
 							}],
 							"deploy": {
@@ -916,7 +915,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 		});
 	});
 	
-	it("deploy - fail failed to get source information", function (done) {
+	it("deploy - success with src tag", function (done) {
 		bl.marketplace.mp = {
 			getModel: () => {
 				return {
@@ -928,18 +927,17 @@ describe("Unit test for: BL - lib/deploy", () => {
 								configuration: {
 									group: "config"
 								},
-								"versions" : [{
-									"version" : "2",
+								"versions": [{
+									"version": "2",
 									"tags": ["1.1"]
 								}],
 								src: {
 									provider: "manual"
 								}
 							});
-						}
-						else {
+						} else {
 							return cb(null, {
-								type: "service",
+								type: "daemon",
 								name: "marketplace",
 								configuration: {
 									subType: "soajs",
@@ -984,7 +982,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 												},
 												ports: {
 													type: "kubernetes",
-													portType: "Internal",
+													portType: "NodePort",
 													values: [
 														{
 															name: "http",
@@ -996,14 +994,15 @@ describe("Unit test for: BL - lib/deploy", () => {
 															target: 443,
 															isPublished: true
 														}
-													]
+													],
+													externalTrafficPolicy: "cluster"
 												},
-												sourceCode :{
-													"label" : "test",
-													"catalog" : "test",
-													"id" : "98023",
-													"version" : "2",
-													"tag" : "1.1",
+												sourceCode: {
+													"label": "test",
+													"catalog": "test",
+													"id": "98023",
+													"version": "2",
+													"tag": "1.1",
 												},
 											},
 											settings: {
@@ -1017,7 +1016,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 											"src": {
 												"id": "14687",
 												"owner": "soajs",
-												"commit": "123"
+												"tag": "1.1",
 											},
 											version: "1"
 										}
@@ -1098,15 +1097,14 @@ describe("Unit test for: BL - lib/deploy", () => {
 								pullPolicy: "Always",
 								repositoryType: "public",
 								override: true,
-								shell: "shell/bin/bash",
 								binary: false
 							},
 							sourceCode: {
-								"label" : "test",
-								"catalog" : "test",
-								"id" : "98023",
-								"version" : "test",
-								"tag" : "1.1",
+								"label": "test",
+								"catalog": "test",
+								"id": "98023",
+								"version": "test",
+								"tag": "1.1",
 							},
 							readinessProbe: {
 								exec: {
@@ -1333,20 +1331,1329 @@ describe("Unit test for: BL - lib/deploy", () => {
 				configuration: {
 					env: "new"
 				},
-				filter :{
-					labelSelector : 'soajs.env.code=new, soajs.service.name=controller'
+				filter: {
+					labelSelector: 'soajs.env.code=new, soajs.service.name=controller'
 				},
 				"limit": 100
 			})
 			.reply(200, {
 				"result": true,
 				"data": {
-					items : [{
-						"metadata" :{
+					items: [{
+						"metadata": {
 							"name": "marketplace",
 						},
-						"spec" :{
-							"clusterIP" : "1.0.0.1"
+						"spec": {
+							"clusterIP": "1.0.0.1"
+						}
+					}]
+				}
+			});
+		
+		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error, response) => {
+			assert.ifError(error);
+			assert.ok(response);
+			done();
+		});
+	});
+	
+	it("deploy - success with src branch", function (done) {
+		bl.marketplace.mp = {
+			getModel: () => {
+				return {
+					getItem: (data, cb) => {
+						if (data.type === "config") {
+							return cb(null, {
+								name: "config",
+								type: "config",
+								configuration: {
+									group: "config"
+								},
+								"versions": [{
+									"version": "2",
+									"branches": ["master"]
+								}],
+								src: {
+									provider: "manual"
+								}
+							});
+						} else {
+							return cb(null, {
+								type: "service",
+								name: "marketplace",
+								configuration: {
+									subType: "soajs",
+									group: "Console",
+									port: 4007,
+									requestTimeout: 30,
+									requestTimeoutRenewal: 5
+								},
+								versions: [
+									{
+										version: "1",
+										maintenance: {
+											readiness: "/heartbeat",
+											port: {
+												type: "custom",
+												value: "90"
+											},
+											commands: [
+												{
+													label: "Reload Registry",
+													path: "/reloadRegistry",
+													icon: "fas fa-undo"
+												},
+												{
+													label: "Resource Info",
+													path: "/resourceInfo",
+													icon: "fas fa-info"
+												}
+											]
+										},
+										apis: []
+									}
+								],
+								deploy: {
+									NEW: [
+										{
+											recipe: {
+												id: "9090",
+												image: {
+													prefix: "soajsorg",
+													name: "gateway",
+													tag: "latest"
+												},
+												ports: {
+													type: "kubernetes",
+													portType: "Internal",
+													values: [
+														{
+															name: "http",
+															target: 80,
+															isPublished: true
+														},
+														{
+															name: "https",
+															target: 443,
+															isPublished: true
+														}
+													]
+												},
+												readinessProbe: {
+													exec: {
+														command: [
+															"ls"
+														]
+													},
+													initialDelaySeconds: 5,
+													timeoutSeconds: 5,
+													periodSeconds: 5,
+													successThreshold: 5,
+													failureThreshold: 5,
+												},
+												livenessProbe: {
+													exec: {
+														command: [
+															"ls"
+														]
+													},
+													initialDelaySeconds: 5,
+													timeoutSeconds: 5,
+													periodSeconds: 5,
+													successThreshold: 5,
+													failureThreshold: 5,
+												},
+												sourceCode: {
+													"label": "test",
+													"catalog": "test",
+													"id": "98023",
+													"version": "2",
+													"branch": "master",
+												},
+												"env" : {
+													secret_env: {
+														type: "secret",
+														value: "tola"
+													},
+													user_input: {
+														type: "userInput",
+														value: "lola"
+													},
+												},
+											},
+											settings: {
+												memory: "0",
+												mode: "CronJob",
+												schedule: " * * * * *",
+												concurrencyPolicy: "standard",
+												restartPolicy: true
+											},
+											cd: {
+												strategy: "notify"
+											},
+											"src": {
+												"id": "14687",
+												"owner": "soajs",
+												"branch": "master",
+												"commit": "123"
+											},
+											version: "1"
+										}
+									]
+								}
+							});
+						}
+						
+					}
+				};
+			}
+		};
+		let inputmaskData = {
+			"name": "marketplace",
+			"type": "service",
+			"version": "1",
+			"env": "NEW"
+		};
+		
+		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
+			return cb(null, {
+				code: "NEW",
+				description: "new",
+				domain: "soajs.org",
+				sitePrefix: "site",
+				apiPrefix: "api",
+				port: 443,
+				protocol: "https",
+				deployer: {
+					type: "container",
+					selected: "container.kubernetes",
+					container: {
+						kubernetes: {
+							id: "5ef30a5b5f04686c4f63f693",
+							namespace: "new"
+						}
+					}
+				},
+				dbs: {
+					config: {
+						prefix: ""
+					},
+					databases: {}
+				},
+				services: {
+					controller: {
+						authorization: false,
+					},
+					config: {
+						ports: {
+							controller: 4000,
+							maintenanceInc: 1000,
+							randomInc: 100
+						}
+					}
+				}
+			});
+		});
+		nock('http://www.example.com')
+			.get('/catalog/recipes/get')
+			.query({
+				id: "9090"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					_id: "9090",
+					name: "marketplace",
+					type: "service",
+					subtype: "nodejs",
+					description: "Deploy Node.js service",
+					recipe: {
+						deployOptions: {
+							image: {
+								prefix: "soajsorg",
+								name: "marketplace",
+								tag: "latest",
+								pullPolicy: "Always",
+								repositoryType: "public",
+								override: true,
+								shell: "shell/bin/bash",
+								binary: false
+							},
+							sourceCode: {
+								"label": "test",
+								"catalog": "test",
+								"id": "98023",
+								"version": "test",
+								"branch": "master",
+							},
+							readinessProbe: {
+								exec: {
+									command: [
+										"ls"
+									]
+								},
+								initialDelaySeconds: 5,
+								timeoutSeconds: 5,
+								periodSeconds: 5,
+								successThreshold: 5,
+								failureThreshold: 5,
+							},
+							livenessProbe: {
+								exec: {
+									command: [
+										"ls"
+									]
+								},
+								initialDelaySeconds: 5,
+								timeoutSeconds: 5,
+								periodSeconds: 5,
+								successThreshold: 5,
+								failureThreshold: 5,
+							},
+							ports: [
+								{
+									name: "http",
+									target: 80,
+									isPublished: true,
+									published: 30080
+								}
+							],
+							voluming: [
+								{
+									docker: {},
+									kubernetes: {
+										volume: {
+											name: "soajsprofile",
+											secret: {
+												secretName: "soajsprofile"
+											}
+										},
+										volumeMount: {
+											mountPath: "/opt/soajs/profile/",
+											name: "soajsprofile"
+										}
+									}
+								}
+							],
+							restartPolicy: {
+								condition: "any",
+								maxAttempts: 4
+							},
+							container: {
+								network: "soajsnet",
+								workingDir: "/opt"
+							},
+							labels: {
+								ragheb: "ragheb"
+							},
+							execCommands: {
+								list: "ls -l"
+							}
+						},
+						buildOptions: {
+							env: {
+								secret_env: {
+									type: "secret",
+									value: "tola"
+								},
+								user_input: {
+									type: "userInput",
+									value: "lola"
+								},
+							},
+							cmd: {
+								deploy: {
+									command: [
+										"bash"
+									],
+									args: [
+										"-c",
+										"node ."
+									]
+								}
+							}
+						}
+					}
+				}
+			});
+		
+		nock('http://www.example.com')
+			.get('/git/repo/info')
+			.query({
+				id: "14687"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					domain: "github.com",
+					repository: "soajs.marketplace",
+					name: "marketplace",
+					owner: "soajs",
+					provider: "github",
+					access: "public",
+					token: "12345678"
+				}
+			});
+		
+		nock('http://www.example.com')
+			.get('/git/repo/info')
+			.query({
+				id: "98023"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					domain: "github.com",
+					repository: "config.test",
+					name: "github",
+					owner: "soajs",
+					provider: "github",
+					access: "public",
+					token: "576322"
+				}
+			});
+		nock('http://www.example.com')
+			.get('/console/tenant')
+			.query({
+				code: "DBTN"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					code: "DBTN",
+					applications: [
+						{
+							product: "DSBRD",
+							package: "DSBRD_GUEST",
+							description: "Dashboard application for DSBRD_GUEST package",
+							keys: [
+								{
+									key: "a139786a6e6d18e48b4987e83789430b",
+									extKeys: [
+										{
+											extKey: "98",
+											device: null,
+											geo: null,
+											env: "DASHBOARD",
+											dashboardAccess: true,
+											expDate: null
+										}
+									]
+								}
+							]
+						}
+					],
+					console: true,
+					description: "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
+					locked: true,
+					name: "Console Tenant",
+					tag: "Console",
+					type: "product"
+				}
+			});
+		
+		nock('http://www.example.com')
+			.post('/kubernetes/item/deploy/soajs/cronjob')
+			.query({
+				configuration: {
+					env: "new"
+				}
+			})
+			.reply(200, {
+				"result": true,
+				"data": true
+			});
+		
+		nock('http://www.example.com')
+			.get('/kubernetes/services/Service')
+			.query({
+				configuration: {
+					env: "new"
+				},
+				filter: {
+					labelSelector: 'soajs.env.code=new, soajs.service.name=controller'
+				},
+				"limit": 100
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					items: [{
+						"metadata": {
+							"name": "marketplace",
+						},
+						"spec": {
+							"clusterIP": "1.0.0.1"
+						}
+					}]
+				}
+			});
+		
+		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error, response) => {
+			assert.ifError(error);
+			assert.ok(response);
+			done();
+		});
+	});
+	
+	it("deploy - success with maintenance", function (done) {
+		bl.marketplace.mp = {
+			getModel: () => {
+				return {
+					getItem: (data, cb) => {
+						if (data.type === "config") {
+							return cb(null, {
+								name: "config",
+								type: "config",
+								configuration: {
+									group: "config"
+								},
+								"versions": [{
+									"version": "2",
+									"branches": ["master"]
+								}],
+								src: {
+									provider: "manual"
+								}
+							});
+						} else {
+							return cb(null, {
+								type: "service",
+								name: "marketplace",
+								configuration: {
+									subType: "soajs",
+									group: "Console",
+									port: 4007,
+									requestTimeout: 30,
+									requestTimeoutRenewal: 5
+								},
+								versions: [
+									{
+										version: "1",
+										maintenance: {
+											readiness: "/heartbeat",
+											port: {
+												type: "maintenance"
+											},
+											commands: [
+												{
+													label: "Reload Registry",
+													path: "/reloadRegistry",
+													icon: "fas fa-undo"
+												},
+												{
+													label: "Resource Info",
+													path: "/resourceInfo",
+													icon: "fas fa-info"
+												}
+											]
+										},
+										apis: []
+									}
+								],
+								deploy: {
+									NEW: [
+										{
+											recipe: {
+												id: "9090",
+												image: {
+													prefix: "soajsorg",
+													name: "gateway",
+													tag: "latest"
+												},
+												ports: {
+													type: "kubernetes",
+													portType: "Internal",
+													values: [
+														{
+															name: "http",
+															target: 80,
+															isPublished: true
+														},
+														{
+															name: "https",
+															target: 443,
+															isPublished: true
+														}
+													]
+												},
+												readinessProbe: {
+													exec: {
+														command: [
+															"ls"
+														]
+													},
+													initialDelaySeconds: 5,
+													timeoutSeconds: 5,
+													periodSeconds: 5,
+													successThreshold: 5,
+													failureThreshold: 5,
+												},
+												livenessProbe: {
+													exec: {
+														command: [
+															"ls"
+														]
+													},
+													initialDelaySeconds: 5,
+													timeoutSeconds: 5,
+													periodSeconds: 5,
+													successThreshold: 5,
+													failureThreshold: 5,
+												},
+												sourceCode: {
+													"label": "test",
+													"catalog": "test",
+													"id": "98023",
+													"version": "2",
+													"branch": "master",
+												},
+												"env" : {
+													secret_env: {
+														type: "secret",
+														value: "tola"
+													},
+													user_input: {
+														type: "userInput",
+														value: "lola"
+													},
+												},
+											},
+											settings: {
+												memory: "0",
+												mode: "CronJob",
+												schedule: " * * * * *",
+												concurrencyPolicy: "standard",
+												restartPolicy: true
+											},
+											cd: {
+												strategy: "notify"
+											},
+											"src": {
+												"id": "14687",
+												"owner": "soajs",
+												"branch": "master",
+												"commit": "123"
+											},
+											version: "1"
+										}
+									]
+								}
+							});
+						}
+						
+					}
+				};
+			}
+		};
+		let inputmaskData = {
+			"name": "marketplace",
+			"type": "service",
+			"version": "1",
+			"env": "NEW"
+		};
+		
+		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
+			return cb(null, {
+				code: "NEW",
+				description: "new",
+				domain: "soajs.org",
+				sitePrefix: "site",
+				apiPrefix: "api",
+				port: 443,
+				protocol: "https",
+				deployer: {
+					type: "container",
+					selected: "container.kubernetes",
+					container: {
+						kubernetes: {
+							id: "5ef30a5b5f04686c4f63f693",
+							namespace: "new"
+						}
+					}
+				},
+				dbs: {
+					config: {
+						prefix: ""
+					},
+					databases: {}
+				},
+				services: {
+					controller: {
+						authorization: false,
+					},
+					config: {
+						ports: {
+							controller: 4000,
+							maintenanceInc: 1000,
+							randomInc: 100
+						}
+					}
+				}
+			});
+		});
+		nock('http://www.example.com')
+			.get('/catalog/recipes/get')
+			.query({
+				id: "9090"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					_id: "9090",
+					name: "marketplace",
+					type: "service",
+					subtype: "nodejs",
+					description: "Deploy Node.js service",
+					recipe: {
+						deployOptions: {
+							image: {
+								prefix: "soajsorg",
+								name: "marketplace",
+								tag: "latest",
+								pullPolicy: "Always",
+								repositoryType: "public",
+								override: true,
+								shell: "shell/bin/bash",
+								binary: false
+							},
+							sourceCode: {
+								"label": "test",
+								"catalog": "test",
+								"id": "98023",
+								"version": "test",
+								"branch": "master",
+							},
+							readinessProbe: {
+								exec: {
+									command: [
+										"ls"
+									]
+								},
+								initialDelaySeconds: 5,
+								timeoutSeconds: 5,
+								periodSeconds: 5,
+								successThreshold: 5,
+								failureThreshold: 5,
+							},
+							livenessProbe: {
+								exec: {
+									command: [
+										"ls"
+									]
+								},
+								initialDelaySeconds: 5,
+								timeoutSeconds: 5,
+								periodSeconds: 5,
+								successThreshold: 5,
+								failureThreshold: 5,
+							},
+							ports: [
+								{
+									name: "http",
+									target: 80,
+									isPublished: true,
+									published: 30080
+								}
+							],
+							voluming: [
+								{
+									docker: {},
+									kubernetes: {
+										volume: {
+											name: "soajsprofile",
+											secret: {
+												secretName: "soajsprofile"
+											}
+										},
+										volumeMount: {
+											mountPath: "/opt/soajs/profile/",
+											name: "soajsprofile"
+										}
+									}
+								}
+							],
+							restartPolicy: {
+								condition: "any",
+								maxAttempts: 4
+							},
+							container: {
+								network: "soajsnet",
+								workingDir: "/opt"
+							},
+							labels: {
+								ragheb: "ragheb"
+							},
+							execCommands: {
+								list: "ls -l"
+							}
+						},
+						buildOptions: {
+							env: {
+								secret_env: {
+									type: "secret",
+									value: "tola"
+								},
+								user_input: {
+									type: "userInput",
+									value: "lola"
+								},
+							},
+							cmd: {
+								deploy: {
+									command: [
+										"bash"
+									],
+									args: [
+										"-c",
+										"node ."
+									]
+								}
+							}
+						}
+					}
+				}
+			});
+		
+		nock('http://www.example.com')
+			.get('/git/repo/info')
+			.query({
+				id: "14687"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					domain: "github.com",
+					repository: "soajs.marketplace",
+					name: "marketplace",
+					owner: "soajs",
+					provider: "github",
+					access: "public",
+					token: "12345678"
+				}
+			});
+		
+		nock('http://www.example.com')
+			.get('/git/repo/info')
+			.query({
+				id: "98023"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					domain: "github.com",
+					repository: "config.test",
+					name: "github",
+					owner: "soajs",
+					provider: "github",
+					access: "public",
+					token: "576322"
+				}
+			});
+		nock('http://www.example.com')
+			.get('/console/tenant')
+			.query({
+				code: "DBTN"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					code: "DBTN",
+					applications: [
+						{
+							product: "DSBRD",
+							package: "DSBRD_GUEST",
+							description: "Dashboard application for DSBRD_GUEST package",
+							keys: [
+								{
+									key: "a139786a6e6d18e48b4987e83789430b",
+									extKeys: [
+										{
+											extKey: "98",
+											device: null,
+											geo: null,
+											env: "DASHBOARD",
+											dashboardAccess: true,
+											expDate: null
+										}
+									]
+								}
+							]
+						}
+					],
+					console: true,
+					description: "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
+					locked: true,
+					name: "Console Tenant",
+					tag: "Console",
+					type: "product"
+				}
+			});
+		
+		nock('http://www.example.com')
+			.post('/kubernetes/item/deploy/soajs/cronjob')
+			.query({
+				configuration: {
+					env: "new"
+				}
+			})
+			.reply(200, {
+				"result": true,
+				"data": true
+			});
+		
+		nock('http://www.example.com')
+			.get('/kubernetes/services/Service')
+			.query({
+				configuration: {
+					env: "new"
+				},
+				filter: {
+					labelSelector: 'soajs.env.code=new, soajs.service.name=controller'
+				},
+				"limit": 100
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					items: [{
+						"metadata": {
+							"name": "marketplace",
+						},
+						"spec": {
+							"clusterIP": "1.0.0.1"
+						}
+					}]
+				}
+			});
+		
+		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error, response) => {
+			assert.ifError(error);
+			assert.ok(response);
+			done();
+		});
+	});
+	
+	it("deploy - success no src", function (done) {
+		bl.marketplace.mp = {
+			getModel: () => {
+				return {
+					getItem: (data, cb) => {
+						if (data.type === "config") {
+							return cb(null, {
+								name: "config",
+								type: "config",
+								configuration: {
+									group: "config"
+								},
+								"versions": [{
+									"version": "2",
+									"branches": ["master"]
+								}],
+								src: {
+									provider: "manual"
+								}
+							});
+						} else {
+							return cb(null, {
+								type: "service",
+								name: "marketplace",
+								configuration: {
+									subType: "soajs",
+									group: "Console",
+									port: 4007,
+									requestTimeout: 30,
+									requestTimeoutRenewal: 5
+								},
+								versions: [
+									{
+										version: "1",
+										maintenance: {
+											readiness: "/heartbeat",
+											port: {
+												type: "maintenance"
+											},
+											commands: [
+												{
+													label: "Reload Registry",
+													path: "/reloadRegistry",
+													icon: "fas fa-undo"
+												},
+												{
+													label: "Resource Info",
+													path: "/resourceInfo",
+													icon: "fas fa-info"
+												}
+											]
+										},
+										apis: []
+									}
+								],
+								deploy: {
+									NEW: [
+										{
+											recipe: {
+												id: "9090",
+												image: {
+													prefix: "soajsorg",
+													name: "gateway",
+													tag: "latest"
+												},
+												ports: {
+													type: "kubernetes",
+													portType: "Internal",
+													values: [
+														{
+															name: "http",
+															target: 80,
+															isPublished: true
+														},
+														{
+															name: "https",
+															target: 443,
+															isPublished: true
+														}
+													]
+												},
+												readinessProbe: {
+													exec: {
+														command: [
+															"ls"
+														]
+													},
+													initialDelaySeconds: 5,
+													timeoutSeconds: 5,
+													periodSeconds: 5,
+													successThreshold: 5,
+													failureThreshold: 5,
+												},
+												livenessProbe: {
+													exec: {
+														command: [
+															"ls"
+														]
+													},
+													initialDelaySeconds: 5,
+													timeoutSeconds: 5,
+													periodSeconds: 5,
+													successThreshold: 5,
+													failureThreshold: 5,
+												},
+												sourceCode: {
+													"label": "test",
+													"catalog": "test",
+													"id": "98023",
+													"version": "2",
+													"branch": "master",
+												},
+												"env" : {
+													secret_env: {
+														type: "secret",
+														value: "tola"
+													},
+													user_input: {
+														type: "userInput",
+														value: "lola"
+													},
+												},
+											},
+											settings: {
+												memory: "0",
+												mode: "CronJob",
+												schedule: " * * * * *",
+												concurrencyPolicy: "standard",
+												restartPolicy: true
+											},
+											cd: {
+												strategy: "notify"
+											},
+											version: "1"
+										}
+									]
+								}
+							});
+						}
+						
+					}
+				};
+			}
+		};
+		let inputmaskData = {
+			"name": "marketplace",
+			"type": "service",
+			"version": "1",
+			"env": "NEW"
+		};
+		
+		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
+			return cb(null, {
+				code: "NEW",
+				description: "new",
+				domain: "soajs.org",
+				sitePrefix: "site",
+				apiPrefix: "api",
+				port: 443,
+				protocol: "https",
+				deployer: {
+					type: "container",
+					selected: "container.kubernetes",
+					container: {
+						kubernetes: {
+							id: "5ef30a5b5f04686c4f63f693",
+							namespace: "new"
+						}
+					}
+				},
+				dbs: {
+					config: {
+						prefix: ""
+					},
+					databases: {}
+				},
+				services: {
+					controller: {
+						authorization: false,
+					},
+					config: {
+						ports: {
+							controller: 4000,
+							maintenanceInc: 1000,
+							randomInc: 100
+						}
+					}
+				}
+			});
+		});
+		nock('http://www.example.com')
+			.get('/catalog/recipes/get')
+			.query({
+				id: "9090"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					_id: "9090",
+					name: "marketplace",
+					type: "service",
+					subtype: "nodejs",
+					description: "Deploy Node.js service",
+					recipe: {
+						deployOptions: {
+							image: {
+								prefix: "soajsorg",
+								name: "marketplace",
+								tag: "latest",
+								pullPolicy: "Always",
+								repositoryType: "public",
+								override: true,
+								shell: "shell/bin/bash",
+								binary: false
+							},
+							sourceCode: {
+								"label": "test",
+								"catalog": "test",
+								"id": "98023",
+								"version": "test",
+								"branch": "master",
+							},
+							readinessProbe: {
+								exec: {
+									command: [
+										"ls"
+									]
+								},
+								initialDelaySeconds: 5,
+								timeoutSeconds: 5,
+								periodSeconds: 5,
+								successThreshold: 5,
+								failureThreshold: 5,
+							},
+							livenessProbe: {
+								exec: {
+									command: [
+										"ls"
+									]
+								},
+								initialDelaySeconds: 5,
+								timeoutSeconds: 5,
+								periodSeconds: 5,
+								successThreshold: 5,
+								failureThreshold: 5,
+							},
+							ports: [
+								{
+									name: "http",
+									target: 80,
+									isPublished: true,
+									published: 30080
+								}
+							],
+							voluming: [
+								{
+									docker: {},
+									kubernetes: {
+										volume: {
+											name: "soajsprofile",
+											secret: {
+												secretName: "soajsprofile"
+											}
+										},
+										volumeMount: {
+											mountPath: "/opt/soajs/profile/",
+											name: "soajsprofile"
+										}
+									}
+								}
+							],
+							restartPolicy: {
+								condition: "any",
+								maxAttempts: 4
+							},
+							container: {
+								network: "soajsnet",
+								workingDir: "/opt"
+							},
+							labels: {
+								ragheb: "ragheb"
+							},
+							execCommands: {
+								list: "ls -l"
+							}
+						},
+						buildOptions: {
+							env: {
+								secret_env: {
+									type: "secret",
+									value: "tola"
+								},
+								user_input: {
+									type: "userInput",
+									value: "lola"
+								},
+							},
+							cmd: {
+								deploy: {
+									command: [
+										"bash"
+									],
+									args: [
+										"-c",
+										"node ."
+									]
+								}
+							}
+						}
+					}
+				}
+			});
+		
+		nock('http://www.example.com')
+			.get('/git/repo/info')
+			.query({
+				id: "14687"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					domain: "github.com",
+					repository: "soajs.marketplace",
+					name: "marketplace",
+					owner: "soajs",
+					provider: "github",
+					access: "public",
+					token: "12345678"
+				}
+			});
+		
+		nock('http://www.example.com')
+			.get('/git/repo/info')
+			.query({
+				id: "98023"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					domain: "github.com",
+					repository: "config.test",
+					name: "github",
+					owner: "soajs",
+					provider: "github",
+					access: "public",
+					token: "576322"
+				}
+			});
+		nock('http://www.example.com')
+			.get('/console/tenant')
+			.query({
+				code: "DBTN"
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					code: "DBTN",
+					applications: [
+						{
+							product: "DSBRD",
+							package: "DSBRD_GUEST",
+							description: "Dashboard application for DSBRD_GUEST package",
+							keys: [
+								{
+									key: "a139786a6e6d18e48b4987e83789430b",
+									extKeys: [
+										{
+											extKey: "98",
+											device: null,
+											geo: null,
+											env: "DASHBOARD",
+											dashboardAccess: true,
+											expDate: null
+										}
+									]
+								}
+							]
+						}
+					],
+					console: true,
+					description: "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
+					locked: true,
+					name: "Console Tenant",
+					tag: "Console",
+					type: "product"
+				}
+			});
+		
+		nock('http://www.example.com')
+			.post('/kubernetes/item/deploy/soajs/cronjob')
+			.query({
+				configuration: {
+					env: "new"
+				}
+			})
+			.reply(200, {
+				"result": true,
+				"data": true
+			});
+		
+		nock('http://www.example.com')
+			.get('/kubernetes/services/Service')
+			.query({
+				configuration: {
+					env: "new"
+				},
+				filter: {
+					labelSelector: 'soajs.env.code=new, soajs.service.name=controller'
+				},
+				"limit": 100
+			})
+			.reply(200, {
+				"result": true,
+				"data": {
+					items: [{
+						"metadata": {
+							"name": "marketplace",
+						},
+						"spec": {
+							"clusterIP": "1.0.0.1"
 						}
 					}]
 				}

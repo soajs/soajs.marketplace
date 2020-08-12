@@ -289,11 +289,13 @@ let lib = {
 						computedEnvVariables[env_variables[1]]) {
 						soajs.awareness.connect("infra", "1", (response) => {
 							if (response && response.host) {
+								opts.host = {
+									infra: response
+								};
 								let labelSelector;
 								if (opts.registry.services.config.ports.name) {
 									labelSelector = 'soajs.env.code=' + opts.registry.code.toLowerCase() + ', soajs.service.name=' + opts.registry.services.config.ports.name;
-								}
-								else {
+								} else {
 									labelSelector = 'soajs.env.code=' + opts.registry.code.toLowerCase() + ', soajs.service.name=' + "controller";
 								}
 								let options = {
@@ -317,7 +319,7 @@ let lib = {
 									}
 									if (!body.data || !body.data.items || body.data.items.length === 0 ||
 										!body.data.items[0].metadata || !body.data.items[0].metadata.name ||
-										!body.data.items[0].spec ) {
+										!body.data.items[0].spec) {
 										return call(bl.marketplace.handleError(soajs, 411, null));
 									}
 									if (computedEnvVariables[env_variables[0]]) {
@@ -403,7 +405,7 @@ let lib = {
 								if (error || !repo.result) {
 									return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
 								}
-								if (!repo && !repo.data.owner) {
+								if (!repo && !repo.data && !repo.data.owner) {
 									return call(bl.marketplace.handleError(soajs, 412, null));
 								}
 								let env_variables = ["SOAJS_CONFIG_REPO_OWNER", "SOAJS_CONFIG_REPO_BRANCH", "SOAJS_CONFIG_REPO_COMMIT", "SOAJS_CONFIG_REPO_NAME", "SOAJS_CONFIG_REPO_PROVIDER", "SOAJS_CONFIG_REPO_TOKEN", "SOAJS_CONFIG_REPO_DOMAIN"];
@@ -416,14 +418,12 @@ let lib = {
 									"name": env_variables[1],
 									"value": opts.deploy.recipe.sourceCode.branch || opts.deploy.recipe.sourceCode.tag
 								});
-								
-								if (opts.deploy.src.commit) {
+								if (opts.deploy.recipe.sourceCode.branch && opts.deploy.recipe.sourceCode.commit) {
 									config.env.push({
 										"name": env_variables[2],
 										"value": opts.deploy.recipe.sourceCode.commit
 									});
 								}
-								
 								config.env.push({
 									"name": env_variables[3],
 									"value": repo.data.name
@@ -477,10 +477,12 @@ let lib = {
 						}
 					}
 					callback();
-				}, cb);
+				}, () => {
+					return cb(null, opts.host ? opts.host : true);
+				});
 			});
 		} else {
-			return cb(null, true);
+			return cb(null, opts.host ? opts.host : true);
 		}
 	},
 	
@@ -599,12 +601,7 @@ let lib = {
 				ports: []
 			};
 			config.ports = [];
-			let maintenance;
-			opts.item.versions.forEach((one) => {
-				if (one.version === opts.deploy.version) {
-					maintenance = one.maintenance;
-				}
-			});
+			let maintenance = opts.version.maintenance;
 			config.service.ports.push({
 				name: "service-port",
 				protocol: "TCP",
@@ -721,7 +718,7 @@ let lib = {
 			},
 			body: {recipe: config}
 		};
-		if (opts.host.infra) {
+		if (opts.host && opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
 			request(options, (error, response, body) => {
@@ -868,6 +865,7 @@ let lib = {
 			}],
 			compute_extra: ['computeEnvVariables', function (results, callback) {
 				let opts = {
+					version: results.get_version,
 					item: item,
 					deploy: results.get_deploy,
 					recipe: results.get_catalog_recipe,
@@ -879,13 +877,13 @@ let lib = {
 				lib.computeDeployObject(soajs, opts, config, bl, callback);
 			}],
 			deploy: ['compute_extra', function (results, callback) {
-				let opts = {
+				let newOpts = {
 					env: results.get_env_record.code,
 					host: {
-						infra: results.computeEnvVariables && results.computeEnvVariables[1] ? results.computeEnvVariables[1] : null
+						infra: results.computeEnvVariables && results.computeEnvVariables.infra ? results.computeEnvVariables.infra : null
 					}
 				};
-				lib.deployObject(soajs, opts, config, bl, callback);
+				lib.deployObject(soajs, newOpts, config, bl, callback);
 			}],
 		}, function (err, results) {
 			if (err) {
