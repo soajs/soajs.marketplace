@@ -131,7 +131,7 @@ let validator = {
 							},
 							"version": {
 								"type": "string",
-								"required": true
+								"required": false
 							}
 						},
 						"additionalProperties": false
