@@ -117,10 +117,6 @@ let validator = {
 					"type": "object",
 					"required": false
 				},
-				"swaggerFilename": {
-					"type": "string",
-					"required": false
-				},
 				"port": {
 					"type": "integer",
 					"required": true

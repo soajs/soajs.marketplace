@@ -126,10 +126,12 @@ let validator = {
 						"minItems": 1,
 						"properties": {
 							"name": {
-								"type": "string"
+								"type": "string",
+								"required": true
 							},
 							"version": {
-								"type": "string"
+								"type": "string",
+								"required": true
 							}
 						},
 						"additionalProperties": false
