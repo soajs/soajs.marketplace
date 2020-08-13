@@ -1168,13 +1168,6 @@ module.exports = {
 						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
 				},
-				"version": {
-					"source": ['query.version'],
-					"required": true,
-					"validation": {
-						"type": "string",
-					}
-				},
 				"config": {
 					"source": ['body.config'],
 					"required": true,

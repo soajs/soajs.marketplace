@@ -156,6 +156,10 @@ let local = {
 				
 			});
 		});
+	},
+	
+	"inspect": (soajs, inputmaskData, options, cb) => {
+		return cb (null, true);
 	}
 	
 };

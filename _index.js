@@ -223,7 +223,7 @@ function run(serviceStartCb) {
 					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
-						"env": req.soajs.inputmaskData.config.env,
+						"env": req.soajs.inputmaskData.config ? req.soajs.inputmaskData.config.env : req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
 						"locator": ["deploy", req.soajs.inputmaskData.name],
@@ -238,7 +238,7 @@ function run(serviceStartCb) {
 					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
-						"env": req.soajs.inputmaskData.config.env,
+						"env": req.soajs.inputmaskData.config ? req.soajs.inputmaskData.config.env : req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
 						"locator": ["configure", req.soajs.inputmaskData.name],

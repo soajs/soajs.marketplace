@@ -49,6 +49,8 @@ describe("starting integration tests", () => {
 		require("./get/items_type.js");
 		require("./get/soajs_items.js");
 		
+		require("./get/item_inspect.js");
+		
 		require("./put/soajs_item_environments.js");
 		require("./put/soajs_item_recipes.js");
 		require("./put/soajs_item_acl.js");
@@ -60,6 +62,14 @@ describe("starting integration tests", () => {
 		require("./put/item_version_configuration.js");
 		require("./put/item_branch.js");
 		require("./put/item_tag.js");
+		
+		require("./put/item_maintenance.js");
+		require("./put/item_deploy.js");
+		require("./put/item_cd.js");
+		require("./put/item_deploy_build.js");
+		require("./put/item_deploy_configure.js");
+		require("./put/item_redeploy.js");
+		require("./put/item_deploy.js");
 
 		require("./put/items/item_service_soajs.js");
 		
