@@ -9,7 +9,7 @@
 "use strict";
 const imported = require("../data/import.js");
 
-describe("Starting Unit test", () => {
+describe.skip("Starting Unit test", () => {
 	
 	before((done) => {
 		let rootPath = process.cwd();

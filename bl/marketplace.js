@@ -400,7 +400,7 @@ let bl = {
 						return cb(error);
 					}
 					sdk.get_env_registry(soajs, {
-						"envCode": inputmaskData.env
+						"env": inputmaskData.env
 					}, (err, envRecord) => {
 						if (err) {
 							return cb(bl.handleError(soajs, 400, err));

@@ -39,7 +39,7 @@ describe("starting integration tests", () => {
 		});
 	});
 	
-	it("loading tests", (done) => {
+	it.skip("loading tests", (done) => {
 		require("./get/public_items.js");
 		require("./get/items.js");
 		require("./get/item_type.js");
@@ -85,8 +85,13 @@ describe("starting integration tests", () => {
 		done();
 	});
 	
-	it("loading use cases", (done) => {
+	it.skip("loading use cases", (done) => {
 		require("./UC1/update_item_acl_restriction.js");
+		done();
+	});
+	
+	it("loading use cases", (done) => {
+		require("./UC2/item_maintenance.js");
 		done();
 	});
 });

@@ -825,7 +825,7 @@ let lib = {
 				});
 			}],
 			get_env_record: ['get_deploy', 'get_catalog_recipe', function (results, callback) {
-				sdk.get_env_registry(soajs, {envCode: inputmaskData.env}, (err, envRecord) => {
+				sdk.get_env_registry(soajs, {env: inputmaskData.env}, (err, envRecord) => {
 					if (err) {
 						return callback(bl.marketplace.handleError(soajs, 416, err));
 					}
