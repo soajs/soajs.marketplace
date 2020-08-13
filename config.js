@@ -1476,7 +1476,7 @@ module.exports = {
 			},
 			"/item/maintenance": {
 				"_apiInfo": {
-					"l": "This API trigger maintenance operation on a deployed item.",
+					"l": "This API triggers maintenance operation on a deployed item.",
 					"group": "Item deploy"
 				},
 				"name": {
