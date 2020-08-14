@@ -39,7 +39,7 @@ describe("starting integration tests", () => {
 		});
 	});
 	
-	it.skip("loading tests", (done) => {
+	it("loading tests", (done) => {
 		require("./get/public_items.js");
 		require("./get/items.js");
 		require("./get/item_type.js");
