@@ -316,10 +316,9 @@ let lib = {
 							let opts = {
 								"name": deployObject.name,
 								"type": deployObject.type,
-								"config": deployObject.config,
-								"version": deployObject.config.version
+								"config": deployObject.config
 							};
-							opts.env = deployObject.env;
+							opts.config.env = deployObject.env;
 							if (deployObject.deployObject === "commit") {
 								opts.config.src.from = deployObject.from;
 								if (deployObject.from.image_tag) {

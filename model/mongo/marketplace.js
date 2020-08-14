@@ -571,7 +571,7 @@ Marketplace.prototype.update_item_configuration = function (data, cb) {
 		return cb(error, null);
 	}
 	if (!data.response || !data.config.env) {
-		let error = new Error("Marketplace: Bad configuration are required.");
+		let error = new Error("Marketplace: Bad configuration.");
 		return cb(error, null);
 	}
 	let condition = {
