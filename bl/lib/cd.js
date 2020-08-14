@@ -345,7 +345,7 @@ let lib = {
 										"locator": ["Catalog", results.computeInput.name, results.computeInput.type, results.computeInput.version],
 										"action": "updated"
 									};
-									sdk.ledger(soajs, doc, err);
+									sdk.ledger(soajs, doc,  soajs.buildResponse(err, response));
 									report.stage_5.fail.push("Item " + results.computeInput.name + " v " + results.computeInput.version +
 										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.env + " failed to deploy!");
 								}
