@@ -102,6 +102,7 @@ module.exports = {
 		420: "Maintenance operation not found for this item version!",
 		421: "Unable to connect to item",
 		422: "Error: ",
+		423: "Unable to redeploy item!",
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
@@ -832,7 +833,7 @@ module.exports = {
 										}
 									}
 								},
-								"oneOf": [
+								"anyOf": [
 									{
 										"required": ["tag"]
 									},
@@ -841,10 +842,12 @@ module.exports = {
 									},
 									{
 										"required": ["image_tag", "image_name", "image_prefix"]
+									},
+									{
+										"required": ["image_tag"]
 									}
 								]
-							},
-							
+							}
 						}
 					}
 				}
@@ -1180,13 +1183,6 @@ module.exports = {
 						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
 				},
-				"version": {
-					"source": ['query.version'],
-					"required": true,
-					"validation": {
-						"type": "string",
-					}
-				},
 				"config": {
 					"source": ['body.config'],
 					"required": true,
@@ -1488,7 +1484,7 @@ module.exports = {
 			},
 			"/item/maintenance": {
 				"_apiInfo": {
-					"l": "This API trigger maintenance operation on a deployed item.",
+					"l": "This API triggers maintenance operation on a deployed item.",
 					"group": "Item deploy"
 				},
 				"name": {

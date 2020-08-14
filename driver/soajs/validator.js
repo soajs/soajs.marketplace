@@ -112,21 +112,6 @@ let validator = {
 						"minItems": 1
 					}
 				},
-				"documentation": {
-					"type": "object",
-					"required": false,
-					"additionalProperties": false,
-					"properties": {
-						"readme": {
-							"type": "string",
-							"required": false
-						},
-						"release": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
 				"profile": {
 					"type": "object",
 					"required": false
@@ -140,10 +125,12 @@ let validator = {
 						"minItems": 1,
 						"properties": {
 							"name": {
-								"type": "string"
+								"type": "string",
+								"required": true
 							},
 							"version": {
-								"type": "string"
+								"type": "string",
+								"required": false
 							}
 						},
 						"additionalProperties": false

@@ -206,8 +206,20 @@ function run(serviceStartCb) {
 			service.put("/item/deploy/cd", function (req, res) {
 				bl.deploy.cd(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					let response = req.soajs.buildResponse(error, data);
+					if (!error && data) {
+						let success = true;
+						for (let stage in data) {
+							if (stage && data.hasOwnProperty(stage) && data[stage]) {
+								if (data[stage].fail.length > 0) {
+									success = false;
+								}
+							}
+						}
+						if (!success) {
+							response.result = false;
+						}
+					}
 					res.json(response);
-					//check
 					let doc = {
 						"type": "Deployment",
 						"section": "Continuous delivery",
@@ -223,7 +235,7 @@ function run(serviceStartCb) {
 					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
-						"env": req.soajs.inputmaskData.config.env,
+						"env": req.soajs.inputmaskData.config ? req.soajs.inputmaskData.config.env : req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
 						"locator": ["deploy", req.soajs.inputmaskData.name],
@@ -238,7 +250,7 @@ function run(serviceStartCb) {
 					let response = req.soajs.buildResponse(error, data);
 					res.json(response);
 					let doc = {
-						"env": req.soajs.inputmaskData.config.env,
+						"env": req.soajs.inputmaskData.config ? req.soajs.inputmaskData.config.env : req.soajs.inputmaskData.env,
 						"type": "Deployment",
 						"section": "Catalog",
 						"locator": ["configure", req.soajs.inputmaskData.name],
@@ -264,7 +276,7 @@ function run(serviceStartCb) {
 				});
 			});
 			service.put("/item/maintenance", function (req, res) {
-				bl.marketplace.maintenance(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				bl.marketplace.maintenance(req.soajs, req.soajs.inputmaskData, null, soajs, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});

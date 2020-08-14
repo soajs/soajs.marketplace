@@ -113,21 +113,6 @@ let validator = {
 						"minItems": 1
 					}
 				},
-				"documentation": {
-					"type": "object",
-					"required": false,
-					"additionalProperties": false,
-					"properties": {
-						"readme": {
-							"type": "string",
-							"required": false
-						},
-						"release": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
 				"profile": {
 					"type": "object",
 					"required": false
@@ -141,10 +126,12 @@ let validator = {
 						"minItems": 1,
 						"properties": {
 							"name": {
-								"type": "string"
+								"type": "string",
+								"required": true
 							},
 							"version": {
-								"type": "string"
+								"type": "string",
+								"required": false
 							}
 						},
 						"additionalProperties": false
@@ -252,9 +239,20 @@ let validator = {
 				}
 			}
 		},
-		"swagger": {
+		"apiList": {
 			"type": "object",
-			"required": false
+			"required": false,
+			"properties": {
+				"type" : {
+					"required": true,
+					"type": "string",
+					"enum": ["swagger", "schema"]
+				},
+				"schema" : {
+					"required": true,
+					"type": "object"
+				}
+			}
 		},
 		"documentation": {
 			"type": "object",

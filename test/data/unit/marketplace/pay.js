@@ -62,7 +62,7 @@ let lib = {
 	"src": {
 		"provider": "github",
 		"owner": "ht",
-		"repo": "mkpl.order"
+		"repo": "mkpl.pay"
 	}
 };
 module.exports = lib;

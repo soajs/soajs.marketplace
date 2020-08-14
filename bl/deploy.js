@@ -36,11 +36,15 @@ let local = {
 		lib_deploy.deploy(soajs, inputmaskData, options, bl, cb);
 	},
 	"saveConfigurationAndDeploy": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.marketplace.handleError(soajs, 400, null));
+		}
 		local.saveConfiguration(soajs, inputmaskData, options, (error, item) => {
 			if (error && error.code !== 603) {
 				return cb(error);
 			}
 			inputmaskData.env = inputmaskData.config.env;
+			inputmaskData.version = inputmaskData.config.version;
 			lib_deploy.deploy(soajs, inputmaskData, item, bl, cb);
 		});
 	},
@@ -75,14 +79,14 @@ let local = {
 						}
 					} else {
 						if (response.settings.environments.value.length > 0 &&
-							response.settings.environments.value.indexOf(inputmaskData.config.toUpperCase()) > -1) {
+							response.settings.environments.value.indexOf(inputmaskData.config.env.toUpperCase()) > -1) {
 							return cb(bl.marketplace.handleError(soajs, 406, null));
 						}
 					}
 				}
 			}
 			
-			soajs.awareness.connect('dashboard', function (res) {
+			soajs.awareness.connect('dashboard', "1", function (res) {
 				let options = {
 					method: "get",
 					uri: "http://" + res.host + "/catalog/recipes/get",
@@ -153,6 +157,10 @@ let local = {
 				
 			});
 		});
+	},
+	
+	"inspect": (soajs, inputmaskData, options, cb) => {
+		return cb (null, true);
 	}
 	
 };

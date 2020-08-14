@@ -12,7 +12,7 @@ const async = require("async");
 const sdk = require("../../lib/sdk.js");
 
 function computeErrorMessageFromService(body) {
-	if (body && !body.result) {
+	if (body || (body && !body.result)) {
 		let error = "";
 		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {
@@ -29,12 +29,6 @@ function computeErrorMessageFromService(body) {
 	}
 }
 
-let helper = {
-	removeItem: function (arr, item) {
-		return arr.filter(f => f !== item);
-	},
-	
-};
 let lib = {
 	
 	"cd": (soajs, inputmaskData, options, bl, local, cb) => {
@@ -65,7 +59,7 @@ let lib = {
 					"success": [],
 					"fail": []
 				};
-				soajs.awareness.connect('infra', function (res) {
+				soajs.awareness.connect('infra', '1', function (res) {
 					let url = "/cd/token";
 					let options = {
 						method: "get",
@@ -77,7 +71,7 @@ let lib = {
 						},
 					};
 					request(options, (error, response, body) => {
-						if (error || !body.result) {
+						if (error || !body.result || !body) {
 							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						}
 						if (!body.data) {
@@ -124,40 +118,56 @@ let lib = {
 					return cb(null, report);
 				}
 				let selected_envs = Object.keys(results.get_item.deploy);
+				if (selected_envs.length === 0){
+					report.stage_3.fail.push("No environments found!");
+					return cb(null, report);
+				}
+				let unFound_envs = [];
+				if (inputmaskData.config.from.env) {
+					for (let i = inputmaskData.config.from.env.length - 1; i >= 0; i--) {
+						if (selected_envs.indexOf(inputmaskData.config.from.env[i].toUpperCase()) === -1) {
+							unFound_envs.push(inputmaskData.config.from.env[i].toUpperCase());
+						}
+					}
+					selected_envs = inputmaskData.config.from.env;
+				}
+			
+				if (unFound_envs.length > 0) {
+					report.stage_3.fail.push("Environments: " +  unFound_envs.join(",") + " were not found.");
+					return cb(null, report);
+				}
 				let unsupported_acl = [];
 				if (results.get_item.settings) {
 					if (results.get_item.settings.environments &&
 						results.get_item.settings.environments.value) {
 						if (results.get_item.settings.environments.type === "whitelist") {
 							if (results.get_item.settings.environments.value.length > 0) {
-								if (inputmaskData.config.from.env) {
-									for (let i = inputmaskData.config.from.env.length - 1; i >= 0; i--) {
-										if (results.get_item.settings.environments.value.indexOf(inputmaskData.config.from.env[i].toUpperCase()) === -1) {
-											unsupported_acl.push(inputmaskData.config.from.env[i].toUpperCase());
-											helper.removeItem(selected_envs, inputmaskData.config.from.env[i]);
-										}
+								for (let i = selected_envs.length - 1; i >= 0; i--) {
+									if (results.get_item.settings.environments.value.indexOf(selected_envs[i].toUpperCase()) === -1) {
+										unsupported_acl.push(selected_envs[i].toUpperCase());
+										selected_envs.splice(i, 1);
 									}
 								}
 							}
 						} else {
-							for (let i = inputmaskData.config.from.env.length - 1; i >= 0; i--) {
-								if (results.get_item.settings.environments.value.indexOf(inputmaskData.config.from.env[i].toUpperCase()) > -1) {
-									unsupported_acl.push(inputmaskData.config.from.env[i].toUpperCase());
-									helper.removeItem(selected_envs, inputmaskData.config.from.env[i]);
+							for (let i = selected_envs.length - 1; i >= 0; i--) {
+								if (results.get_item.settings.environments.value.indexOf(selected_envs[i].toUpperCase()) > -1) {
+									unsupported_acl.push(selected_envs[i].toUpperCase());
+									selected_envs.splice(i, 1);
 								}
 							}
 						}
 					}
 				}
 				if (unsupported_acl.length > 0) {
-					report.stage_3.fail.push("You have no access to the following environments", unsupported_acl.join(","));
+					report.stage_3.fail.push("You have no access to the following environments " + unsupported_acl.join(","));
 					return cb(null, report);
 				}
 				if (selected_envs.length === 0) {
 					report.stage_3.fail.push("No environments found!");
 					return cb(null, report);
 				}
-				report.stage_3.success.push(selected_envs.join(','), ' environments have been found');
+				report.stage_3.success.push("Environments: " + selected_envs.join(',') +  ' environments have been found');
 				return callback(null, selected_envs);
 			}],
 			create_deploy_notice: ["check_acl", function (results, callback) {
@@ -180,6 +190,7 @@ let lib = {
 											type: results.get_item.type,
 											config: oneItem,
 											from: inputmaskData.config.from,
+											version: inputmaskData.version,
 											deployObject: "commit"
 										});
 									} else {
@@ -189,6 +200,7 @@ let lib = {
 											type: results.get_item.type,
 											config: oneItem,
 											from: inputmaskData.config.from,
+											version: inputmaskData.version,
 											deployObject: "commit"
 										});
 									}
@@ -205,6 +217,7 @@ let lib = {
 											type: results.get_item.type,
 											config: oneItem,
 											from: inputmaskData.config.from,
+											version: inputmaskData.version,
 											deployObject: "tag"
 										});
 									} else {
@@ -214,6 +227,7 @@ let lib = {
 											type: results.get_item.type,
 											config: oneItem,
 											from: inputmaskData.config.from,
+											version: inputmaskData.version,
 											deployObject: "tag"
 										});
 									}
@@ -224,20 +238,20 @@ let lib = {
 							else {
 								//get prefix
 								let deployed_image_prefix;
-								if (results.get_item.deploy.image && results.get_item.deploy.image.prefix) {
-									deployed_image_prefix = results.get_item.deploy.image.prefix;
+								if (oneItem.recipe.image && oneItem.recipe.image.prefix) {
+									deployed_image_prefix = oneItem.recipe.image.prefix;
 								}
 								
 								//get name
 								let deployed_image_name;
-								if (results.get_item.deploy.name && results.get_item.deploy.image.name) {
-									deployed_image_name = results.get_item.deploy.image.name;
+								if (oneItem.recipe.image && oneItem.recipe.image.name) {
+									deployed_image_name = oneItem.recipe.image.name;
 								}
 								
 								//get tag
 								let deployed_image_tag;
-								if (results.get_item.deploy.image && results.get_item.deploy.image.tag) {
-									deployed_image_tag = results.get_item.deploy.image.tag;
+								if (oneItem.recipe.image && oneItem.recipe.image.tag) {
+									deployed_image_tag = oneItem.recipe.image.tag;
 								}
 								if (inputmaskData.config.from.image_prefix === deployed_image_prefix &&
 									inputmaskData.config.from.image_name === deployed_image_name &&
@@ -249,6 +263,7 @@ let lib = {
 											type: results.get_item.type,
 											config: oneItem,
 											from: inputmaskData.config.from,
+											version: inputmaskData.version,
 											deployObject: "image"
 										});
 									} else {
@@ -258,6 +273,7 @@ let lib = {
 											type: results.get_item.type,
 											config: oneItem,
 											from: inputmaskData.config.from,
+											version: inputmaskData.version,
 											deployObject: "image"
 										});
 									}
@@ -288,25 +304,19 @@ let lib = {
 						"locator": ["Catalog", notice.name, notice.type, notice.version],
 						"action": "updated"
 					};
-					sdk.ledger(soajs, doc);
 					report.stage_5.success.push("Notification sent for item " + notice.name +
 						" v " + notice.version + " with cd status " + notice.config.cd.strategy + " in environment " + notice.env);
-					miniCall();
+					sdk.ledger(soajs, doc, {result: true}, miniCall);
 				}, callback);
 			}],
 			start_deploy: ["create_deploy_notice", function (results, callback) {
-				report.stage_5 = {
-					success: [],
-					fail: []
-				};
 				async.each(results.create_deploy_notice[0], function (deployObject, eachCall) {
 					async.auto({
 						computeInput: function (autoCall) {
 							let opts = {
 								"name": deployObject.name,
 								"type": deployObject.type,
-								"config": deployObject.config,
-								"version": deployObject.config.version
+								"config": deployObject.config
 							};
 							opts.config.env = deployObject.env;
 							if (deployObject.deployObject === "commit") {
@@ -321,41 +331,24 @@ let lib = {
 									opts.config.recipe.tag = deployObject.from.image_tag;
 								}
 							}
-							if (deployObject.deployObject === "image") {
-								return autoCall(null, opts, "deploy");
-							} else {
-								return autoCall(null, opts, "saveConfigurationAndDeploy");
-							}
+							return autoCall(null, opts);
 						},
 						//get updated version
 						startProcessing: ['computeInput', function (results, autoCall) {
-							local[results.computeInput[1]](soajs, results.computeInput[0], options, (err, response) => {
+							local.saveConfigurationAndDeploy(soajs, results.computeInput, options, (err, response) => {
 								if (err) {
-									let doc = {
-										"env": results.computeInput[0].env,
-										"type": "Deployment",
-										"section": "Continuous delivery",
-										"locator": ["Catalog", results.computeInput[0].name, results.computeInput[0].type, results.computeInput[0].version],
-										"action": "updated"
-									};
-									sdk.ledger(soajs, doc, {result: false});
-									report.stage_5.fail.push("Item " + results.computeInput[0].name + " v " + results.computeInput[0].version +
-										" with cd status " + results.computeInput[0].config.cd.strategy + " in environment " + results.computeInput[0].env + " failed to deploy!");
+									report.stage_5.fail.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
+										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.config.env + " failed to deploy!");
 								}
 								return autoCall(null, response);
 							});
 						}],
 						updateLedger: ['startProcessing', function (results, autoCall) {
-							let doc = {
-								"env": results.computeInput[0].env,
-								"type": "Deployment",
-								"section": "Continuous delivery",
-								"locator": ["Catalog", results.computeInput[0].name, results.computeInput[0].type, results.computeInput[0].version],
-								"action": "updated"
-							};
-							sdk.ledger(soajs, doc, {result: true});
-							report.stage_5.success.push("Item " + results.computeInput[0].name + " v " + results.computeInput[0].version +
-								" with cd status " + results.computeInput[0].config.cd.strategy + " in environment " + results.computeInput[0].env + " has been successfully deployed");
+							if(!results.startProcessing){
+								return autoCall();
+							}
+							report.stage_5.success.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
+								" with cd status " + results.computeInput.config.cd.strategy + " in environment " +  results.computeInput.config.env + " has been successfully deployed");
 							return autoCall();
 						}]
 					}, eachCall);
