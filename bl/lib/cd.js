@@ -306,7 +306,7 @@ let lib = {
 					};
 					report.stage_5.success.push("Notification sent for item " + notice.name +
 						" v " + notice.version + " with cd status " + notice.config.cd.strategy + " in environment " + notice.env);
-					sdk.ledger(soajs, doc, null, miniCall);
+					sdk.ledger(soajs, doc, {result: true}, miniCall);
 				}, callback);
 			}],
 			start_deploy: ["create_deploy_notice", function (results, callback) {
@@ -345,7 +345,7 @@ let lib = {
 										"locator": ["Catalog", results.computeInput.name, results.computeInput.type, results.computeInput.version],
 										"action": "updated"
 									};
-									sdk.ledger(soajs, doc, {result: false});
+									sdk.ledger(soajs, doc, err);
 									report.stage_5.fail.push("Item " + results.computeInput.name + " v " + results.computeInput.version +
 										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.env + " failed to deploy!");
 								}
