@@ -44,6 +44,7 @@ let local = {
 				return cb(error);
 			}
 			inputmaskData.env = inputmaskData.config.env;
+			inputmaskData.version = inputmaskData.config.version;
 			lib_deploy.deploy(soajs, inputmaskData, item, bl, cb);
 		});
 	},

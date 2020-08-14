@@ -83,6 +83,7 @@ let config = {
 };
 config.packagejson = {};
 const service = new soajs.server.service(config);
+
 let manual = {
 	code: "DASHBOARD",
 	deployer: {
@@ -109,18 +110,31 @@ let manual = {
 		}
 	},
 };
+
 let container = {
-	code: "NEW",
+	code: "DASHBOARD",
 	deployer: {
 		type: "container",
 		selected: "container.kubernetes",
 		container: {
 			kubernetes: {
 				id: "5ef30a5b5f04686c4f63f693",
-				namespace: "new"
+				namespace: "dashboard"
 			}
 		}
 	},
+	services: {
+		controller: {
+			authorization: false,
+		},
+		config: {
+			ports: {
+				controller: 4000,
+				maintenanceInc: 1000,
+				randomInc: 100
+			},
+		}
+	}
 };
 
 function run(serviceStartCb) {
