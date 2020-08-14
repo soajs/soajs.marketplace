@@ -1604,6 +1604,7 @@ describe("Unit test for: BL - lib/cd", () => {
 		let item = {
 			"_id": "123",
 			"name": "marketplace",
+			"type": "service",
 			"deploy": {
 				"NEW": [
 					{

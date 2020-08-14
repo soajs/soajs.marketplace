@@ -337,8 +337,8 @@ let lib = {
 						startProcessing: ['computeInput', function (results, autoCall) {
 							local.saveConfigurationAndDeploy(soajs, results.computeInput, options, (err, response) => {
 								if (err) {
-									report.stage_5.fail.push("Item " + results.computeInput.name + " v " + results.computeInput.version +
-										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.env + " failed to deploy!");
+									report.stage_5.fail.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
+										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.config.env + " failed to deploy!");
 								}
 								return autoCall(null, response);
 							});
@@ -347,8 +347,8 @@ let lib = {
 							if(!results.startProcessing){
 								return autoCall();
 							}
-							report.stage_5.success.push("Item " + results.computeInput.name + " v " + results.computeInput.version +
-								" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.env + " has been successfully deployed");
+							report.stage_5.success.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
+								" with cd status " + results.computeInput.config.cd.strategy + " in environment " +  results.computeInput.config.env + " has been successfully deployed");
 							return autoCall();
 						}]
 					}, eachCall);
