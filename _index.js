@@ -206,8 +206,20 @@ function run(serviceStartCb) {
 			service.put("/item/deploy/cd", function (req, res) {
 				bl.deploy.cd(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					let response = req.soajs.buildResponse(error, data);
+					if (!error && data) {
+						let success = true;
+						for (let stage in data) {
+							if (stage && data.hasOwnProperty(stage) && data[stage]) {
+								if (data[stage].fail.length > 0) {
+									success = false;
+								}
+							}
+						}
+						if (!success) {
+							response.result = false;
+						}
+					}
 					res.json(response);
-					//check
 					let doc = {
 						"type": "Deployment",
 						"section": "Continuous delivery",

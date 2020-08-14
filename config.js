@@ -787,7 +787,7 @@ module.exports = {
 						"type": "object",
 						"required": ["from"],
 						"properties": {
-							"repository": {
+							"from": {
 								"type": "object",
 								"properties": {
 									"tag": {
@@ -804,20 +804,7 @@ module.exports = {
 										"type": "string",
 										"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
 										"minLength": 1
-									}
-								},
-								"oneOf": [
-									{
-										"required": ["tag"]
 									},
-									{
-										"required": ["branch", "commit"]
-									}
-								]
-							},
-							"image": {
-								"type": "object",
-								"properties": {
 									"image_prefix": {
 										"type": "string"
 									},
@@ -826,38 +813,30 @@ module.exports = {
 									},
 									"image_tag": {
 										"type": "string"
+									},
+									"env": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
 									}
 								},
-								"oneOf": [
+								"anyOf": [
+									{
+										"required": ["tag"]
+									},
+									{
+										"required": ["branch", "commit"]
+									},
+									{
+										"required": ["image_tag", "image_name", "image_prefix"]
+									},
 									{
 										"required": ["image_tag"]
-									},
-									{
-										"required": ["image_name"]
-									},
-									{
-										"required": ["image_prefix"]
 									}
 								]
-							},
-							"env": {
-								"type": "array",
-								"items": {
-									"type": "string"
-								}
 							}
-						},
-						"oneOf": [
-							{
-								"required": ["repository"]
-							},
-							{
-								"required": ["image"]
-							},
-							{
-								"required": ["repository", "image"]
-							}
-						]
+						}
 					}
 				}
 			},
