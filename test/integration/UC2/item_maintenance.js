@@ -35,8 +35,12 @@ describe("Testing API: PUT /item/maintenance", () => {
 	});
 	
 	after((done) => {
-		consoleserver.stopService();
-		done();
+		consoleserver.stopService(() => {
+			infraserver.stopService(() => {
+				done();
+			});
+		});
+		
 	});
 	it("Success - will make manual maintenance operation", (done) => {
 		let params = {
@@ -47,9 +51,9 @@ describe("Testing API: PUT /item/maintenance", () => {
 				"version": "1",
 				"operation": "/heartbeat"
 			},
-			body : {
-				port : {
-					portType : "maintenance"
+			body: {
+				port: {
+					portType: "maintenance"
 				}
 			}
 		};
@@ -69,9 +73,9 @@ describe("Testing API: PUT /item/maintenance", () => {
 				"version": "1",
 				"operation": "/heartbeat"
 			},
-			body : {
-				port : {
-					portType : "maintenance"
+			body: {
+				port: {
+					portType: "maintenance"
 				}
 			}
 		};

@@ -85,7 +85,7 @@ describe("starting integration tests", () => {
 		done();
 	});
 	
-	it.skip("loading use cases", (done) => {
+	it("loading use cases", (done) => {
 		require("./UC1/update_item_acl_restriction.js");
 		done();
 	});
