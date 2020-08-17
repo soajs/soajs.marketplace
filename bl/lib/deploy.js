@@ -553,7 +553,7 @@ let lib = {
 		}
 		config.image = {
 			name: opts.recipe.recipe.deployOptions.image.prefix + "/" + opts.recipe.recipe.deployOptions.image.name + ":" + opts.recipe.recipe.deployOptions.image.tag,
-			imagePullPolicy: opts.recipe.recipe.deployOptions.image.pullPolicy
+			imagePullPolicy: opts.recipe.recipe.deployOptions.image.pullPolicy || "always"
 		};
 		if (opts.recipe.recipe.deployOptions.image.override && opts.deploy.recipe.image) {
 			config.image.name = opts.deploy.recipe.image.prefix + "/" + opts.deploy.recipe.image.name + ":" + opts.deploy.recipe.image.tag;
