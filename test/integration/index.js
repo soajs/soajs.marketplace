@@ -87,11 +87,8 @@ describe("starting integration tests", () => {
 	
 	it("loading use cases", (done) => {
 		require("./UC1/update_item_acl_restriction.js");
-		done();
-	});
-	
-	it("loading use cases", (done) => {
 		require("./UC2/item_maintenance.js");
+		require("./UC3/item_build.js");
 		done();
 	});
 });

@@ -52,7 +52,7 @@ module.exports = {
 			"version": "1"
 		},
 		{
-			"name": "repository",
+			"name": "repositories",
 			"version": "1"
 		},
 		{
