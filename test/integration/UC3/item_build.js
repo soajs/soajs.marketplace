@@ -273,7 +273,6 @@ describe("Testing API: PUT /item/deploy/build", () => {
 		};
 		requester('/item/config', 'put', data, (error, body) => {
 			assert.ok(body);
-			console.log(JSON.stringify(body, null, 2))
 			assert.ok(body.result);
 			done();
 		});
