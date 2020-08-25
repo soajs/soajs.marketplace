@@ -39,7 +39,7 @@ describe("starting integration tests", () => {
 		});
 	});
 	
-	it("loading tests", (done) => {
+	it("loading tests for catalogs", (done) => {
 		require("./get/public_items.js");
 		require("./get/items.js");
 		require("./get/item_type.js");
@@ -85,6 +85,15 @@ describe("starting integration tests", () => {
 		done();
 	});
 	
+	it("loading tests for recipe catalog", (done) => {
+		require("./get/recipe.js");
+		require("./get/recipes.js");
+		require("./get/recipes_ids.js");
+		require("./post/recipe.js");
+		require("./put/recipe.js");
+		require("./delete/recipe.js");
+		done();
+	});
 	it("loading use cases", (done) => {
 		require("./UC1/update_item_acl_restriction.js");
 		require("./UC2/item_maintenance.js");

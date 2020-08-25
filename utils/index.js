@@ -9,6 +9,7 @@
 'use strict';
 
 let utils = require("./helper.js");
+const async = require("async");
 
 let lib = {
 	"generateSchemas": (data, cb) => {
@@ -29,6 +30,22 @@ let lib = {
 				data.schema = utils.extractAPIsList(finalSchema.schema);
 				return cb(err);
 			});
+		});
+	},
+	"normalizeKeyValues": function (record, regex, replacementString, cb) {
+		let updatedRecord = {};
+		let replacementRegex = new RegExp(regex, 'g');
+		async.eachOf(record, function (oneRecordEntry, key, callback) {
+			if (key.match(replacementRegex)) {
+				updatedRecord[key.replace(replacementRegex, replacementString)] = oneRecordEntry;
+			}
+			else {
+				updatedRecord[key] = oneRecordEntry;
+			}
+			
+			return callback();
+		}, function () {
+			return cb(null, updatedRecord);
 		});
 	},
 };

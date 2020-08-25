@@ -27,6 +27,7 @@ describe("Starting Unit test", () => {
 	it("Unit test for BL", (done) => {
 		require("./bl/deploy.js");
 		require("./bl/marketplace.js");
+		require("./bl/recipe.js");
 
 		require("./bl/lib/redeploy.js");
 		require("./bl/lib/cd.js");
@@ -52,6 +53,7 @@ describe("Starting Unit test", () => {
 
 	it("Unit test for Model", (done) => {
 		require("./model/mongo/marketplace.js");
+		require("./model/mongo/recipe.js");
 		done();
 	});
 	it("Unit test for utils", (done) => {

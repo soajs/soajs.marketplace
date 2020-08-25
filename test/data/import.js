@@ -332,6 +332,23 @@ let custom = {
 						}
 					},
 					function (cb) {
+						//check for catalogs data
+						if (fs.existsSync(dataPath + "catalogs_versioning/")) {
+							let config = {
+								"colName": "catalogs_versioning",
+								"condAnchor": "_id",
+								"objId": "_id",
+								"delete": cleanDataBefore
+							};
+							if (templates.catalogs_versioning && typeof templates.catalogs_versioning === "function") {
+								config.docManipulation = templates.catalogs_versioning;
+							}
+							return lib.basic(config, dataPath + "catalogs_versioning/", mongoConnection, cb);
+						} else {
+							return cb(null);
+						}
+					},
+					function (cb) {
 						//check for custom registry data
 						if (fs.existsSync(dataPath + "customRegistry/")) {
 							let config = {
