@@ -76,6 +76,8 @@ module.exports = {
 		"release": "/RELEASE.md"
 	},
 	
+	"bodyParser": {"limit":"50mb"},
+	
 	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
