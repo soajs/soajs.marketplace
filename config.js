@@ -118,6 +118,7 @@ module.exports = {
 		432: "Invalid port schema provided!",
 		433: "Unable to update catalog recipe",
 		434: "You are not allowed to edit or delete a locked recipe",
+		435: "Catalog recipe not found",
 		
 		500: "Nothing to Update!",
 		501: "Item not found!",

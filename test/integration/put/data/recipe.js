@@ -17,11 +17,6 @@ module.exports = [
 			type: "service",
 			subtype: "nodejs",
 			description: "Deploy Node.js service",
-			restriction: {
-				deployment: [
-					"container"
-				]
-			},
 			recipe: {
 				deployOptions: {
 					image: {

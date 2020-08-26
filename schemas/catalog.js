@@ -46,7 +46,19 @@ module.exports = {
 									"shell": {"type": "string", "required": false},
 								}
 							},
-							
+							"sourceCode": {
+								"type": "object",
+								"required": false,
+								"properties": {
+									"configuration": {
+										"type": "object",
+										"required": false,
+										"properties": {
+											"label": {"type": "string", "required": true}
+										}
+									},
+								}
+							},
 							"readinessProbe": {
 								"type": ["object", "null"],
 								"required": false

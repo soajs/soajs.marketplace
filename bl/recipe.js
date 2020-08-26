@@ -57,6 +57,9 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
+			if (!response){
+				return cb(bl.handleError(soajs, 435, err));
+			}
 			if (response.recipe.deployOptions && response.recipe.deployOptions.labels) {
 				utils.normalizeKeyValues(response.recipe.deployOptions.labels, bl.localConfig.tokens.dotToken, bl.localConfig.tokens.dotValue, function (error, updatedRecord) {
 					response.recipe.deployOptions.labels = updatedRecord;

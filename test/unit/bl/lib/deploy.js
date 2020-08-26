@@ -235,31 +235,17 @@ describe("Unit test for: BL - lib/deploy", () => {
 				};
 			}
 		};
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(new Error("dummy"));
+			}
+		};
 		let inputmaskData = {
 			"name": "marketplace",
 			"type": "service",
 			"version": "1",
 			"env": "NEW"
 		};
-		
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": false,
-				"errors": {
-					"details": [{
-						code: 1,
-						message: "error 1"
-					},
-						{
-							code: 2,
-							message: "error 2"
-						}]
-				}
-			});
 		
 		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error) => {
 			assert.ok(error);
@@ -295,31 +281,17 @@ describe("Unit test for: BL - lib/deploy", () => {
 				};
 			}
 		};
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(new Error("dummy"));
+			}
+		};
 		let inputmaskData = {
 			"name": "marketplace",
 			"type": "service",
 			"version": "1",
 			"env": "NEW"
 		};
-		
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": false,
-				"errors": {
-					"details": [{
-						code: 1,
-						message: "error 1"
-					},
-						{
-							code: 2,
-							message: "error 2"
-						}]
-				}
-			});
 		
 		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error) => {
 			assert.ok(error);
@@ -355,64 +327,10 @@ describe("Unit test for: BL - lib/deploy", () => {
 				};
 			}
 		};
-		let inputmaskData = {
-			"name": "marketplace",
-			"type": "service",
-			"version": "1",
-			"env": "NEW"
-		};
 		
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": false,
-				"errors": {
-					"details": [{
-						code: 1,
-						message: "error 1"
-					},
-						{
-							code: 2,
-							message: "error 2"
-						}]
-				}
-			});
-		
-		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error) => {
-			assert.ok(error);
-			assert.deepEqual(error.code, 503);
-			done();
-		});
-	});
-	
-	it("deploy - fail no registry", function (done) {
-		bl.marketplace.mp = {
-			getModel: () => {
-				return {
-					getItem: (data, cb) => {
-						return cb(null, {
-							"_id": "123",
-							"name": "marketplace",
-							"settings": {
-								"environments": {}
-							},
-							"versions": [{
-								"version": "1"
-							}],
-							"deploy": {
-								"NEW": [{
-									"version": "1",
-									"recipe": {
-										"id": "9090"
-									}
-								}]
-							}
-						});
-					}
-				};
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(new Error("dummy"));
 			}
 		};
 		let inputmaskData = {
@@ -422,25 +340,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 			"env": "NEW"
 		};
 		
-		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
-			return cb(new Error("error"));
-		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					_id: "recipe"
-				}
-			});
-		
-		
 		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error) => {
 			assert.ok(error);
-			assert.deepEqual(error.code, 417);
+			assert.deepEqual(error.message, "dummy");
 			done();
 		});
 	});
@@ -482,20 +384,17 @@ describe("Unit test for: BL - lib/deploy", () => {
 		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
 			return cb(new Error("error"));
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "recipe",
 					recipe: {
 						deployOptions: {}
 					}
-				}
-			});
+				});
+			}
+		};
 		
 		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error) => {
 			assert.ok(error);
@@ -541,20 +440,17 @@ describe("Unit test for: BL - lib/deploy", () => {
 		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
 			return cb(null);
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "recipe",
 					recipe: {
 						deployOptions: {}
 					}
-				}
-			});
+				});
+			}
+		};
 		
 		lib_deploy.deploy(soajs, inputmaskData, {}, bl, (error) => {
 			assert.ok(error);
@@ -593,26 +489,10 @@ describe("Unit test for: BL - lib/deploy", () => {
 				};
 			}
 		};
-		let inputmaskData = {
-			"name": "marketplace",
-			"type": "service",
-			"version": "1",
-			"env": "NEW"
-		};
 		
-		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
-			return cb(null, {
-				code: "NEW"
-			});
-		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "9090",
 					name: "marketplace",
 					type: "service",
@@ -719,8 +599,21 @@ describe("Unit test for: BL - lib/deploy", () => {
 							}
 						}
 					}
-				}
+				});
+			}
+		};
+		let inputmaskData = {
+			"name": "marketplace",
+			"type": "service",
+			"version": "1",
+			"env": "NEW"
+		};
+		
+		sinon.stub(sdk, 'get_env_registry').callsFake(function fakeFn(soajs, data, cb) {
+			return cb(null, {
+				code: "NEW"
 			});
+		});
 		
 		nock('http://www.example.com')
 			.get('/git/repo/info')
@@ -780,14 +673,10 @@ describe("Unit test for: BL - lib/deploy", () => {
 				code: "NEW"
 			});
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "9090",
 					name: "marketplace",
 					type: "service",
@@ -895,8 +784,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 							}
 						}
 					}
-				}
-			});
+				});
+			}
+		};
 		
 		nock('http://www.example.com')
 			.get('/git/repo/info')
@@ -1075,14 +965,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "9090",
 					name: "marketplace",
 					type: "service",
@@ -1235,9 +1120,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 							}
 						}
 					}
-				}
-			});
-		
+				});
+			}
+		};
 		nock('http://www.example.com')
 			.get('/git/repo/info')
 			.query({
@@ -1554,14 +1439,10 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "9090",
 					name: "marketplace",
 					type: "service",
@@ -1674,8 +1555,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 							}
 						}
 					}
-				}
-			});
+				});
+			}
+		};
 		
 		nock('http://www.example.com')
 			.get('/git/repo/info')
@@ -1992,14 +1874,10 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "9090",
 					name: "marketplace",
 					type: "service",
@@ -2112,8 +1990,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 							}
 						}
 					}
-				}
-			});
+				});
+			}
+		};
 		
 		nock('http://www.example.com')
 			.get('/git/repo/info')
@@ -2424,14 +2303,10 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		});
-		nock('http://www.example.com')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "9090"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
+		
+		bl.recipe = {
+			get: (soajs, data, options, cb) => {
+				return cb(null, {
 					_id: "9090",
 					name: "marketplace",
 					type: "service",
@@ -2544,8 +2419,9 @@ describe("Unit test for: BL - lib/deploy", () => {
 							}
 						}
 					}
-				}
-			});
+				});
+			}
+		};
 		
 		nock('http://www.example.com')
 			.get('/git/repo/info')

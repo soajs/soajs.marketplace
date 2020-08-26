@@ -802,27 +802,10 @@ let lib = {
 				}
 			}],
 			get_catalog_recipe: ['get_deploy', function (results, callback) {
-				soajs.awareness.connect('dashboard', "1", function (res) {
-					let options = {
-						method: "get",
-						uri: "http://" + res.host + "/catalog/recipes/get",
-						headers: res.headers,
-						json: true,
-						qs: {
-							id: results.get_deploy.recipe.id
-						}
-					};
-					request(options, (error, response, body) => {
-						if (error || !body.result) {
-							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
-						} else if (!body.data || !body.data.recipe) {
-							return callback(bl.marketplace.handleError(soajs, 417, null));
-						} else {
-							return callback(null, body.data);
-						}
-						
-					});
-				});
+				let data = {
+					id: results.get_deploy.recipe.id
+				};
+				bl.recipe.get(soajs, data, null, callback);
 			}],
 			get_env_record: ['get_deploy', 'get_catalog_recipe', function (results, callback) {
 				sdk.get_env_registry(soajs, {env: inputmaskData.env}, (err, envRecord) => {

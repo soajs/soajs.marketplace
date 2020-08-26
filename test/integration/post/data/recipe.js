@@ -25,12 +25,11 @@ module.exports = [
 						"pullPolicy": "Always",
 						"repositoryType": "public",
 						"override": false,
-						"shell": "/bin/bash",
 						"binary": false
 					},
 					"sourceCode": {
 						"configuration": {
-							"label": "repo",
+							"label": "test",
 							"catalog": "",
 							"version": "",
 							"branch": "",
@@ -86,14 +85,6 @@ module.exports = [
 							"label": "label",
 							"default": "value",
 							"fieldMsg": "message"
-						},
-						"SOAJS_ENV": {
-							"type": "computed",
-							"value": "$SOAJS_ENV"
-						},
-						"test_env": {
-							"type": "static",
-							"value": "test_value"
 						}
 					},
 					"cmd":

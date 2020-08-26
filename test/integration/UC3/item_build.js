@@ -14,8 +14,9 @@ const requester = require('../requester');
 let consoleserver = require('./console-service-mock.js');
 let infraserver = require('./infra-service-mock.js');
 let multiserver = require('./multi-service-mock.js');
-let dashboardserver = require('./dashboard-service-mock.js');
 let reposerver = require('./repositroies-service-mock.js');
+
+let recipe = require('../post/data/recipe');
 
 
 describe("Testing API: PUT /item/deploy/build", () => {
@@ -27,14 +28,11 @@ describe("Testing API: PUT /item/deploy/build", () => {
 				console.log("Starting infra ...");
 				multiserver.runService(() => {
 					console.log("Starting multitenant ...");
-					dashboardserver.runService(() => {
-						console.log("Starting dashboard ...");
-						reposerver.runService(() => {
-							console.log("Starting repositories ...");
-							setTimeout(function () {
-								done();
-							}, 5000);
-						});
+					reposerver.runService(() => {
+						console.log("Starting repositories ...");
+						setTimeout(function () {
+							done();
+						}, 5000);
 					});
 				});
 			});
@@ -50,15 +48,14 @@ describe("Testing API: PUT /item/deploy/build", () => {
 		consoleserver.stopService(() => {
 			infraserver.stopService(() => {
 				multiserver.stopService(() => {
-					dashboardserver.stopService(() => {
-						reposerver.stopService(() => {
-							done();
-						});
+					reposerver.stopService(() => {
+						done();
 					});
 				});
 			});
 		});
 	});
+	let recipe_id;
 	it("Success - will add a service", (done) => {
 		let data = {
 			"body": {
@@ -179,8 +176,8 @@ describe("Testing API: PUT /item/deploy/build", () => {
 	
 	it("Success - will verify service", (done) => {
 		let data = {
-			"qs" : {
-				"name" : "deploy",
+			"qs": {
+				"name": "deploy",
 				"type": "service"
 			}
 		};
@@ -278,13 +275,25 @@ describe("Testing API: PUT /item/deploy/build", () => {
 		});
 	});
 	
+	it("Success - will add a recipe", (done) => {
+		let data = {
+			"body": recipe[0]
+		};
+		requester('/recipe', 'post', data, (error, body) => {
+			assert.ok(body);
+			assert.ok(body.result);
+			recipe_id = body.data.id;
+			done();
+		});
+	});
+	
 	it("Success - will build a service", (done) => {
 		let data = {
-			"qs" :{
+			"qs": {
 				"name": "deploy",
 				"type": "service",
 			},
-			"body" :{
+			"body": {
 				"config": {
 					"env": "new",
 					"version": "1",
@@ -304,15 +313,31 @@ describe("Testing API: PUT /item/deploy/build", () => {
 						"id": "12"
 					},
 					"recipe": {
-						"id": "1234567890",
-						"readinessProbe": {},
-						"ports": {
-							"type": "test",
-							"portType": "Internal",
-							"values": [{
-								"name": "http",
-								"target": 80
-							}]
+						"id": recipe_id,
+						"readinessProbe": {
+							"httpGet": {
+								"path": "/heartbeat",
+								"port": "maintenance"
+							},
+							"initialDelaySeconds": 1,
+							"timeoutSeconds": 2,
+							"periodSeconds": 2,
+							"successThreshold": 3,
+							"failureThreshold": 0
+							
+						},
+						"image": {
+							"prefix": "soajsorg",
+							"name": "image",
+							"tag": "latest",
+						},
+						"livenessProbe": {
+							"httpGet": {"path": "", "port": ""},
+							"initialDelaySeconds": 0,
+							"timeoutSeconds": 0,
+							"periodSeconds": 0,
+							"successThreshold": 0,
+							"failureThreshold": 0
 						},
 						"sourceCode": {
 							"label": "test",
@@ -323,11 +348,11 @@ describe("Testing API: PUT /item/deploy/build", () => {
 							"commit": "12345",
 						},
 						"env": {
-							"SECRET_ENV": {
+							"secret_key": {
 								"name": "secret name",
 								"key": "secret name"
 							},
-							"USER_ENV": "test data"
+							"user_input": "test data"
 						},
 					}
 				}
@@ -342,16 +367,16 @@ describe("Testing API: PUT /item/deploy/build", () => {
 	
 	it("Success - will redeploy a service", (done) => {
 		let data = {
-			"qs" : {
+			"qs": {
 				"name": "deploy",
 				"type": "service",
 				"env": "new",
-				"version" :"1"
+				"version": "1"
 			},
-			"body" :{
+			"body": {
 				"src": {
 					"from": {
-						"branch" : "master",
+						"branch": "master",
 						"commit": "newcommit"
 					}
 				}
@@ -366,16 +391,16 @@ describe("Testing API: PUT /item/deploy/build", () => {
 	
 	it("Success - will redeploy a service", (done) => {
 		let data = {
-			"qs" : {
+			"qs": {
 				"name": "deploy",
 				"type": "service",
 				"env": "new",
-				"version" :"1"
+				"version": "1"
 			},
-			"body" :{
+			"body": {
 				"src": {
 					"from": {
-						"branch" : "master",
+						"branch": "master",
 						"commit": "newcommit"
 					}
 				}
@@ -390,16 +415,16 @@ describe("Testing API: PUT /item/deploy/build", () => {
 	
 	it("Success -initiate CD on a service", (done) => {
 		let data = {
-			"qs" : {
+			"qs": {
 				"name": "deploy",
 				"type": "service",
-				"version" :"1",
+				"version": "1",
 				"token": "12312312"
 			},
-			"body" :{
+			"body": {
 				"config": {
 					"from": {
-						"branch" : "master",
+						"branch": "master",
 						"commit": "newcommit"
 					}
 				}
