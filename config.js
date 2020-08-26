@@ -1165,6 +1165,9 @@ module.exports = {
 											},
 											"tag": {
 												"type": "string"
+											},
+											"registrySecret": {
+												"type": "string"
 											}
 										},
 										"required": ["name", "prefix", "tag"]
@@ -1440,6 +1443,9 @@ module.exports = {
 												"type": "string"
 											},
 											"tag": {
+												"type": "string"
+											},
+											"registrySecret": {
 												"type": "string"
 											}
 										},

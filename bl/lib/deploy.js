@@ -558,6 +558,9 @@ let lib = {
 		if (opts.recipe.recipe.deployOptions.image.override && opts.deploy.recipe.image) {
 			config.image.name = opts.deploy.recipe.image.prefix + "/" + opts.deploy.recipe.image.name + ":" + opts.deploy.recipe.image.tag;
 		}
+		if (opts.recipe.recipe.deployOptions.image.registrySecret) {
+			config.image.secret = opts.recipe.recipe.deployOptions.image.registrySecret;
+		}
 		if (opts.deploy.recipe.readinessProbe) {
 			config.readinessProbe = opts.deploy.recipe.readinessProbe;
 		}
