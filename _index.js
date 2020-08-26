@@ -81,6 +81,24 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.get("/recipe", function (req, res) {
+				bl.recipe.get(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
+			service.get("/recipes", function (req, res) {
+				bl.recipe.list(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
+			service.get("/recipes/ids", function (req, res) {
+				bl.recipe.list(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
 			//DELETE methods
 			service.delete("/item", function (req, res) {
 				bl.marketplace.deleteItem(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -90,6 +108,12 @@ function run(serviceStartCb) {
 			
 			service.delete("/items/src", function (req, res) {
 				bl.marketplace.deleteItem_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
+			service.delete("/recipe", function (req, res) {
+				bl.recipe.delete(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
@@ -281,8 +305,19 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.put("/recipe", function (req, res) {
+				bl.recipe.edit(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
 			//POST methods
 			
+			service.post("/recipe", function (req, res) {
+				bl.recipe.add(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
 			
 			service.start(serviceStartCb);
 		});

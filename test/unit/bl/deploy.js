@@ -10,7 +10,6 @@
 
 const helper = require("../../helper.js");
 const assert = require('assert');
-const nock = require("nock");
 const sinon = require('sinon');
 const lib_deploy = helper.requireModule('./bl/lib/deploy.js');
 const lib_redeploy = helper.requireModule('./bl/lib/redeploy.js');
@@ -196,30 +195,26 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
-			}
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -305,30 +300,29 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
-			}
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"result": true,
+						"data": {
+							"recipe": {
+								"buildOptions": {
+									"env": {
+										"SECRET_ENV": {
+											"type": "secret"
+										},
+										"USER_ENV": {
+											"type": "userInput"
+										}
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -414,17 +408,14 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(new Error("error"), null);
+				}
 			}
 		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": false,
-				"errors": "request error"
-			});
+		
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -485,7 +476,7 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 		};
 		bl.saveConfiguration(soajs, inputmaskData, options, (err) => {
 			assert.ok(err);
-			assert.deepEqual(err.message, "request error");
+			assert.deepEqual(err.message, "error");
 			done();
 		});
 	});
@@ -514,37 +505,33 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
+								}
+							},
+							"deployOptions": {
+								"image": {
+									"name": "test",
+									"prefix": "soajs",
+									"tag": "1.1"
+								},
+							}
+						}
+					});
+				}
 			}
 		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
-								}
-							}
-						},
-						"deployOptions": {
-							"image": {
-								"name": "test",
-								"prefix": "soajs",
-								"tag": "1.1"
-							},
-						}
-					}
-				}
-			});
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -629,37 +616,34 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
+								}
+							},
+							"deployOptions": {
+								"image": {
+									"name": "test",
+									"prefix": "soajs",
+									"tag": "1.1"
+								},
+							}
+						}
+					});
+				}
 			}
 		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
-								}
-							}
-						},
-						"deployOptions": {
-							"image": {
-								"name": "test",
-								"prefix": "soajs",
-								"tag": "1.1"
-							},
-						}
-					}
-				}
-			});
+		
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -743,37 +727,33 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
+								}
+							},
+							"deployOptions": {
+								"image": {
+									"name": "test",
+									"prefix": "soajs",
+									"tag": "1.1"
+								},
+							}
+						}
+					});
+				}
 			}
 		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
-								}
-							}
-						},
-						"deployOptions": {
-							"image": {
-								"name": "test",
-								"prefix": "soajs",
-								"tag": "1.1"
-							},
-						}
-					}
-				}
-			});
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -854,29 +834,25 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 					}
 				}
 			},
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -968,30 +944,27 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
-			}
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null,  {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
+		
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -1083,30 +1056,27 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
-			}
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
+		
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -1185,7 +1155,7 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 							getItem: (inputmaskData, cb) => {
 								return cb(null, {
 									"_id": "123",
-									"settings" : {
+									"settings": {
 										"environments": {
 											"value": [],
 											"type": "whitelist"
@@ -1199,30 +1169,26 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
-			}
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};
@@ -1301,7 +1267,7 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 							getItem: (inputmaskData, cb) => {
 								return cb(null, {
 									"_id": "123",
-									"settings" : {}
+									"settings": {}
 								});
 							},
 							update_item_configuration: (opts, cb) => {
@@ -1310,30 +1276,26 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 						};
 					}
 				}
-			}
-		};
-		nock('http://192.168.5.200')
-			.get('/catalog/recipes/get')
-			.query({
-				id: "1234567890"
-			})
-			.reply(200, {
-				"result": true,
-				"data": {
-					"recipe": {
-						"buildOptions": {
-							"env": {
-								"SECRET_ENV": {
-									"type": "secret"
-								},
-								"USER_ENV": {
-									"type": "userInput"
+			},
+			recipe: {
+				get: (soajs, data, options, cb) => {
+					return cb(null, {
+						"recipe": {
+							"buildOptions": {
+								"env": {
+									"SECRET_ENV": {
+										"type": "secret"
+									},
+									"USER_ENV": {
+										"type": "userInput"
+									}
 								}
 							}
 						}
-					}
+					});
 				}
-			});
+			}
+		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
 		BL.localConfig = helper.requireModule("config.js");
 		let options = {};

@@ -15,6 +15,7 @@ const item_static_schema = require("./driver/static/validator.js");
 const item_custom_schema = require("./driver/custom/validator.js");
 const item_config_schema = require("./driver/config/validator.js");
 const item_soajs_schema = require("./driver/soajs/validator.js");
+const catalog_schema = require("./schemas/catalog");
 
 module.exports = {
 	"type": 'service',
@@ -75,9 +76,17 @@ module.exports = {
 		"readme": "/README.md",
 		"release": "/RELEASE.md"
 	},
+	"tokens": {
+		"dotValue": ".",
+		"dotToken": "__dot__",
+		"dotRegexString": "\\."
+	},
+	"kubePorts": {
+		"minPort": 30000,
+		"maxPort": 32767
+	},
 	
 	"bodyParser": {"limit":"50mb"},
-	
 	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
@@ -105,6 +114,14 @@ module.exports = {
 		421: "Unable to connect to item",
 		422: "Error: ",
 		423: "Unable to redeploy item!",
+		
+		430: "One of the inputs under configuration repository is missing.",
+		431: "The port chosen is outside the range of valid exposed ports (30000 , 32767)",
+		432: "Invalid port schema provided!",
+		433: "Unable to update catalog recipe",
+		434: "You are not allowed to edit or delete a locked recipe",
+		435: "Catalog recipe not found",
+		
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
@@ -358,6 +375,84 @@ module.exports = {
 					"group": "Item deploy"
 				},
 				"commonFields": ["id"]
+			},
+			
+			"/recipes": {
+				"_apiInfo": {
+					"l": "List catalog recipes",
+					"group": "Catalog"
+				},
+				'version': {
+					"source": ['query.version'],
+					"required": false,
+					"validation": {
+						"type": "boolean"
+					}
+				},
+				'skip': {
+					"source": ['query.skip'],
+					"required": false,
+					"validation": {
+						"type": "integer"
+					}
+				},
+				'limit': {
+					"source": ['query.limit'],
+					"required": false,
+					"validation": {
+						"type": "integer"
+					}
+				}
+			},
+			
+			"/recipes/ids": {
+				"_apiInfo": {
+					"l": "List catalog recipes by selected ids",
+					"group": "Catalog"
+				},
+				'ids': {
+					"source": ['query.ids'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": "1",
+						"items": {
+							"type": "string",
+						}
+					}
+				}
+			},
+			
+			"/recipe": {
+				"_apiInfo": {
+					"l": "Get catalog recipe by id",
+					"group": "Catalog"
+				},
+				"id": {
+					"source": ['query.id'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				'version': {
+					"source": ['query.version'],
+					"required": false,
+					"validation": {
+						"type": "number",
+						"minimum": 1
+					}
+				}
+			}
+		},
+		
+		"post": {
+			"/recipe": {
+				"_apiInfo": {
+					"l": "Add new catalog",
+					"group": "Catalog"
+				},
+				"catalog": catalog_schema
 			}
 		},
 		
@@ -411,6 +506,28 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API deletes the configure deployment of an item",
 					"group": "Item deploy"
+				}
+			},
+			
+			"/recipe" :{
+				"_apiInfo": {
+					"l": "Delete a catalog recipe by id",
+					"group": "Catalog"
+				},
+				"id": {
+					"source": ['query.id'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				'version': {
+					"source": ['query.version'],
+					"required": false,
+					"validation": {
+						"type": "number",
+						"minimum": 1
+					}
 				}
 			}
 		},
@@ -1547,6 +1664,21 @@ module.exports = {
 						]
 					}
 				}
+			},
+			
+			"/recipe": {
+				"_apiInfo": {
+					"l": "Update catalog recipe",
+					"group": "Catalog"
+				},
+				"id": {
+					"source": ['query.id'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"catalog": catalog_schema
 			}
 		}
 	}

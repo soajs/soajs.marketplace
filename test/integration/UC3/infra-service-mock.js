@@ -591,217 +591,175 @@ function run(serviceStartCb) {
 		});
 		
 		service.post("/kubernetes/item/deploy/soajs", function (req, res) {
-			let check = __.isEqual(req.soajs.inputmaskData,
-				{
-					"recipe": {
-						"env": [
-							{
-								"name": "SOAJS_GIT_OWNER",
-								"value": "ragheb"
-							},
-							{
-								"name": "SOAJS_GIT_BRANCH",
-								"value": "master"
-							},
-							{
-								"name": "SOAJS_GIT_COMMIT",
-								"value": "123"
-							},
-							{
-								"name": "SOAJS_GIT_REPO",
-								"value": "deploy"
-							},
-							{
-								"name": "SOAJS_GIT_PROVIDER",
-								"value": "github"
-							},
-							{
-								"name": "SOAJS_GIT_TOKEN",
-								"value": "12345678"
-							},
-							{
-								"name": "SOAJS_GIT_DOMAIN",
-								"value": "github.com"
-							},
-							{
-								"name": "SOAJS_NX_DOMAIN",
-								"value": "soajs.org"
-							},
-							{
-								"name": "SOAJS_NX_SITE_DOMAIN",
-								"value": "site.soajs.org"
-							},
-							{
-								"name": "SOAJS_NX_API_DOMAIN",
-								"value": "api.soajs.org"
-							},
-							{
-								"name": "SOAJS_SRV_PORT",
-								"value": "6981"
-							},
-							{
-								"name": "SOAJS_SRV_PORT_MAINTENANCE",
-								"value": "NaN"
-							},
-							{
-								"name": "SOAJS_ENV",
-								"value": "new"
-							},
-							{
-								"name": "SOAJS_SERVICE_NAME",
-								"value": "deploy"
-							},
-							{
-								"name": "SOAJS_NX_CONTROLLER_PORT",
-								"value": "4000"
-							},
-							{
-								"name": "SOAJS_CONTROLLER_PORT_MAINTENANCE",
-								"value": "5000"
-							},
-							{
-								"name": "SOAJS_DEPLOY_HA",
-								"value": "kubernetes"
-							},
-							{
-								"name": "SOAJS_EXTKEY",
-								"value": "98"
-							},
-							{
-								"name": "SOAJS_NX_CONTROLLER_IP",
-								"value": "1.0.0.1"
-							},
-							{
-								"name": "SOAJS_REGISTRY_API",
-								"value": "1.0.0.1:5000"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_OWNER",
-								"value": "ragheb"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_BRANCH",
-								"value": "master"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_COMMIT",
-								"value": "12345"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_NAME",
-								"value": "deploy"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_PROVIDER",
-								"value": "github"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_TOKEN",
-								"value": "12345678"
-							},
-							{
-								"name": "SOAJS_CONFIG_REPO_DOMAIN",
-								"value": "github.com"
-							},
-							{
-								"name": "SECRET_ENV",
-								"valueFrom": {
-									"secretKeyRef": {
-										"name": "secret name",
-										"key": "secret name"
-									}
+			let temp = req.soajs.inputmaskData;
+			delete temp.recipe.catalog.id;
+			let check = __.isEqual(temp, {
+				"recipe": {
+					"env": [
+						{
+							"name": "SOAJS_GIT_OWNER",
+							"value": "ragheb"
+						},
+						{
+							"name": "SOAJS_GIT_BRANCH",
+							"value": "master"
+						},
+						{
+							"name": "SOAJS_GIT_COMMIT",
+							"value": "123"
+						},
+						{
+							"name": "SOAJS_GIT_REPO",
+							"value": "deploy"
+						},
+						{
+							"name": "SOAJS_GIT_PROVIDER",
+							"value": "github"
+						},
+						{
+							"name": "SOAJS_GIT_TOKEN",
+							"value": "12345678"
+						},
+						{
+							"name": "SOAJS_GIT_DOMAIN",
+							"value": "github.com"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_OWNER",
+							"value": "ragheb"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_BRANCH",
+							"value": "master"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_COMMIT",
+							"value": "12345"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_NAME",
+							"value": "deploy"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_PROVIDER",
+							"value": "github"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_TOKEN",
+							"value": "12345678"
+						},
+						{
+							"name": "SOAJS_CONFIG_REPO_DOMAIN",
+							"value": "github.com"
+						},
+						{
+							"name": "secret_key",
+							"valueFrom": {
+								"secretKeyRef": {
+									"name": "secret name",
+									"key": "secret name"
 								}
-							},
+							}
+						},
+						{
+							"name": "user_input",
+							"value": "test data"
+						}
+					],
+					"catalog": {
+						"version": "1",
+						"shell": "shell/bin/bash"
+					},
+					"item": {
+						"env": "new",
+						"name": "deploy",
+						"type": "service",
+						"version": "1",
+						"group": "deployItemsExample"
+					},
+					"src": {
+						"repo": "deploy",
+						"owner": "ragheb",
+						"from": {
+							"branch": "master",
+							"commit": "123"
+						}
+					},
+					"mode": "Deployment",
+					"labels": {
+						"test": "label"
+					},
+					"image": {
+						"name": "soajsorg/image:latest",
+						"imagePullPolicy": "Always"
+					},
+					"readinessProbe": {
+						"httpGet": {
+							"path": "/heartbeat",
+							"port": "maintenance"
+						},
+						"initialDelaySeconds": 1,
+						"timeoutSeconds": 2,
+						"periodSeconds": 2,
+						"successThreshold": 3,
+						"failureThreshold": 0
+					},
+					"livenessProbe": {
+						"httpGet": {
+							"path": "",
+							"port": ""
+						},
+						"initialDelaySeconds": 0,
+						"timeoutSeconds": 0,
+						"periodSeconds": 0,
+						"successThreshold": 0,
+						"failureThreshold": 0
+					},
+					"command": [
+						"bash"
+					],
+					"args": [
+						"-c",
+						"node ."
+					],
+					"volume": {
+						"volumeMounts": [
 							{
-								"name": "USER_ENV",
-								"value": "test data"
-							},
-							{
-								"name": "SOAJS_PROFILE",
-								"value": "/opt/soajs/profile/soajsprofile"
-							},
-							{
-								"name": "SOAJS_MONGO_CON_KEEPALIVE",
-								"value": "true"
+								"mountPath": "/opt/soajs/profile/",
+								"name": "soajsprofile"
 							}
 						],
-						"catalog": {
-							"id": "123",
-							"version": "1",
-							"shell": "shell/bin/bash"
-						},
-						"item": {
-							"env": "new",
-							"name": "deploy",
-							"type": "service",
-							"version": "1",
-							"group": "deployItemsExample"
-						},
-						"src": {
-							"repo": "deploy",
-							"owner": "ragheb",
-							"from": {
-								"branch": "master",
-								"commit": "123"
-							}
-						},
-						"mode": "Deployment",
-						"labels": {
-							"ragheb": "ragheb"
-						},
-						"image": {
-							"name": "soajsorg/deploy:latest",
-							"imagePullPolicy": "Always"
-						},
-						"readinessProbe": {},
-						"volume": {
-							"volumeMounts": [
-								{
-									"mountPath": "/opt/soajs/profile/",
-									"name": "soajsprofile"
-								}
-							],
-							"volumes": [
-								{
-									"name": "soajsprofile",
-									"secret": {
-										"secretName": "soajsprofile"
-									}
-								}
-							]
-						},
-						"replicas": 1,
-						"service": {
-							"ports": [
-								{
-									"name": "service-port",
-									"protocol": "TCP",
-									"target": 6981,
-									"port": 6981
-								},
-								{
-									"protocol": "TCP",
-									"name": "http",
-									"port": 80,
-									"targetPort": 80
-								}
-							]
-						},
-						"ports": [
+						"volumes": [
 							{
-								"name": "service",
-								"containerPort": 6981
-							},
-							{
-								"name": "http",
-								"containerPort": 80
+								"name": "soajsprofile",
+								"secret": {
+									"secretName": "soajsprofile"
+								}
 							}
 						]
 					},
-					"configuration": {
-						"env": "new"
-					}
-				});
+					"replicas": 1,
+					"service": {
+						"ports": [
+							{
+								"name": "service-port",
+								"protocol": "TCP",
+								"target": 6981,
+								"port": 6981
+							}
+						]
+					},
+					"ports": [
+						{
+							"name": "service",
+							"containerPort": 6981
+						}
+					]
+				},
+				"configuration": {
+					"env": "new"
+				}
+			});
 			return res.json(req.soajs.buildResponse(!check, {
 				"data": true
 			}));
