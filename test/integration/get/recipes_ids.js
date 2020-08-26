@@ -33,6 +33,7 @@ describe("Testing API: GET /items", () => {
         };
         requester('/recipes/ids', 'get', params, (error, body) => {
             assert.ok(body);
+            //make sure it only get the id u asked for
 	        assert.deepStrictEqual(body.data[0]._id, "5ef5a98e707a10af2f5d84c8");
             done();
         });

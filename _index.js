@@ -94,7 +94,7 @@ function run(serviceStartCb) {
 			});
 			
 			service.get("/recipes/ids", function (req, res) {
-				bl.recipe.list(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+				bl.recipe.list_by_ids(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
 				});
 			});
