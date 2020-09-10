@@ -12,15 +12,15 @@ module.exports = {
 			"type": {"type": "string", "required": true},
 			"subtype": {"type": "string", "required": false},
 			"description": {"type": "string", "required": true},
-            "restriction": {
-                "type": "object",
-				"required" : false,
-                "properties": {
-                    "deployment": {"type": "array", 'required' : false},
-                    "driver": {"type": "array", 'required' : false},
-                    "infra": {"type": "array", 'required' : false}
+			"restriction": {
+				"type": "object",
+				"required": false,
+				"properties": {
+					"deployment": {"type": "array", 'required': false},
+					"driver": {"type": "array", 'required': false},
+					"infra": {"type": "array", 'required': false}
 				}
-            },
+			},
 			"recipe": {
 				"type": "object",
 				"required": true,
@@ -41,7 +41,11 @@ module.exports = {
 									"prefix": {"type": "string", "required": false},
 									"name": {"type": "string", "required": true},
 									"tag": {"type": "string", "required": true},
-									"repositoryType": {"type": "string", "required": false, "enum": ["private","public"]},
+									"repositoryType": {
+										"type": "string",
+										"required": false,
+										"enum": ["private", "public"]
+									},
 									"pullPolicy": {"type": "string", "required": false},
 									"shell": {"type": "string", "required": false},
 								}
@@ -127,6 +131,18 @@ module.exports = {
 							"serviceAccount": {
 								"type": "object",
 								"required": false
+							},
+							"securityContext": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"pod": {
+										"type": "object"
+									},
+									"container": {
+										"type": "object"
+									}
+								}
 							}
 						}
 					},

@@ -567,6 +567,17 @@ let lib = {
 		if (opts.deploy.recipe.livenessProbe) {
 			config.livenessProbe = opts.deploy.recipe.livenessProbe;
 		}
+		
+		if (opts.recipe.recipe.deployOptions.securityContext && (opts.recipe.recipe.deployOptions.securityContext.container || opts.recipe.recipe.deployOptions.securityContext.pod)) {
+			config.securityContext = {};
+			if (opts.recipe.recipe.deployOptions.securityContext.container) {
+				config.securityContext.container = opts.recipe.recipe.deployOptions.securityContext.container;
+			}
+			if (opts.recipe.recipe.deployOptions.securityContext.pod) {
+				config.securityContext.pod = opts.recipe.recipe.deployOptions.securityContext.pod;
+			}
+		}
+		
 		if (opts.recipe.recipe.buildOptions.cmd && opts.recipe.recipe.buildOptions.cmd.deploy) {
 			if (opts.recipe.recipe.buildOptions.cmd.deploy.command) {
 				config.command = opts.recipe.recipe.buildOptions.cmd.deploy.command;
