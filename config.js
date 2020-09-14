@@ -189,7 +189,17 @@ module.exports = {
 					"source": ['query.type'],
 					"required": false,
 					"validation": {"type": "string"}
-				}
+				},
+				"start": {
+					"source": ['query.start'],
+					"required": false,
+					"validation": {"type": "integer"}
+				},
+				"limit": {
+					"source": ['query.limit'],
+					"required": false,
+					"validation": {"type": "integer"}
+				},
 			},
 			
 			'/public/items': {
@@ -303,7 +313,17 @@ module.exports = {
 							"type": "string"
 						}
 					}
-				}
+				},
+				"start": {
+					"source": ['query.start'],
+					"required": false,
+					"validation": {"type": "integer"}
+				},
+				"limit": {
+					"source": ['query.limit'],
+					"required": false,
+					"validation": {"type": "integer"}
+				},
 			},
 			
 			'/items/type/name': {
