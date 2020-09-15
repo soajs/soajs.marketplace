@@ -195,9 +195,9 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 			}
 		}
 	}
-	if (data.name){
+	if (data.name) {
 		options.projection = {
-			name : 1
+			name: 1
 		};
 	}
 	condition = __self.add_acl_2_condition(data, condition);
@@ -275,7 +275,7 @@ Marketplace.prototype.getItem_by_names = function (data, cb) {
 	
 	let condition = {
 		"name": {
-			"$in" : data.names
+			"$in": data.names
 		},
 		"type": {$in: data.types}
 	};
@@ -284,7 +284,9 @@ Marketplace.prototype.getItem_by_names = function (data, cb) {
 		if (err) {
 			return cb(err);
 		}
-		return cb(err, records);
+		return cb(err, {
+			records
+		});
 	});
 };
 
@@ -615,8 +617,7 @@ Marketplace.prototype.update_item_configuration = function (data, cb) {
 			if (one.version === data.config.version) {
 				newDeploy.push(data.config);
 				found = true;
-			}
-			else {
+			} else {
 				newDeploy.push(one);
 			}
 		});
