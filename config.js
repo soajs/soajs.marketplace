@@ -189,17 +189,7 @@ module.exports = {
 					"source": ['query.type'],
 					"required": false,
 					"validation": {"type": "string"}
-				},
-				"start": {
-					"source": ['query.start'],
-					"required": false,
-					"validation": {"type": "integer"}
-				},
-				"limit": {
-					"source": ['query.limit'],
-					"required": false,
-					"validation": {"type": "integer"}
-				},
+				}
 			},
 			
 			'/public/items': {
@@ -339,6 +329,36 @@ module.exports = {
 				},
 				"types": {
 					"source": ['query.types'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			
+			'/items/type/names': {
+				"_apiInfo": {
+					"l": "This API lists all item names matching certain names",
+					"group": "Item"
+				},
+				"commonFields": ["start", "limit"],
+				"types": {
+					"source": ['query.types'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"minItems": 1,
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"names": {
+					"source": ['query.names'],
 					"required": true,
 					"validation": {
 						"type": "array",

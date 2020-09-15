@@ -118,6 +118,21 @@ let bl = {
 		});
 	},
 	
+	"getItem_by_names": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		inputmaskData._groups = getGroups(soajs);
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.getItem_by_names(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
+	
 	"updateItem_environments": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));

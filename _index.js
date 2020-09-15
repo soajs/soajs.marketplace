@@ -63,6 +63,12 @@ function run(serviceStartCb) {
 				});
 			});
 			
+			service.get("/items/type/names", function (req, res) {
+				bl.marketplace.getItem_by_names(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+					return res.json(req.soajs.buildResponse(error, data));
+				});
+			});
+			
 			service.get("/items/src", function (req, res) {
 				bl.marketplace.getItem_by_source(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
 					return res.json(req.soajs.buildResponse(error, data));
