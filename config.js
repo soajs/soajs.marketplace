@@ -285,7 +285,7 @@ module.exports = {
 				"commonFields": ["start", "limit"],
 				"type": {
 					"source": ['query.type'],
-					"required": true,
+					"required": false,
 					"validation": {"type": "string"}
 				},
 				"subtype": {
