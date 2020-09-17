@@ -45,6 +45,7 @@ describe("starting integration tests", () => {
 		require("./get/item_type.js");
 		require("./get/items_type_all.js");
 		require("./get/items_type_name.js");
+		require("./get/items_type_names.js");
 		require("./get/items_src.js");
 		require("./get/items_type.js");
 		require("./get/soajs_items.js");

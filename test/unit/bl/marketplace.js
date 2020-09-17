@@ -228,6 +228,50 @@ describe("Unit test for: BL - marketplace", () => {
 		});
 	});
 	
+	//getItem_by_names
+	it("getItem_by_names - no inputmaskData", function (done) {
+		BL.modelObj = {
+			getItem_by_names: (data, cb) => {
+				return cb(null, {
+					records: [{"_id": "123"}]
+				});
+			}
+		};
+		BL.getItem_by_names(soajs, null, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 400);
+			done();
+		});
+	});
+	
+	it("getItem_by_names - fail mongo", function (done) {
+		BL.modelObj = {
+			getItem_by_names: (data, cb) => {
+				return cb(true);
+			}
+		};
+		BL.getItem_by_names(soajs, {}, {}, (error) => {
+			assert.ok(error);
+			assert.deepEqual(error.code, 602);
+			done();
+		});
+	});
+	
+	it("getItem_by_names - success", function (done) {
+		BL.modelObj = {
+			getItem_by_names: (data, cb) => {
+				return cb(null, {
+					records: [{"_id": "123"}]
+				});
+			}
+		};
+		BL.getItem_by_names(soajs, {}, {}, (error, response) => {
+			assert.ifError(error);
+			assert.deepEqual(response.records, [{"_id": "123"}]);
+			done();
+		});
+	});
+	
 	//updateItem_environments
 	it("updateItem_environments - no inputmaskData", function (done) {
 		BL.modelObj = {

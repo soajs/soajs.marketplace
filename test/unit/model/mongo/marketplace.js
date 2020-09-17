@@ -321,6 +321,26 @@ describe("Unit test for: model - marketplace", function () {
 		});
 	});
 	
+	it("getItem_by_names - fail", function (done) {
+		let data = {};
+		modelObj.getItem_by_names(data, (error) => {
+			assert.ok(error);
+			done();
+		});
+	});
+	
+	it("getItem_by_names - success", function (done) {
+		let main_data = {
+			"types": ["service"],
+			"names": ["console", "multitenant"],
+		};
+		modelObj.getItem_by_names(main_data, (error, response) => {
+			assert.deepEqual(response.records.length, "2");
+			done();
+		});
+	});
+	
+	
 	it("updateItem_recipes - fail", function (done) {
 		let data = {};
 		modelObj.updateItem_recipes(data, (error) => {
