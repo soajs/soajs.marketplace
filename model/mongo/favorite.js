@@ -80,7 +80,6 @@ Favorite.prototype.get = function (data, cb) {
 	
 	let options = {};
 	__self.mongoCore.findOne(colName, condition, options, (error, response) => {
-		console.log(response)
 		if (error) {
 			return cb(error);
 		} else {
