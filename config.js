@@ -86,7 +86,7 @@ module.exports = {
 		"maxPort": 32767
 	},
 	
-	"bodyParser": {"limit":"50mb"},
+	"bodyParser": {"limit": "50mb"},
 	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
@@ -483,7 +483,29 @@ module.exports = {
 						"minimum": 1
 					}
 				}
-			}
+			},
+			
+			"/favorite": {
+				"_apiInfo": {
+					"l": "List Favorites",
+					"group": "Favorite"
+				},
+				'username': {
+					'source': ['query.username'],
+					'required': true,
+					'validation': {
+						'type': 'string'
+					}
+				},
+				'type': {
+					'source': ['query.type'],
+					'required': true,
+					"validation": {
+						"enum": ['soajs', 'service', 'daemon', 'resource', 'custom', 'static', 'config'],
+						"type": "string"
+					}
+				}
+			},
 		},
 		
 		"post": {
@@ -493,6 +515,28 @@ module.exports = {
 					"group": "Catalog"
 				},
 				"catalog": catalog_schema
+			},
+			
+			"/favorite": {
+				"_apiInfo": {
+					"l": "Add to Favorites",
+					"group": "Favorite"
+				},
+				'service': {
+					'source': ['query.service'],
+					'required': true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				'type': {
+					'source': ['query.type'],
+					'required': true,
+					"validation": {
+						"enum": ['soajs', 'service', 'daemon', 'resource', 'custom', 'static', 'config'],
+						"type": "string"
+					}
+				}
 			}
 		},
 		
@@ -549,7 +593,7 @@ module.exports = {
 				}
 			},
 			
-			"/recipe" :{
+			"/recipe": {
 				"_apiInfo": {
 					"l": "Delete a catalog recipe by id",
 					"group": "Catalog"
@@ -567,6 +611,28 @@ module.exports = {
 					"validation": {
 						"type": "number",
 						"minimum": 1
+					}
+				}
+			},
+			
+			"/favorite": {
+				"_apiInfo": {
+					"l": "Delete from Favorites",
+					"group": "Favorite"
+				},
+				'service': {
+					'source': ['query.service'],
+					'required': true,
+					'validation': {
+						'type': 'string'
+					}
+				},
+				'type': {
+					'source': ['query.type'],
+					'required': true,
+					"validation": {
+						"enum": ['soajs', 'service', 'daemon', 'resource', 'custom', 'static', 'config'],
+						"type": "string"
 					}
 				}
 			}

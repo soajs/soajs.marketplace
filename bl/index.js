@@ -14,12 +14,13 @@ const fs = require("fs");
 
 let SSOT = {};
 let model = process.env.SOAJS_SERVICE_MODEL || "mongo";
-const BLs = ["marketplace", "recipe"];
+const BLs = ["marketplace", "recipe", "favorite"];
 
 let BL = {
 	init: init,
 	marketplace: null,
-	recipe: null
+	recipe: null,
+	favorite: null
 };
 
 function init(service, localConfig, cb) {
