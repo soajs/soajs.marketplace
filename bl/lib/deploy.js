@@ -105,7 +105,7 @@ let lib = {
 						soajs.awareness.connect('multitenant', "1", function (res) {
 							let options = {
 								method: "get",
-								uri: "http://" + res.host + "/console/tenant",
+								uri: "http://" + res.host + "/tenant/console",
 								headers: res.headers,
 								json: true,
 								qs: {

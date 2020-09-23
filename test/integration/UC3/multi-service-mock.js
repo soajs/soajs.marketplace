@@ -41,7 +41,7 @@ let config = {
 	},
 	"schema": {
 		"get": {
-			"/console/tenant": {
+			"/tenant/console": {
 				_apiInfo: {
 					"l": "Get Console tenant",
 					"group": "Console Tenant"
@@ -62,7 +62,7 @@ const service = new soajs.server.service(config);
 
 function run(serviceStartCb) {
 	service.init(() => {
-		service.get("/console/tenant", function (req, res) {
+		service.get("/tenant/console", function (req, res) {
 			return res.json(req.soajs.buildResponse(null, {
 				code: "DBTN",
 				applications: [

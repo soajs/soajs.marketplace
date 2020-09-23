@@ -1159,7 +1159,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		nock('http://www.example.com')
-			.get('/console/tenant')
+			.get('/tenant/console')
 			.query({
 				code: "DBTN"
 			})
@@ -1595,7 +1595,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		nock('http://www.example.com')
-			.get('/console/tenant')
+			.get('/tenant/console')
 			.query({
 				code: "DBTN"
 			})
@@ -2030,7 +2030,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		nock('http://www.example.com')
-			.get('/console/tenant')
+			.get('/tenant/console')
 			.query({
 				code: "DBTN"
 			})
@@ -2459,7 +2459,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 				}
 			});
 		nock('http://www.example.com')
-			.get('/console/tenant')
+			.get('/tenant/console')
 			.query({
 				code: "DBTN"
 			})
