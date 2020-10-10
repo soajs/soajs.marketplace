@@ -525,7 +525,7 @@ let lib = {
 			}
 		}
 		
-		if (opts.deploy.src) {
+		if (opts.deploy.src && opts.repoInfo) {
 			config.src = {
 				repo: opts.repoInfo.name.toLowerCase(),
 				owner: opts.repoInfo.owner.toLowerCase(),
