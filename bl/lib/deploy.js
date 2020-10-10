@@ -31,6 +31,13 @@ function computeErrorMessageFromService(body) {
 
 let lib = {
 	
+	"cleanLabel": (label) => {
+		if (!label) {
+			return '';
+		}
+		return label.replace(/\//g, "__slash__");
+	},
+	
 	"computeEnvVariables": (soajs, modelObj, opts, config, bl, cb) => {
 		// let opts = {
 		// 	item: item,
@@ -721,6 +728,9 @@ let lib = {
 		let url = "/kubernetes/item/deploy/soajs";
 		if (config.mode === 'CronJob') {
 			url = "/kubernetes/item/deploy/soajs/cronjob";
+		}
+		if (config && config.src && config.src.from && config.src.from.branch){
+			config.src.from.branch = lib.cleanLabel (config.src.from.branch);
 		}
 		let options = {
 			method: "post",
