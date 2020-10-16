@@ -137,6 +137,15 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 	if (data.types && Array.isArray(data.types)) {
 		condition.type = {$in: data.types};
 	}
+	if (data.compact) {
+		options.projection = {
+			"deploy": 0,
+			"versions.swagger": 0,
+			"versions.soa": 0,
+			"versions.documentation": 0
+		};
+	}
+	console.log(options)
 	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {
@@ -200,6 +209,15 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 			name: 1
 		};
 	}
+	if (data.compact) {
+		options.projection = {
+			"deploy": 0,
+			"versions.swagger": 0,
+			"versions.soa": 0,
+			"versions.documentation": 0
+		};
+	}
+	console.log(options)
 	condition = __self.add_acl_2_condition(data, condition);
 	__self.mongoCore.find(colName, condition, options, (err, items) => {
 		if (err) {

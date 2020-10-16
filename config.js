@@ -189,6 +189,11 @@ module.exports = {
 					"source": ['query.type'],
 					"required": false,
 					"validation": {"type": "string"}
+				},
+				"compact": {
+					"source": ['query.compact'],
+					"required": false,
+					"validation": {"type": "boolean"}
 				}
 			},
 			
@@ -218,6 +223,11 @@ module.exports = {
 							"type": "string"
 						}
 					}
+				},
+				"compact": {
+					"source": ['query.compact'],
+					"required": false,
+					"validation": {"type": "boolean"}
 				}
 			},
 			
@@ -247,6 +257,11 @@ module.exports = {
 							"type": "string"
 						}
 					}
+				},
+				"compact": {
+					"source": ['query.compact'],
+					"required": false,
+					"validation": {"type": "boolean"}
 				}
 			},
 			'/items/type': {
@@ -275,6 +290,11 @@ module.exports = {
 							"type": "string"
 						}
 					}
+				},
+				"compact": {
+					"source": ['query.compact'],
+					"required": false,
+					"validation": {"type": "boolean"}
 				}
 			},
 			'/items/type/all': {
@@ -314,6 +334,11 @@ module.exports = {
 					"required": false,
 					"validation": {"type": "integer"}
 				},
+				"compact": {
+					"source": ['query.compact'],
+					"required": false,
+					"validation": {"type": "boolean"}
+				}
 			},
 			
 			'/items/type/name': {
