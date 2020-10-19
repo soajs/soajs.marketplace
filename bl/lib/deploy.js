@@ -478,7 +478,10 @@ let lib = {
 							config.env.push({
 								"name": key,
 								"valueFrom": {
-									secretKeyRef: opts.deploy.recipe.env[key]
+									secretKeyRef: {
+										"name": opts.deploy.recipe.env[key].name,
+										"key": opts.deploy.recipe.env[key].key
+									}
 								}
 							});
 						}
@@ -506,7 +509,12 @@ let lib = {
 			version: opts.recipe.v ? opts.recipe.v.toString() : "1",
 		};
 		if (opts.recipe.recipe.deployOptions.image.shell) {
-			config.catalog.shell = opts.recipe.recipe.deployOptions.image.shell;
+			let regexp = new RegExp(/^(shell\/)([A-Za-z0-9\/_.]*)$/);
+			if (regexp.test(opts.recipe.recipe.deployOptions.image.shell)) {
+				config.catalog.shell = opts.recipe.recipe.deployOptions.image.shell;
+			} else {
+				config.catalog.shell = "shell" + opts.recipe.recipe.deployOptions.image.shell;
+			}
 		} else {
 			config.catalog.shell = "shell/bin/bash";
 		}
@@ -729,8 +737,8 @@ let lib = {
 		if (config.mode === 'CronJob') {
 			url = "/kubernetes/item/deploy/soajs/cronjob";
 		}
-		if (config && config.src && config.src.from && config.src.from.branch){
-			config.src.from.branch = lib.cleanLabel (config.src.from.branch);
+		if (config && config.src && config.src.from && config.src.from.branch) {
+			config.src.from.branch = lib.cleanLabel(config.src.from.branch);
 		}
 		let options = {
 			method: "post",
