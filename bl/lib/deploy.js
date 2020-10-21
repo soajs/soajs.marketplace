@@ -205,28 +205,28 @@ let lib = {
 						if (computedEnvVariables[env_variables[1]]) {
 							if (opts.version.maintenance &&
 								opts.version.maintenance.port &&
-								opts.version.maintenance.type) {
-								if (opts.version.maintenance.type === "inherit") {
+								opts.version.maintenance.port.type) {
+								if (opts.version.maintenance.port.type === "inherit") {
 									temp = {
 										"name": computedEnvVariables[env_variables[1]],
-										"value": opts.version.port.toString()
+										"value": opts.item.configuration.port.toString()
 									};
-								} else if (opts.version.maintenance.type === "maintenance") {
+								} else if (opts.version.maintenance.port.type === "maintenance") {
 									temp = {
 										"name": computedEnvVariables[env_variables[1]],
-										"value": (opts.version.port + opts.registry.services.config.ports.maintenanceInc).toString()
+										"value": (opts.item.configuration.port + opts.registry.services.config.ports.maintenanceInc).toString()
 									};
 								} else {
 									temp = {
 										"name": computedEnvVariables[env_variables[1]],
-										"value": opts.version.maintenance.value.toString()
+										"value": opts.version.maintenance.port.value.toString()
 									};
 								}
 								
 							} else {
 								temp = {
 									"name": computedEnvVariables[env_variables[1]],
-									"value": (opts.version.port + opts.registry.services.config.ports.maintenanceInc).toString()
+									"value": (opts.item.configuration.port + opts.registry.services.config.ports.maintenanceInc).toString()
 								};
 							}
 							if (!temp.value) {
@@ -665,7 +665,10 @@ let lib = {
 						"containerPort": opts.item.configuration.port + opts.registry.services.config.ports.maintenanceInc
 					});
 				}
-				//inherit do nothing
+			}
+			//inherit, check readinessProb if port is inherit then change it to service for backward compatibility
+			if (config.readinessProbe && config.readinessProbe.httpGet && config.readinessProbe.httpGet.port === "inherit") {
+				config.readinessProbe.httpGet.port = "service";
 			}
 		}
 		if (opts.deploy.recipe.ports && opts.deploy.recipe.ports.values && opts.deploy.recipe.ports.values.length > 0) {
