@@ -68,18 +68,19 @@ let utils = {
 		let all_errors = {};
 		let globalResponses = yamlJson.responses;
 		let responses = {};
-		
-		for (let oneResponse in globalResponses) {
-			if (oneResponse && globalParams[oneResponse]) {
-				responses[oneResponse.toLowerCase()] = {
-					"description": globalResponses[oneResponse].description
-				};
+		if (globalParams) {
+			for (let oneResponse in globalResponses) {
+				if (oneResponse && globalParams[oneResponse]) {
+					responses[oneResponse.toLowerCase()] = {
+						"description": globalResponses[oneResponse].description
+					};
+				}
 			}
 		}
 		for (let route in apiPath) {
 			if (route && apiPath[route]) {
 				let methods = Object.keys(apiPath[route]);
-				for(let i = 0; i < methods.length; i++) {
+				for (let i = 0; i < methods.length; i++) {
 					if (methods[i] && all_methods.indexOf(methods[i].toLowerCase()) === -1) {
 						all_methods.push(methods[i].toLowerCase());
 					}
@@ -113,7 +114,7 @@ let utils = {
 		for (let route in apiPath) {
 			if (route && apiPath[route]) {
 				let methods = Object.keys(apiPath[route]);
-				for(let i = 0; i < methods.length; i++) {
+				for (let i = 0; i < methods.length; i++) {
 					if (apiPath[route][methods[i]]) {
 						
 						soajsRoute = route.replace(/\{/g, ":").replace(/\}/g, "");
