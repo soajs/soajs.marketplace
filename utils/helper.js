@@ -68,15 +68,15 @@ let utils = {
 		let all_errors = {};
 		let globalResponses = yamlJson.responses;
 		let responses = {};
-		if (globalParams) {
+		//if (globalParams) {
 			for (let oneResponse in globalResponses) {
-				if (oneResponse && globalParams[oneResponse]) {
+				if (oneResponse && globalResponses[oneResponse]) {
 					responses[oneResponse.toLowerCase()] = {
 						"description": globalResponses[oneResponse].description
 					};
 				}
 			}
-		}
+		//}
 		for (let route in apiPath) {
 			if (route && apiPath[route]) {
 				let methods = Object.keys(apiPath[route]);
