@@ -337,6 +337,7 @@ let lib = {
 						startProcessing: ['computeInput', function (results, autoCall) {
 							local.saveConfigurationAndDeploy(soajs, results.computeInput, options, (err, response) => {
 								if (err) {
+									soajs.log.error(err);
 									report.stage_5.fail.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
 										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.config.env + " failed to deploy!");
 								}

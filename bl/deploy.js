@@ -44,7 +44,7 @@ let local = {
 			}
 			inputmaskData.env = inputmaskData.config.env;
 			inputmaskData.version = inputmaskData.config.version;
-			lib_deploy.deploy(soajs, inputmaskData, item, bl, cb);
+			lib_deploy.deploy(soajs, inputmaskData, options, bl, cb);
 		});
 	},
 	
@@ -133,8 +133,10 @@ let local = {
 				if (secretFound) {
 					return cb(bl.marketplace.handleError(soajs, 409, null));
 				}
-				inputmaskData.response = response;
-				let opts = JSON.parse(JSON.stringify(inputmaskData));
+				//inputmaskData.response = response;
+				//let opts = JSON.parse(JSON.stringify(inputmaskData));
+				let opts = Object.assign(inputmaskData);
+				opts.registry = response;
 				modelObj.update_item_configuration(opts, (err) => {
 					if (err) {
 						if (err.message && err.message === 'Marketplace: item [' + opts.name + '] was not updated.') {
