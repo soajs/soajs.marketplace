@@ -756,6 +756,7 @@ let lib = {
 		if (opts.host && opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
+			console.log(options);
 			request(options, (error, response, body) => {
 				if (error || !body.result) {
 					return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
