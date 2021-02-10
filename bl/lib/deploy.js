@@ -756,7 +756,6 @@ let lib = {
 		if (opts.host && opts.host.infra) {
 			options.uri = "http://" + opts.host.infra.host + url;
 			options.headers = opts.host.infra.headers;
-			console.log(options);
 			request(options, (error, response, body) => {
 				if (error || !body.result) {
 					return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
@@ -767,6 +766,7 @@ let lib = {
 			soajs.awareness.connect('infra', '1', function (res) {
 				options.uri = "http://" + res.host + url;
 				options.headers = res.headers;
+				console.log(options);
 				request(options, (error, response, body) => {
 					if (error || !body.result) {
 						return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
