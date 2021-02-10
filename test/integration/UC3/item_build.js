@@ -359,7 +359,6 @@ describe("Testing API: PUT /item/deploy/build", () => {
 			}
 		};
 		requester('/item/deploy/build', 'put', data, (error, body) => {
-			console.log(body.errors)
 			assert.ok(body);
 			assert.ok(body.result);
 			done();
