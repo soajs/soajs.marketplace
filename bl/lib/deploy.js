@@ -766,7 +766,6 @@ let lib = {
 			soajs.awareness.connect('infra', '1', function (res) {
 				options.uri = "http://" + res.host + url;
 				options.headers = res.headers;
-				console.log(options);
 				request(options, (error, response, body) => {
 					if (error || !body.result) {
 						return cb(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
