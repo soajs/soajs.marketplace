@@ -38,7 +38,7 @@ let local = {
 		if (!inputmaskData) {
 			return cb(bl.marketplace.handleError(soajs, 400, null));
 		}
-		local.saveConfiguration(soajs, inputmaskData, options, (error, item) => {
+		local.saveConfiguration(soajs, inputmaskData, options, (error) => {
 			if (error && error.code !== 603) {
 				return cb(error);
 			}
@@ -133,10 +133,10 @@ let local = {
 				if (secretFound) {
 					return cb(bl.marketplace.handleError(soajs, 409, null));
 				}
-				//inputmaskData.response = response;
-				//let opts = JSON.parse(JSON.stringify(inputmaskData));
-				let opts = Object.assign(inputmaskData);
-				opts.registry = response;
+				inputmaskData.response = response;
+				let opts = JSON.parse(JSON.stringify(inputmaskData));
+				// let opts = Object.assign(inputmaskData);
+				// opts.registry = response;
 				modelObj.update_item_configuration(opts, (err) => {
 					if (err) {
 						if (err.message && err.message === 'Marketplace: item [' + opts.name + '] was not updated.') {
