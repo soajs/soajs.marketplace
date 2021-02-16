@@ -57,7 +57,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			if (!response){
+			if (!response) {
 				return cb(bl.handleError(soajs, 435, err));
 			}
 			if (response.recipe.deployOptions && response.recipe.deployOptions.labels) {
@@ -82,7 +82,8 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			async.map(records, function (oneRecord, callback) {
+			
+			async.map((inputmaskData.count ? records.records : records), function (oneRecord, callback) {
 				if (oneRecord.recipe.deployOptions && oneRecord.recipe.deployOptions.labels) {
 					utils.normalizeKeyValues(oneRecord.recipe.deployOptions.labels, bl.localConfig.tokens.dotToken, bl.localConfig.tokens.dotValue, function (error, updatedRecord) {
 						oneRecord.recipe.deployOptions.labels = updatedRecord;
@@ -91,7 +92,14 @@ let bl = {
 				} else {
 					return callback(null, oneRecord);
 				}
-			}, cb);
+			}, (error, items) => {
+				if (inputmaskData.count) {
+					records.records = items;
+				} else {
+					records = items;
+				}
+				cb(null, records);
+			});
 		});
 	},
 	
@@ -200,11 +208,11 @@ let bl = {
 					bl.mp.closeModel(modelObj);
 					return cb(bl.handleError(soajs, 602, err));
 				}
-				if (!record){
+				if (!record) {
 					bl.mp.closeModel(modelObj);
 					return cb(bl.handleError(soajs, 433, err));
 				}
-				if (record.locked){
+				if (record.locked) {
 					bl.mp.closeModel(modelObj);
 					return cb(bl.handleError(soajs, 434, err));
 				}

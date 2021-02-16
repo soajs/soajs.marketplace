@@ -110,7 +110,9 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		"skip": 0,
 		"limit": 100
 	};
-	options.sort = {};
+	options.sort = {
+		name: 1
+	};
 	if (data && data.limit) {
 		options.limit = data.limit;
 	}
@@ -180,7 +182,9 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		"skip": 0,
 		"limit": 100
 	};
-	options.sort = {};
+	options.sort = {
+		name: 1
+	};
 	if (data && data.limit) {
 		options.limit = data.limit;
 	}

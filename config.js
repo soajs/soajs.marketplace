@@ -447,6 +447,7 @@ module.exports = {
 					"l": "List catalog recipes",
 					"group": "Catalog"
 				},
+				"commonFields": ["start", "limit", "keywords"],
 				'version': {
 					"source": ['query.version'],
 					"required": false,
@@ -454,18 +455,11 @@ module.exports = {
 						"type": "boolean"
 					}
 				},
-				'skip': {
-					"source": ['query.skip'],
+				'count': {
+					"source": ['query.count'],
 					"required": false,
 					"validation": {
-						"type": "integer"
-					}
-				},
-				'limit': {
-					"source": ['query.limit'],
-					"required": false,
-					"validation": {
-						"type": "integer"
+						"type": "boolean"
 					}
 				}
 			},
@@ -683,8 +677,7 @@ module.exports = {
 					"source": ['body.environments'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"minItems": 1
+						"type": "array"
 					}
 				}
 			},
@@ -698,8 +691,7 @@ module.exports = {
 					"source": ['body.recipes'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"minItems": 1
+						"type": "array"
 					}
 				}
 			},
@@ -721,8 +713,7 @@ module.exports = {
 					"source": ['body.groups'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"minItems": 1
+						"type": "array"
 					}
 				}
 			},
@@ -745,8 +736,7 @@ module.exports = {
 					"source": ['body.environments'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"minItems": 1
+						"type": "array"
 					}
 				}
 			},
@@ -760,8 +750,7 @@ module.exports = {
 					"source": ['body.recipes'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"minItems": 1
+						"type": "array"
 					}
 				}
 			},
@@ -783,8 +772,7 @@ module.exports = {
 					"source": ['body.groups'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"minItems": 1
+						"type": "array"
 					}
 				}
 			},

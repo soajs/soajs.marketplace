@@ -114,18 +114,45 @@ Recipe.prototype.getItems = function (data, cb) {
 	if (data.hasOwnProperty("limit")) {
 		options.limit = data.limit;
 	}
-	if (data.hasOwnProperty("skip")) {
-		options.skip = data.skip;
+	if (data.hasOwnProperty("start")) {
+		options.skip = data.start;
 	}
 	let final_coll = colName;
 	if (Object.hasOwnProperty.call(data, 'version') && data.version) {
 		final_coll = colName + "_versioning";
 	}
-	__self.mongoCore.find(final_coll, condition, {}, (err, items) => {
+	if (data && data.keywords) {
+		let rePattern = new RegExp(data.keywords, 'i');
+		condition.$or = [
+			{"name": {"$regex": rePattern}},
+			{"description": {"$regex": rePattern}}
+		];
+	}
+	__self.mongoCore.find(final_coll, condition, options, (err, items) => {
 		if (err) {
 			return cb(err);
 		}
-		return cb(null, items);
+		if (data.count) {
+			let response = {};
+			response.limit = options.limit;
+			response.start = options.skip;
+			response.size = items.length;
+			response.records = items;
+			if (items.length < options.limit) {
+				response.count = items.length;
+				return cb(null, response);
+			} else {
+				__self.mongoCore.countDocuments(final_coll, condition, {}, (err, count) => {
+					if (err) {
+						return cb(err, null);
+					}
+					response.count = count;
+					return cb(null, response);
+				});
+			}
+		} else {
+			return cb(null, items);
+		}
 	});
 };
 
