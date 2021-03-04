@@ -136,12 +136,12 @@ Recipe.prototype.getItems = function (data, cb) {
 			let response = {};
 			response.limit = options.limit;
 			response.start = options.skip;
-			response.size = items.length;
+			// response.size = items.length;
 			response.records = items;
-			if (items.length < options.limit) {
-				response.count = items.length;
-				return cb(null, response);
-			} else {
+			// if (items.length < options.limit) {
+			// 	response.count = items.length;
+			// 	return cb(null, response);
+			// } else {
 				__self.mongoCore.countDocuments(final_coll, condition, {}, (err, count) => {
 					if (err) {
 						return cb(err, null);
@@ -149,7 +149,7 @@ Recipe.prototype.getItems = function (data, cb) {
 					response.count = count;
 					return cb(null, response);
 				});
-			}
+			// }
 		} else {
 			return cb(null, items);
 		}
