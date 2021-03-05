@@ -35,7 +35,7 @@ describe("Testing API: GET /items/type/name", () => {
 			assert.ok(body);
 			
 		
-			assert.deepEqual(body.data.size,  '10');
+			assert.deepEqual(body.data.count,  '10');
 			
 			//let check = validator.validate(body, listUsersSchema);
 			//assert.deepEqual(check.valid, true);

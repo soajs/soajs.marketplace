@@ -33,7 +33,7 @@ describe("Testing API: GET /items/type/all", () => {
 		};
 		requester('/items/type/all', 'get', params, (error, body) => {
 			assert.ok(body);
-			assert.deepEqual(body.data.size,  '10');
+			assert.deepEqual(body.data.count,  '10');
 			
 			//let check = validator.validate(body, listUsersSchema);
 			//assert.deepEqual(check.valid, true);
