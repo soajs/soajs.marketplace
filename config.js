@@ -577,8 +577,7 @@ module.exports = {
 					"source": ['query.name'],
 					"required": true,
 					"validation": {
-						"type": "string",
-						"pattern": /^[a-zA-Z0-9_-]+$/
+						"type": "string"
 					}
 				}
 			},
@@ -609,6 +608,27 @@ module.exports = {
 				"_apiInfo": {
 					"l": "This API deletes the configure deployment of an item",
 					"group": "Item deploy"
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"name": {
+					"source": ['query.name'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"env": {
+					"source": ['query.env'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
 				}
 			},
 			
@@ -1106,8 +1126,7 @@ module.exports = {
 					"source": ['query.name'],
 					"required": true,
 					"validation": {
-						"type": "string",
-						"pattern": /^[a-zA-Z0-9_-]+$/
+						"type": "string"
 					}
 				},
 				"env": {
@@ -1141,8 +1160,7 @@ module.exports = {
 					"source": ['body.name', 'query.name'],
 					"required": true,
 					"validation": {
-						"type": "string",
-						"pattern": /^[a-zA-Z0-9_-]+$/
+						"type": "string"
 					}
 				},
 				"config": {
@@ -1420,8 +1438,7 @@ module.exports = {
 					"source": ['query.name'],
 					"required": true,
 					"validation": {
-						"type": "string",
-						"pattern": /^[a-zA-Z0-9_-]+$/
+						"type": "string"
 					}
 				},
 				"config": {

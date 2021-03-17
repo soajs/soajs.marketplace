@@ -3,134 +3,123 @@ module.exports = {
 	"required": true,
 	"validation": {
 		"type": "object",
-		"required": true,
 		"additionalProperties": false,
 		"properties": {
-			"name": {"type": "string", "required": true},
-			"locked": {"type": "boolean", "required": false},
-			"active": {"type": "boolean", "required": false},
-			"type": {"type": "string", "required": true},
-			"subtype": {"type": "string", "required": false},
-			"description": {"type": "string", "required": true},
+			"name": {"type": "string"},
+			"locked": {"type": "boolean"},
+			"active": {"type": "boolean"},
+			"type": {"type": "string"},
+			"subtype": {"type": "string"},
+			"description": {"type": "string"},
 			"restriction": {
 				"type": "object",
-				"required": false,
 				"properties": {
-					"deployment": {"type": "array", 'required': false},
-					"driver": {"type": "array", 'required': false},
-					"infra": {"type": "array", 'required': false}
+					"deployment": {"type": "array"},
+					"driver": {"type": "array"},
+					"infra": {"type": "array"}
 				}
 			},
 			"recipe": {
 				"type": "object",
-				"required": true,
 				"additionalProperties": false,
 				"properties": {
 					"deployOptions": {
 						"type": "object",
-						"required": true,
 						"properties": {
 							"namespace": {
-								"type": "string",
-								"required": false
+								"type": "string"
 							},
 							"image": {
 								"type": "object",
-								"required": false,
 								"properties": {
-									"prefix": {"type": "string", "required": false},
-									"name": {"type": "string", "required": true},
-									"tag": {"type": "string", "required": true},
+									"prefix": {"type": "string"},
+									"name": {"type": "string"},
+									"tag": {"type": "string"},
+									"override": {"type": "boolean"},
+									"binary": {"type": "boolean"},
 									"repositoryType": {
 										"type": "string",
-										"required": false,
 										"enum": ["private", "public"]
 									},
-									"pullPolicy": {"type": "string", "required": false},
-									"shell": {"type": "string", "required": false},
-								}
+									"pullPolicy": {"type": "string"},
+									"shell": {"type": "string"},
+								},
+								"required": ["name", "tag"]
 							},
 							"sourceCode": {
 								"type": "object",
-								"required": false,
 								"properties": {
 									"configuration": {
 										"type": "object",
-										"required": false,
 										"properties": {
-											"label": {"type": "string", "required": true}
-										}
-									},
+											"label": {"type": "string"}
+										},
+										"required": ["label"]
+									}
 								}
 							},
 							"readinessProbe": {
-								"type": ["object", "null"],
-								"required": false
+								"type": ["object", "null"]
 								//NOTE: removed validation for readinessProbe to allow free schema
 							},
 							"liveinessProbe": {
-								"type": ["object", "null"],
-								"required": false
+								"type": ["object", "null"]
 								//NOTE: removed validation for readinessProbe to allow free schema
 							},
 							"ports": {
 								"type": "array",
-								"required": false,
 								"items": {
 									"type": "object",
 									"additionalProperties": false,
 									"properties": {
-										"name": {"type": "string", "required": true},
-										"isPublished": {"type": "boolean", "required": false},
-										"port": {"type": "number", "required": false},
-										"target": {"type": "number", "required": true},
-										"published": {"type": "number", "required": false},
-										"preserveClientIP": {"type": "boolean", "required": false}
-									}
+										"name": {"type": "string"},
+										"isPublished": {"type": "boolean"},
+										"port": {"type": "number"},
+										"target": {"type": "number"},
+										"published": {"type": "number"},
+										"preserveClientIP": {"type": "boolean"}
+									},
+									"required": ["name", "target"]
 								}
 							},
 							"voluming": {
 								"type": "array",
-								"required": false,
 								"items": {
-									"docker": {
-										"type": "object",
-										"required": true,
-										"properties": {
-											"volume": {
-												"type": "object",
-												"required": true
-											}
-										}
-									},
-									"kubernetes": {
-										"type": "object",
-										"required": true,
-										"properties": {
-											"volume": {
-												"type": "object",
-												"required": true,
-												
+									"type": "object",
+									"properties": {
+										"docker": {
+											"type": "object",
+											"properties": {
+												"volume": {
+													"type": "object"
+												}
 											},
-											"volumeMount": {
-												"type": "object",
-												"required": true
-											}
+											"required": ["volume"]
+										},
+										"kubernetes": {
+											"type": "object",
+											"properties": {
+												"volume": {
+													"type": "object"
+													
+												},
+												"volumeMount": {
+													"type": "object"
+												}
+											},
+											"required": ["volume", "volumeMount"]
 										}
 									}
 								}
 							},
 							"labels": {
-								"type": "object",
-								"required": false
+								"type": "object"
 							},
 							"execCommands": {
-								"type": "object",
-								"required": false
+								"type": "object"
 							},
 							"serviceAccount": {
-								"type": "object",
-								"required": false
+								"type": "object"
 							},
 							"securityContext": {
 								"type": "object",
@@ -148,50 +137,51 @@ module.exports = {
 					},
 					"buildOptions": {
 						"type": "object",
-						"required": false,
 						"additionalProperties": false,
 						"properties": {
 							"settings": {
-								"type": "object",
-								"required": false
+								"type": "object"
 							},
 							"env": {
 								"type": "object",
-								"required": false,
 								"additionalProperties": {
 									"type": "object",
 									"properties": {
 										"type": {
 											"type": "string",
-											"required": true,
 											"enum": ["static", "userInput", "computed", "secret"]
 										},
-										"label": {"type": "string", "required": false},
-										"fieldMsg": {"type": "string", "required": false},
-										"default": {"type": "string", "required": false}
-									}
+										"label": {"type": "string"},
+										"fieldMsg": {"type": "string"},
+										"default": {"type": "string"},
+										"secret": {"type": "string"},
+										"key": {"type": "string"}
+									},
+									"required": ["type"]
 								}
 							},
 							"cmd": {
 								"type": "object",
-								"required": false,
 								"additionalProperties": false,
 								"properties": {
 									"deploy": {
 										"type": "object",
-										"required": true,
 										"additionalProperties": false,
 										"properties": {
-											"command": {"type": "array", "required": true},
-											"args": {"type": "array", "required": true}
-										}
+											"command": {"type": "array"},
+											"args": {"type": "array"}
+										},
+										"required": ["command", "args"]
 									}
-								}
+								},
+								"required": ["deploy"]
 							}
 						}
 					}
-				}
+				},
+				"required": ["deployOptions"]
 			}
-		}
+		},
+		"required": ["name", "type", "description", "recipe"]
 	}
 };
