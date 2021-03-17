@@ -53,7 +53,6 @@ module.exports = [
 					],
 					voluming: [
 						{
-							docker: {},
 							kubernetes: {
 								volume: {
 									name: "soajsprofile",

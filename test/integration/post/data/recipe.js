@@ -63,7 +63,6 @@ module.exports = [
 						"preserveClientIP": true
 					}],
 					"voluming": [{
-						"docker": {},
 						"kubernetes": {
 							"volume": {"name": "soajsprofile", "secret": {"secretName": "soajsprofile"}},
 							"volumeMount": {"mountPath": "/opt/soajs/profile/", "name": "soajsprofile"}

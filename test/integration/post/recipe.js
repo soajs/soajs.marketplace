@@ -25,7 +25,7 @@ describe("Testing API: POST /recipe", () => {
 	
 	it("Success - add recipe", (done) => {
 		let params = {
-			body:  _data[0]
+			body: _data[0]
 		};
 		requester('/recipe', 'post', params, (error, body) => {
 			assert.ifError(error);
@@ -33,6 +33,6 @@ describe("Testing API: POST /recipe", () => {
 			done();
 		});
 	});
-
+	
 	
 });
