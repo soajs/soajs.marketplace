@@ -18,6 +18,7 @@ module.exports = {
 				"branch": "master"
 			},
 			"soa": {
+				"type":"resource",
 				"name": "resource",
 				"group": "resource",
 				"version": "1",
@@ -51,6 +52,7 @@ module.exports = {
 				"branch": "dev"
 			},
 			"soa": {
+				"type":"resource",
 				"name": "resource",
 				"group": "resource",
 				"version": "2",
@@ -76,6 +78,7 @@ module.exports = {
 				"branch": "stg"
 			},
 			"soa": {
+				"type":"resource",
 				"name": "resource",
 				"group": "resource",
 				"subType": "Resource",
@@ -104,6 +107,7 @@ module.exports = {
 				"tag": "1"
 			},
 			"soa": {
+				"type":"resource",
 				"profile": {
 					"personal": "info"
 				},
@@ -131,6 +135,7 @@ module.exports = {
 				"tag": "2"
 			},
 			"soa": {
+				"type":"resource",
 				"profile": {
 					"personal": "info"
 				},
@@ -158,6 +163,7 @@ module.exports = {
 				"tag": "3"
 			},
 			"soa": {
+				"type":"resource",
 				"profile": {
 					"personal": "info"
 				},

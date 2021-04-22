@@ -28,7 +28,6 @@ describe("Testing API: Delete /item", () => {
 			body: {"item": _data.resource_delete.item}
 		};
 		requester('/item/resource', 'put', params, (error, body) => {
-			console.log(body);
 			assert.ok(body);
 			assert.deepEqual(body.data, "Catalog Entry Successfully Added!");
 			//let check = validator.validate(body, listUsersSchema);

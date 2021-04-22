@@ -18,6 +18,7 @@ module.exports = {
 				"branch": "stg"
 			},
 			"soa": {
+				"type":"resource",
 				"name": "antoine",
 				"group": "delete",
 				"version": "2",
