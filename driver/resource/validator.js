@@ -10,71 +10,61 @@
 
 let validator = {
 	"type": "object",
-	"required": true,
 	"properties": {
 		"src": {
-			"required": true,
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
 				"provider": {
-					"required": true,
 					"type": "string",
 					"default": "manual",
 					"enum": ["manual", "github", "bitbucket", "bitbucket_enterprise"]
 				},
 				"owner": {
-					"required": false,
 					"type": "string"
 				},
 				"repo": {
-					"required": false,
 					"type": "string"
 				},
 				"branch": {
-					"required": false,
 					"type": "string"
 				},
 				"tag": {
-					"required": false,
 					"type": "string"
 				}
-			}
+			},
+			"required": ["provider"]
 		},
 		"soa": {
 			"type": "object",
-			"required": true,
 			"properties": {
 				"type": {
 					"type": "string",
-					"required": false,
 					"enum": ["resource"]
-				},
-				"subType": {
-					"type": "string",
-					"required": false,
-					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
-					"minLength": 1
 				},
 				"name": {
 					"type": "string",
-					"required": true,
 					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
 					"minLength": 1
 				},
 				"group": {
 					"type": "string",
-					"required": true,
 					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
 					"minLength": 1
 				},
 				"description": {
+					"type": "string"
+				},
+				"version": {
+					"type": "string"
+				},
+				"subType": {
 					"type": "string",
-					"required": true
+					"pattern": /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/,
+					"minLength": 1
 				},
 				"tags": {
 					"type": "array",
-					"required": false,
 					"items": {
 						"type": "string",
 						"uniqueItems": true,
@@ -82,31 +72,10 @@ let validator = {
 					}
 				},
 				"attributes": {
-					"type": "object",
-					"required": false,
-				},
-				"tab": {
-					"type": "object",
-					"required": false,
-					"additionalProperties": false,
-					"properties": {
-						"main": {
-							"type": "string",
-							"required": true,
-							"maxLength": 20,
-							"pattern": /^[a-zA-Z0-9_-]+$/
-						},
-						"sub": {
-							"type": "string",
-							"required": true,
-							"maxLength": 20,
-							"pattern": /^[a-zA-Z0-9_-]+$/
-						}
-					}
+					"type": "object"
 				},
 				"program": {
 					"type": "array",
-					"required": false,
 					"items": {
 						"type": "string",
 						"uniqueItems": true,
@@ -114,31 +83,41 @@ let validator = {
 					}
 				},
 				"profile": {
-					"type": "object",
-					"required": false
+					"type": "object"
 				},
-				"version": {
-					"type": "string",
-					"required": true
+				"tab": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"main": {
+							"type": "string",
+							"maxLength": 20,
+							"pattern": /^[a-zA-Z0-9_-]+$/
+						},
+						"sub": {
+							"type": "string",
+							"maxLength": 20,
+							"pattern": /^[a-zA-Z0-9_-]+$/
+						}
+					},
+					"required": ["main", "sub"]
 				}
-			}
+			},
+			"required": ["type", "name", "group", "description", "version"]
 		},
 		"documentation": {
 			"type": "object",
-			"required": false,
 			"properties": {
 				"readme": {
-					"type": "string",
-					"required": false,
+					"type": "string"
 				},
 				"release": {
-					"type": "string",
-					"required": false,
+					"type": "string"
 				}
-				
 			}
 		}
-	}
+	},
+	"required": ["src", "soa"]
 };
 
 module.exports = validator;

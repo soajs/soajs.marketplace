@@ -45,10 +45,6 @@ module.exports = {
 	},
 	"interConnect": [
 		{
-			"name": "dashboard",
-			"version": "1"
-		},
-		{
 			"name": "infra",
 			"version": "1"
 		},
@@ -131,7 +127,7 @@ module.exports = {
 		
 		601: "Model not found",
 		602: "Model error: ",
-		603: "Model item not updated!",
+		603: "Model item was not updated",
 		
 	},
 	"schema": {
