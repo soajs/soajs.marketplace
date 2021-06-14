@@ -108,6 +108,7 @@ Recipe.prototype.getItems = function (data, cb) {
 	}
 	let condition = {};
 	let options = {
+		"sort": {"name": 1},
 		"skip": 0,
 		"limit": 500
 	};
@@ -142,13 +143,13 @@ Recipe.prototype.getItems = function (data, cb) {
 			// 	response.count = items.length;
 			// 	return cb(null, response);
 			// } else {
-				__self.mongoCore.countDocuments(final_coll, condition, {}, (err, count) => {
-					if (err) {
-						return cb(err, null);
-					}
-					response.count = count;
-					return cb(null, response);
-				});
+			__self.mongoCore.countDocuments(final_coll, condition, {}, (err, count) => {
+				if (err) {
+					return cb(err, null);
+				}
+				response.count = count;
+				return cb(null, response);
+			});
 			// }
 		} else {
 			return cb(null, items);
@@ -178,7 +179,7 @@ Recipe.prototype.getItems_by_ids = function (data, cb) {
 			return cb(error);
 		}
 		condition = {_id: {$in: _ids}};
-		__self.mongoCore.find(colName, condition, {}, (err, items) => {
+		__self.mongoCore.find(colName, condition, {"sort": {"name": 1}}, (err, items) => {
 			if (err) {
 				return cb(err);
 			}
