@@ -93,7 +93,6 @@ describe("Unit test for: model - marketplace", function () {
 			"types": ["service"]
 		};
 		modelObj.getItems_by_keywords(data, (error, response) => {
-			console.log(error)
 			assert.ok(response);
 			assert.ok(response.records.length > 1);
 			done();

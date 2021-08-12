@@ -234,7 +234,7 @@ let lib = {
 									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
 								}
 							}
-							// case 4 image
+							// case 4 binary - image
 							else {
 								//get prefix
 								// let deployed_image_prefix;
@@ -256,6 +256,7 @@ let lib = {
 								// if (inputmaskData.config.from.image_prefix === deployed_image_prefix &&
 								// 	inputmaskData.config.from.image_name === deployed_image_name &&
 								// 	inputmaskData.config.from.image_tag === deployed_image_tag) {
+								if (!oneItem.src) {
 									if (oneItem.cd.strategy === "notify") {
 										notice_object.push({
 											env: oneEnv,
@@ -278,7 +279,7 @@ let lib = {
 										});
 									}
 									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
-								// }
+								}
 							}
 						}
 						call();
