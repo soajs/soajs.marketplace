@@ -8,7 +8,31 @@
 
 "use strict";
 const imported = require("../data/import.js");
+const core = require("soajs");
+const Mongo = core.mongo;
 
+function createIndexes(cb) {
+	const colName = "marketplace";
+	const config = {
+		name: 'core_provision',
+		prefix: '',
+		servers: [{host: '127.0.0.1', port: 27017}],
+		credentials: null,
+		streaming: {},
+		URLParam: {useUnifiedTopology: true}
+	};
+	let mongoCore = new Mongo(config);
+	mongoCore.createIndex(colName, {
+		"name": "text",
+		"description": "text",
+		"configuration.subType": 1,
+		"type": 1,
+		"settings.acl.groups.type": 1
+	}, {"name": "name_description_subType_type"}, (err, index) => {
+		console.log("Index: " + index + " created with error: " + err);
+		cb();
+	});
+}
 describe("Starting Unit test", () => {
 	
 	before((done) => {
@@ -20,7 +44,7 @@ describe("Starting Unit test", () => {
 			if (msg) {
 				console.log(msg);
 			}
-			done();
+			createIndexes(done);
 		});
 	});
 	

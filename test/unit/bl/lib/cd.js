@@ -239,7 +239,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "inactive"
 				}
 			});
@@ -288,7 +288,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -341,7 +341,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -393,7 +393,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -510,7 +510,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -627,7 +627,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -694,7 +694,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -737,7 +737,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -806,7 +806,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -824,7 +824,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [],
-					"fail": ["Environments: DEV were not found."]
+					"fail": ["Environments: dev were not found."]
 				}
 			});
 			done();
@@ -849,7 +849,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -918,7 +918,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -960,7 +960,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1027,7 +1027,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -1049,16 +1049,22 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
-					"success": [],
-					"fail": [
-						"No items for selected version found!"
-					]
-				}
+					"success": [
+						'Item Version 1 for environment new was selected with cd status notify'
+					],
+					"fail": []
+				},
+				"stage_5": {
+					"success": [
+						'Notification sent for item marketplace v 1 with cd status notify in environment new'
+					],
+					"fail": []
+				},
 			});
 			done();
 		});
@@ -1150,7 +1156,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -1274,7 +1280,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -1406,7 +1412,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -1538,7 +1544,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
@@ -1583,7 +1589,7 @@ describe("Unit test for: BL - lib/cd", () => {
 	
 	it("cd - success create_deploy_notice - deploy - tag", function (done) {
 		sinon.stub(sdk, 'ledger').callsFake(function fakeFn(soajs, doc, response, cb) {
-			if (cb){
+			if (cb) {
 				return cb();
 			}
 			return null;
@@ -1673,13 +1679,13 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
 		
 		let local = {
-			saveConfigurationAndDeploy : (soajs, input, options, cb)=>{
+			saveConfigurationAndDeploy: (soajs, input, options, cb) => {
 				return cb(null, true);
 			}
 		};
@@ -1723,7 +1729,7 @@ describe("Unit test for: BL - lib/cd", () => {
 	
 	it("cd - success create_deploy_notice - deploy - branch", function (done) {
 		sinon.stub(sdk, 'ledger').callsFake(function fakeFn(soajs, doc, response, cb) {
-			if (cb){
+			if (cb) {
 				return cb();
 			}
 			return null;
@@ -1813,13 +1819,13 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
 		
 		let local = {
-			saveConfigurationAndDeploy : (soajs, input, options, cb)=>{
+			saveConfigurationAndDeploy: (soajs, input, options, cb) => {
 				return cb(null, true);
 			}
 		};
@@ -1863,7 +1869,7 @@ describe("Unit test for: BL - lib/cd", () => {
 	
 	it("cd - success create_deploy_notice - deploy - image", function (done) {
 		sinon.stub(sdk, 'ledger').callsFake(function fakeFn(soajs, doc, response, cb) {
-			if (cb){
+			if (cb) {
 				return cb();
 			}
 			return null;
@@ -1953,13 +1959,13 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
 		
 		let local = {
-			saveConfigurationAndDeploy : (soajs, input, options, cb)=>{
+			saveConfigurationAndDeploy: (soajs, input, options, cb) => {
 				return cb(null, true);
 			}
 		};
@@ -2003,7 +2009,7 @@ describe("Unit test for: BL - lib/cd", () => {
 	
 	it("cd - success create_deploy_notice - deploy - error", function (done) {
 		sinon.stub(sdk, 'ledger').callsFake(function fakeFn(soajs, doc, response, cb) {
-			if (cb){
+			if (cb) {
 				return cb();
 			}
 			return null;
@@ -2093,13 +2099,13 @@ describe("Unit test for: BL - lib/cd", () => {
 			.reply(200, {
 				"result": true,
 				"data": {
-					"token" : inputmaskData.token,
+					"token": inputmaskData.token,
 					"status": "active"
 				}
 			});
 		
 		let local = {
-			saveConfigurationAndDeploy : (soajs, input, options, cb)=>{
+			saveConfigurationAndDeploy: (soajs, input, options, cb) => {
 				return cb(new Error("error"));
 			}
 		};
