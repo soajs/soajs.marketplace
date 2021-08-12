@@ -576,6 +576,9 @@ let lib = {
 		if (opts.recipe.recipe.deployOptions.image.registrySecret) {
 			config.image.secret = opts.recipe.recipe.deployOptions.image.registrySecret;
 		}
+		if (opts.deploy.recipe.image.registrySecret) {
+			config.image.secret = opts.deploy.recipe.image.registrySecret;
+		}
 		if (opts.deploy.recipe.readinessProbe) {
 			config.readinessProbe = opts.deploy.recipe.readinessProbe;
 		}
