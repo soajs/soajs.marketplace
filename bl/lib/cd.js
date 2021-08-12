@@ -113,27 +113,27 @@ let lib = {
 					"success": [],
 					"fail": []
 				};
-				if (!results.get_item.deploy){
+				if (!results.get_item.deploy) {
 					report.stage_3.fail.push("No environments found!");
 					return cb(null, report);
 				}
 				let selected_envs = Object.keys(results.get_item.deploy);
-				if (selected_envs.length === 0){
+				if (selected_envs.length === 0) {
 					report.stage_3.fail.push("No environments found!");
 					return cb(null, report);
 				}
 				let unFound_envs = [];
 				if (inputmaskData.config.from.env) {
 					for (let i = inputmaskData.config.from.env.length - 1; i >= 0; i--) {
-						if (selected_envs.indexOf(inputmaskData.config.from.env[i].toUpperCase()) === -1) {
-							unFound_envs.push(inputmaskData.config.from.env[i].toUpperCase());
+						if (selected_envs.indexOf(inputmaskData.config.from.env[i].toLowerCase()) === -1) {
+							unFound_envs.push(inputmaskData.config.from.env[i].toLowerCase());
 						}
 					}
 					selected_envs = inputmaskData.config.from.env;
 				}
-			
+				
 				if (unFound_envs.length > 0) {
-					report.stage_3.fail.push("Environments: " +  unFound_envs.join(",") + " were not found.");
+					report.stage_3.fail.push("Environments: " + unFound_envs.join(",") + " were not found.");
 					return cb(null, report);
 				}
 				let unsupported_acl = [];
@@ -167,7 +167,7 @@ let lib = {
 					report.stage_3.fail.push("No environments found!");
 					return cb(null, report);
 				}
-				report.stage_3.success.push("Environments: " + selected_envs.join(',') +  ' environments have been found');
+				report.stage_3.success.push("Environments: " + selected_envs.join(',') + ' environments have been found');
 				return callback(null, selected_envs);
 			}],
 			create_deploy_notice: ["check_acl", function (results, callback) {
@@ -180,7 +180,7 @@ let lib = {
 				async.each(results.check_acl, function (oneEnv, miniCall) {
 					async.each(results.get_item.deploy[oneEnv], function (oneItem, call) {
 						if (oneItem.version === inputmaskData.version) {
-							//case 1 && 2
+							//case 1 && 2 branch & commit
 							if (inputmaskData.config.from.branch && inputmaskData.config.from.commit) {
 								if (oneItem.src && oneItem.src.branch && oneItem.src.branch === inputmaskData.config.from.branch) {
 									if (oneItem.cd.strategy === "notify") {
@@ -207,7 +207,7 @@ let lib = {
 									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
 								}
 							}
-							//case 3
+							//case 3 tag
 							else if (inputmaskData.config.from.tag) {
 								if (oneItem.src && oneItem.src.tag && oneItem.src.tag === inputmaskData.config.from.tag) {
 									if (oneItem.cd.strategy === "notify") {
@@ -234,28 +234,28 @@ let lib = {
 									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
 								}
 							}
-							// case 4
+							// case 4 image
 							else {
 								//get prefix
-								let deployed_image_prefix;
-								if (oneItem.recipe.image && oneItem.recipe.image.prefix) {
-									deployed_image_prefix = oneItem.recipe.image.prefix;
-								}
+								// let deployed_image_prefix;
+								// if (oneItem.recipe.image && oneItem.recipe.image.prefix) {
+								// 	deployed_image_prefix = oneItem.recipe.image.prefix;
+								// }
 								
 								//get name
-								let deployed_image_name;
-								if (oneItem.recipe.image && oneItem.recipe.image.name) {
-									deployed_image_name = oneItem.recipe.image.name;
-								}
+								// let deployed_image_name;
+								// if (oneItem.recipe.image && oneItem.recipe.image.name) {
+								// 	deployed_image_name = oneItem.recipe.image.name;
+								// }
 								
 								//get tag
-								let deployed_image_tag;
-								if (oneItem.recipe.image && oneItem.recipe.image.tag) {
-									deployed_image_tag = oneItem.recipe.image.tag;
-								}
-								if (inputmaskData.config.from.image_prefix === deployed_image_prefix &&
-									inputmaskData.config.from.image_name === deployed_image_name &&
-									inputmaskData.config.from.image_tag === deployed_image_tag) {
+								// let deployed_image_tag;
+								// if (oneItem.recipe.image && oneItem.recipe.image.tag) {
+								// 	deployed_image_tag = oneItem.recipe.image.tag;
+								// }
+								// if (inputmaskData.config.from.image_prefix === deployed_image_prefix &&
+								// 	inputmaskData.config.from.image_name === deployed_image_name &&
+								// 	inputmaskData.config.from.image_tag === deployed_image_tag) {
 									if (oneItem.cd.strategy === "notify") {
 										notice_object.push({
 											env: oneEnv,
@@ -278,7 +278,7 @@ let lib = {
 										});
 									}
 									report.stage_4.success.push("Item Version " + inputmaskData.version + " for environment " + oneEnv + " was selected with cd status " + oneItem.cd.strategy);
-								}
+								// }
 							}
 						}
 						call();
@@ -328,7 +328,17 @@ let lib = {
 								opts.config.src.tag = deployObject.from.tag;
 								opts.config.src.from = deployObject.from;
 								if (deployObject.from.image_tag) {
-									opts.config.recipe.tag = deployObject.from.image_tag;
+									opts.config.recipe.image.tag = deployObject.from.image_tag;
+								}
+							} else if (deployObject.deployObject === "image") {
+								if (deployObject.from.image_prefix) {
+									opts.config.recipe.image.prefix = deployObject.from.image_prefix;
+								}
+								if (deployObject.from.image_name) {
+									opts.config.recipe.image.name = deployObject.from.image_name;
+								}
+								if (deployObject.from.image_tag) {
+									opts.config.recipe.image.tag = deployObject.from.image_tag;
 								}
 							}
 							return autoCall(null, opts);
@@ -338,18 +348,18 @@ let lib = {
 							local.saveConfigurationAndDeploy(soajs, results.computeInput, options, (err, response) => {
 								if (err) {
 									soajs.log.error(err);
-									report.stage_5.fail.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
+									report.stage_5.fail.push("Item " + results.computeInput.name + " v " + results.computeInput.config.version +
 										" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.config.env + " failed to deploy!");
 								}
 								return autoCall(null, response);
 							});
 						}],
 						updateLedger: ['startProcessing', function (results, autoCall) {
-							if(!results.startProcessing){
+							if (!results.startProcessing) {
 								return autoCall();
 							}
-							report.stage_5.success.push("Item " + results.computeInput.name + " v " +  results.computeInput.config.version +
-								" with cd status " + results.computeInput.config.cd.strategy + " in environment " +  results.computeInput.config.env + " has been successfully deployed");
+							report.stage_5.success.push("Item " + results.computeInput.name + " v " + results.computeInput.config.version +
+								" with cd status " + results.computeInput.config.cd.strategy + " in environment " + results.computeInput.config.env + " has been successfully deployed");
 							return autoCall();
 						}]
 					}, eachCall);
