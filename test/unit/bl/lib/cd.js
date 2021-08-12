@@ -441,7 +441,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			},
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -558,7 +558,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			},
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1054,17 +1054,11 @@ describe("Unit test for: BL - lib/cd", () => {
 					"fail": []
 				},
 				"stage_4": {
-					"success": [
-						'Item Version 1 for environment new was selected with cd status notify'
-					],
-					"fail": []
-				},
-				"stage_5": {
-					"success": [
-						'Notification sent for item marketplace v 1 with cd status notify in environment new'
-					],
-					"fail": []
-				},
+					"success": [],
+					"fail": [
+						'No items for selected version found!'
+					]
+				}
 			});
 			done();
 		});
@@ -1087,7 +1081,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1178,7 +1172,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
@@ -1213,7 +1207,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1302,19 +1296,19 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status notify"
+						"Item Version 1 for environment new was selected with cd status notify"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [
-						"Notification sent for item marketplace v 1 with cd status notify in environment NEW"
+						"Notification sent for item marketplace v 1 with cd status notify in environment new"
 					],
 					"fail": []
 				}
@@ -1344,7 +1338,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1434,19 +1428,19 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status notify"
+						"Item Version 1 for environment new was selected with cd status notify"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [
-						"Notification sent for item marketplace v 1 with cd status notify in environment NEW"
+						"Notification sent for item marketplace v 1 with cd status notify in environment new"
 					],
 					"fail": []
 				}
@@ -1477,7 +1471,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1517,9 +1511,6 @@ describe("Unit test for: BL - lib/cd", () => {
 						},
 						cd: {
 							strategy: "notify"
-						},
-						"src": {
-							"tag": "1"
 						},
 						version: "1"
 					}
@@ -1566,19 +1557,19 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status notify"
+						"Item Version 1 for environment new was selected with cd status notify"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [
-						"Notification sent for item marketplace v 1 with cd status notify in environment NEW"
+						"Notification sent for item marketplace v 1 with cd status notify in environment new"
 					],
 					"fail": []
 				}
@@ -1612,7 +1603,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"name": "marketplace",
 			"type": "service",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1706,19 +1697,19 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status deploy"
+						"Item Version 1 for environment new was selected with cd status deploy"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [
-						"Item marketplace v 1 with cd status deploy in environment NEW has been successfully deployed"
+						"Item marketplace v 1 with cd status deploy in environment new has been successfully deployed"
 					],
 					"fail": []
 				}
@@ -1751,7 +1742,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1846,19 +1837,19 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status deploy"
+						"Item Version 1 for environment new was selected with cd status deploy"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [
-						"Item marketplace v 1 with cd status deploy in environment NEW has been successfully deployed"
+						"Item marketplace v 1 with cd status deploy in environment new has been successfully deployed"
 					],
 					"fail": []
 				}
@@ -1892,7 +1883,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -1932,9 +1923,6 @@ describe("Unit test for: BL - lib/cd", () => {
 						},
 						cd: {
 							strategy: "deploy"
-						},
-						"src": {
-							"tag": "1"
 						},
 						version: "1"
 					}
@@ -1986,19 +1974,19 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status deploy"
+						"Item Version 1 for environment new was selected with cd status deploy"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [
-						"Item marketplace v 1 with cd status deploy in environment NEW has been successfully deployed"
+						"Item marketplace v 1 with cd status deploy in environment new has been successfully deployed"
 					],
 					"fail": []
 				}
@@ -2032,7 +2020,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			"_id": "123",
 			"name": "marketplace",
 			"deploy": {
-				"NEW": [
+				"new": [
 					{
 						recipe: {
 							id: "5ef5a98e707a10af2f5d84c8",
@@ -2072,9 +2060,6 @@ describe("Unit test for: BL - lib/cd", () => {
 						},
 						cd: {
 							strategy: "deploy"
-						},
-						"src": {
-							"tag": "1"
 						},
 						version: "1"
 					}
@@ -2126,20 +2111,20 @@ describe("Unit test for: BL - lib/cd", () => {
 				},
 				"stage_3": {
 					"success": [
-						"Environments: NEW environments have been found"
+						"Environments: new environments have been found"
 					],
 					"fail": []
 				},
 				"stage_4": {
 					"success": [
-						"Item Version 1 for environment NEW was selected with cd status deploy"
+						"Item Version 1 for environment new was selected with cd status deploy"
 					],
 					"fail": []
 				},
 				"stage_5": {
 					"success": [],
 					"fail": [
-						"Item marketplace v 1 with cd status deploy in environment NEW failed to deploy!"
+						"Item marketplace v 1 with cd status deploy in environment new failed to deploy!"
 					]
 				}
 			});
