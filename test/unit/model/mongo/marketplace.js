@@ -41,8 +41,6 @@ describe("Unit test for: model - marketplace", function () {
 							],
 							"credentials": null,
 							"URLParam": {
-								"maxPoolSize": 2,
-								"bufferMaxEntries": 0,
 								"useUnifiedTopology": true
 							}
 						}

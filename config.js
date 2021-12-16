@@ -29,7 +29,7 @@ module.exports = {
 	"serviceName": "marketplace",
 	"serviceGroup": "Console",
 	"servicePort": 4007,
-	"requestTimeout": 30,
+	"requestTimeout": 90,
 	"requestTimeoutRenewal": 5,
 	"oauth": true,
 	"extKeyRequired": true,

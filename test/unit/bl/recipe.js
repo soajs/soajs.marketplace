@@ -384,9 +384,9 @@ describe("Unit test for: BL - catalog", () => {
 	it("add - success no ports", function (done) {
 		BL.modelObj = {
 			addItem: (data, cb) => {
-				return cb(null, [{
+				return cb(null, {
 					_id: "123"
-				}]);
+				});
 			}
 		};
 		let inputmaskData = {
@@ -489,9 +489,9 @@ describe("Unit test for: BL - catalog", () => {
 	it("add - success with nodeport", function (done) {
 		BL.modelObj = {
 			addItem: (data, cb) => {
-				return cb(null, [{
+				return cb(null, {
 					_id: "123"
-				}]);
+				});
 			}
 		};
 		let inputmaskData = {
@@ -600,9 +600,9 @@ describe("Unit test for: BL - catalog", () => {
 	it("add - success with loadbalancer", function (done) {
 		BL.modelObj = {
 			addItem: (data, cb) => {
-				return cb(null, [{
+				return cb(null, {
 					_id: "123"
-				}]);
+				});
 			}
 		};
 		let inputmaskData = {
@@ -710,9 +710,9 @@ describe("Unit test for: BL - catalog", () => {
 	it("add - success not published", function (done) {
 		BL.modelObj = {
 			addItem: (data, cb) => {
-				return cb(null, [{
+				return cb(null, {
 					_id: "123"
-				}]);
+				});
 			}
 		};
 		let inputmaskData = {
@@ -1138,9 +1138,9 @@ describe("Unit test for: BL - catalog", () => {
 	it("add - error wrong port", function (done) {
 		BL.modelObj = {
 			addItem: (data, cb) => {
-				return cb(null, [{
+				return cb(null, {
 					_id: "123"
-				}]);
+				});
 			}
 		};
 		let inputmaskData = {
@@ -1247,9 +1247,9 @@ describe("Unit test for: BL - catalog", () => {
 	it("add - error invalid ports", function (done) {
 		BL.modelObj = {
 			addItem: (data, cb) => {
-				return cb(null, [{
+				return cb(null, {
 					_id: "123"
-				}]);
+				});
 			}
 		};
 		let inputmaskData = {

@@ -86,7 +86,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, response[0]);
+			return cb(null, response);
 		});
 	},
 	"delete": (soajs, inputmaskData, options, cb) => {
@@ -107,7 +107,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, response[0]);
+			return cb(null, response);
 		});
 	}
 };

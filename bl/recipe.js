@@ -177,7 +177,7 @@ let bl = {
 					return cb(bl.handleError(soajs, 602, err));
 				}
 				return cb(null, {
-					id: record[0]._id
+					id: record._id
 				});
 			});
 		}
