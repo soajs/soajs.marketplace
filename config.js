@@ -566,7 +566,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["resource"]
+						"enum": ["resource", "service", "daemon", "static", "custom"]
 					}
 				},
 				"name": {
