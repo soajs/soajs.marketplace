@@ -161,14 +161,14 @@ Marketplace.prototype.getItems_by_keywords = function (data, cb) {
 		// 	response.count = items.length;
 		// 	return cb(null, response);
 		// } else {
-			__self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
-				if (err) {
-					return cb(err, null);
-				}
-				response.count = count;
-				return cb(null, response);
-			});
-	// 	}
+		__self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
+			if (err) {
+				return cb(err, null);
+			}
+			response.count = count;
+			return cb(null, response);
+		});
+		// 	}
 	});
 };
 
@@ -234,13 +234,13 @@ Marketplace.prototype.getItems_by_type_subtype = function (data, cb) {
 		// 	response.count = items.length;
 		// 	return cb(null, response);
 		// } else {
-			__self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
-				if (err) {
-					return cb(err, null);
-				}
-				response.count = count;
-				return cb(null, response);
-			});
+		__self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
+			if (err) {
+				return cb(err, null);
+			}
+			response.count = count;
+			return cb(null, response);
+		});
 		// }
 	});
 };
@@ -647,11 +647,16 @@ Marketplace.prototype.update_item_configuration = function (data, cb) {
 			deploy[env] = newDeploy;
 		}
 	}
+	// let s = {
+	// 	'$set': {
+	// 		deploy: deploy
+	// 	}
+	// };
 	let s = {
-		'$set': {
-			deploy: deploy
-		}
+		'$set': {}
 	};
+	s.$set["deploy." + env] = deploy[env];
+	
 	let options = {'upsert': false, 'safe': true};
 	__self.mongoCore.updateOne(colName, condition, s, options, (err, record) => {
 		if (err) {
