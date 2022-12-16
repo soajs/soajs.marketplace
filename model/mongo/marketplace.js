@@ -569,7 +569,7 @@ Marketplace.prototype.update_items_branches = function (data, cb) {
 	condition = __self.add_acl_2_condition(data, condition);
 	let updateQuery = {
 		'$set': {
-			"versions.branches": data.branches || []
+			"versions.$[].branches": data.branches || []
 		}
 	};
 	__self.mongoCore.updateMany(colName, condition, updateQuery, (error, response) => {
