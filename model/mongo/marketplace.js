@@ -554,6 +554,32 @@ Marketplace.prototype.deleteItem_source = function (data, cb) {
 	});
 };
 
+Marketplace.prototype.update_items_branches = function (data, cb) {
+	let __self = this;
+	if (!data || !data.provider || !data.owner || !data.repo) {
+		let error = new Error("Marketplace: Source type, owner, and repo are required.");
+		return cb(error, null);
+	}
+	
+	let condition = {
+		"src.provider": data.provider,
+		"src.owner": data.owner,
+		"src.repo": data.repo
+	};
+	condition = __self.add_acl_2_condition(data, condition);
+	let updateQuery = {
+		'$set': {
+			"versions.branches": data.branches || []
+		}
+	};
+	__self.mongoCore.updateMany(colName, condition, updateQuery, (error, response) => {
+		if (error) {
+			return cb(error);
+		}
+		return cb(null, response ? response.modifiedCount : 0);
+	});
+};
+
 Marketplace.prototype.deleteItem_version = function (data, cb) {
 	let __self = this;
 	if (!data || !data.name || !data.type || !data.hasOwnProperty("versions")) {

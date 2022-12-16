@@ -216,7 +216,20 @@ let bl = {
 			return cb(null, true);
 		});
 	},
-	
+	"update_items_branches": (soajs, inputmaskData, options, cb) => {
+		if (!inputmaskData) {
+			return cb(bl.handleError(soajs, 400, null));
+		}
+		inputmaskData._groups = getGroups(soajs);
+		let modelObj = bl.mp.getModel(soajs, options);
+		modelObj.update_items_branches(inputmaskData, (err, response) => {
+			bl.mp.closeModel(modelObj);
+			if (err) {
+				return cb(bl.handleError(soajs, 602, err));
+			}
+			return cb(null, response);
+		});
+	},
 	"deleteItem_branch": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));

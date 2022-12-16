@@ -1718,6 +1718,34 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
+
+			'/items/branches': {
+				"_apiInfo": {
+					"l": "This API update the branches of the items by source.",
+					"group": "Item management"
+				},
+				"provider": {
+					"source": ['query.provider'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"owner": {
+					"source": ['query.owner'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"repo": {
+					"source": ['query.repo'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"branches": {
+					"source": ['query.branch'],
+					"required": true,
+					"validation": {"type": "array"}
+				}
+			},
+
 			"/item/tag": {
 				"_apiInfo": {
 					"l": "This API appends an item by tag",
