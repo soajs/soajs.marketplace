@@ -1725,22 +1725,22 @@ module.exports = {
 					"group": "Item management"
 				},
 				"provider": {
-					"source": ['query.provider'],
+					"source": ['body.provider'],
 					"required": true,
 					"validation": {"type": "string"}
 				},
 				"owner": {
-					"source": ['query.owner'],
+					"source": ['body.owner'],
 					"required": true,
 					"validation": {"type": "string"}
 				},
 				"repo": {
-					"source": ['query.repo'],
+					"source": ['body.repo'],
 					"required": true,
 					"validation": {"type": "string"}
 				},
 				"branches": {
-					"source": ['query.branch'],
+					"source": ['body.branches'],
 					"required": true,
 					"validation": {"type": "array"}
 				}
