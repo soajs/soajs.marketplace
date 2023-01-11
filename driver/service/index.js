@@ -180,10 +180,7 @@ let lib = {
 						}
 						oneVersion.soa = JSON.stringify(soa);
 						oneVersion.apis = data.schema || [];
-						if (data.swagger) {
-							oneVersion.swagger = JSON.stringify(data.swagger);
-							catalog.configuration.swagger = true;
-						}
+
 						if (data.documentation) {
 							if (!oneVersion.documentation) {
 								oneVersion.documentation = {};
@@ -194,6 +191,13 @@ let lib = {
 							if (data.documentation.release) {
 								oneVersion.documentation.release = data.documentation.release;
 							}
+						}
+						if (soa.maintenance) {
+							oneVersion.maintenance = soa.maintenance;
+						}
+						if (data.swagger) {
+							oneVersion.swagger = JSON.stringify(data.swagger);
+							catalog.configuration.swagger = true;
 						}
 						newVersions.push(oneVersion);
 					} else {
@@ -249,6 +253,9 @@ let lib = {
 							if (data.documentation.release) {
 								temp.documentation.release = data.documentation.release;
 							}
+						}
+						if (soa.maintenance) {
+							temp.maintenance = soa.maintenance;
 						}
 						if (data.swagger) {
 							temp.swagger = JSON.stringify(data.swagger);
