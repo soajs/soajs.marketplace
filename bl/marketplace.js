@@ -494,12 +494,14 @@ let bl = {
 		}
 		
 		function checkCommand(version, callback) {
+			if (version.maintenance && inputmaskData.operation === version.maintenance.readiness) {
+				return callback(null, true);
+			}
+			
 			if (!version.maintenance || !version.maintenance.commands || version.maintenance.commands.length === 0) {
 				return callback(bl.handleError(soajs, 419, null));
 			}
-			if (inputmaskData.operation === version.maintenance.readiness) {
-				return callback(null, true);
-			}
+			
 			async.detect(version.maintenance.commands, function (command, call) {
 				if (command.path === inputmaskData.operation) {
 					return call(null, command);
