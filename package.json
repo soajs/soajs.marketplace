@@ -30,7 +30,7 @@
     "mocha": "6.2.2",
     "nock": "13.0.3",
     "request": "2.88.2",
-    "soajs.controller": "4.2.12",
+    "soajs.controller": "4.2.14",
     "sinon": "9.0.2",
     "underscore": "1.13.6"
   },

@@ -183,6 +183,9 @@ let lib = {
 								oneVersion.documentation.release = data.documentation.release;
 							}
 						}
+						if (soa.maintenance) {
+							oneVersion.maintenance = soa.maintenance;
+						}
 						newVersions.push(oneVersion);
 					} else {
 						if (data.src.branch) {
@@ -237,6 +240,9 @@ let lib = {
 							if (data.documentation.release) {
 								temp.documentation.release = data.documentation.release;
 							}
+						}
+						if (soa.maintenance) {
+							temp.maintenance = soa.maintenance;
 						}
 						newVersions.push(temp);
 					}
