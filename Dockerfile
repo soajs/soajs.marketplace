@@ -1,4 +1,4 @@
-FROM soajsorg/node
+FROM soajsorg/node-slim
 
 RUN mkdir -p /opt/soajs/soajs.marketplace/node_modules/
 WORKDIR /opt/soajs/soajs.marketplace/
