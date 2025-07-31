@@ -34,13 +34,13 @@ module.exports = {
 	"oauth": true,
 	"extKeyRequired": true,
 	"urac": true,
-	
+
 	"maintenance": {
 		"readiness": "/heartbeat",
-		"port": {"type": "maintenance"},
+		"port": { "type": "maintenance" },
 		"commands": [
-			{"label": "Reload Registry", "path": "/reloadRegistry", "icon": "fas fa-undo"},
-			{"label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info"}
+			{ "label": "Reload Registry", "path": "/reloadRegistry", "icon": "fas fa-undo" },
+			{ "label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info" }
 		]
 	},
 	"interConnect": [
@@ -61,7 +61,7 @@ module.exports = {
 			"version": "1"
 		}
 	],
-	
+
 	"tags": ["marketplace", "catalog"],
 	"attributes": {
 		"catalogs": ["api", "daemon", "custom", "resource", "front end"],
@@ -81,12 +81,12 @@ module.exports = {
 		"minPort": 30000,
 		"maxPort": 32767
 	},
-	
-	"bodyParser": {"limit": "50mb"},
+
+	"bodyParser": { "limit": "50mb" },
 	//-------------------------------------
 	"errors": {
 		400: "Business logic required data are missing",
-		
+
 		401: "Catalog Entry with same DNA detected!",
 		402: "Branch or Tag is required",
 		403: "Branch not found",
@@ -110,33 +110,33 @@ module.exports = {
 		421: "Unable to connect to item",
 		422: "Error: ",
 		423: "Unable to redeploy item!",
-		
+
 		430: "One of the inputs under configuration repository is missing.",
 		431: "The port chosen is outside the range of valid exposed ports (30000 , 32767)",
 		432: "Invalid port schema provided!",
 		433: "Unable to update catalog recipe",
 		434: "You are not allowed to edit or delete a locked recipe",
 		435: "Catalog recipe not found",
-		
+
 		500: "Nothing to Update!",
 		501: "Item not found!",
 		502: "Item is locked!",
 		503: "Service Error",
-		
+
 		550: "loadByEnv empty. Unable to find registry",
-		
+
 		601: "Model not found",
 		602: "Model error: ",
 		603: "Model item was not updated",
-		
+
 	},
 	"schema": {
-		
+
 		"commonFields": {
 			"keywords": {
 				"source": ['query.keywords', 'body.keywords'],
 				"required": false,
-				"validation": {"type": "string"}
+				"validation": { "type": "string" }
 			},
 			"start": {
 				"required": false,
@@ -159,10 +159,10 @@ module.exports = {
 			"id": {
 				"source": ['query.id', 'body.id'],
 				"required": true,
-				"validation": {"type": "string"}
+				"validation": { "type": "string" }
 			}
 		},
-		
+
 		"get": {
 			'/soajs/items': {
 				"_apiInfo": {
@@ -184,15 +184,15 @@ module.exports = {
 				"type": {
 					"source": ['query.type'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"compact": {
 					"source": ['query.compact'],
 					"required": false,
-					"validation": {"type": "boolean"}
+					"validation": { "type": "boolean" }
 				}
 			},
-			
+
 			'/public/items': {
 				"_apiInfo": {
 					"l": "This API lists the public items matching certain keywords with option to select from what type and subtype.",
@@ -202,12 +202,12 @@ module.exports = {
 				"type": {
 					"source": ['query.type'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"subtype": {
 					"source": ['query.subtype'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"types": {
 					"source": ['query.types'],
@@ -223,10 +223,10 @@ module.exports = {
 				"compact": {
 					"source": ['query.compact'],
 					"required": false,
-					"validation": {"type": "boolean"}
+					"validation": { "type": "boolean" }
 				}
 			},
-			
+
 			'/items': {
 				"_apiInfo": {
 					"l": "This API lists the items matching certain keywords with option to select from what type and subtype.",
@@ -236,12 +236,12 @@ module.exports = {
 				"type": {
 					"source": ['query.type'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"subtype": {
 					"source": ['query.subtype'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"types": {
 					"source": ['query.types'],
@@ -257,7 +257,7 @@ module.exports = {
 				"compact": {
 					"source": ['query.compact'],
 					"required": false,
-					"validation": {"type": "boolean"}
+					"validation": { "type": "boolean" }
 				}
 			},
 			'/items/type': {
@@ -269,12 +269,12 @@ module.exports = {
 				"type": {
 					"source": ['query.type'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"subtype": {
 					"source": ['query.subtype'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"types": {
 					"source": ['query.types'],
@@ -290,7 +290,7 @@ module.exports = {
 				"compact": {
 					"source": ['query.compact'],
 					"required": false,
-					"validation": {"type": "boolean"}
+					"validation": { "type": "boolean" }
 				}
 			},
 			'/items/type/all': {
@@ -302,12 +302,12 @@ module.exports = {
 				"type": {
 					"source": ['query.type'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"subtype": {
 					"source": ['query.subtype'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"types": {
 					"source": ['query.types'],
@@ -323,20 +323,20 @@ module.exports = {
 				"start": {
 					"source": ['query.start'],
 					"required": false,
-					"validation": {"type": "integer"}
+					"validation": { "type": "integer" }
 				},
 				"limit": {
 					"source": ['query.limit'],
 					"required": false,
-					"validation": {"type": "integer"}
+					"validation": { "type": "integer" }
 				},
 				"compact": {
 					"source": ['query.compact'],
 					"required": false,
-					"validation": {"type": "boolean"}
+					"validation": { "type": "boolean" }
 				}
 			},
-			
+
 			'/items/type/name': {
 				"_apiInfo": {
 					"l": "This API lists all item names matching certain types",
@@ -346,7 +346,7 @@ module.exports = {
 				"subtype": {
 					"source": ['query.subtype'],
 					"required": false,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"types": {
 					"source": ['query.types'],
@@ -360,7 +360,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/items/type/names': {
 				"_apiInfo": {
 					"l": "This API lists all item names matching certain names",
@@ -390,7 +390,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/items/src': {
 				"_apiInfo": {
 					"l": "This API gets the items by source.",
@@ -399,20 +399,20 @@ module.exports = {
 				"provider": {
 					"source": ['query.provider'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"owner": {
 					"source": ['query.owner'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"repo": {
 					"source": ['query.repo'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				}
 			},
-			
+
 			'/item/type': {
 				"_apiInfo": {
 					"l": "This API gets one item by its name and type.",
@@ -421,15 +421,15 @@ module.exports = {
 				"name": {
 					"source": ['query.name'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"type": {
 					"source": ['query.type'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				}
 			},
-			
+
 			"/item/deploy/inspect": {
 				"_apiInfo": {
 					"l": "This API gets the configure deployment of an item including (allowed recipes, saved configuration, and kubernetes configuration for both service and deployment|daemonset|cronjob)",
@@ -437,7 +437,7 @@ module.exports = {
 				},
 				"commonFields": ["id"]
 			},
-			
+
 			"/recipes": {
 				"_apiInfo": {
 					"l": "List catalog recipes",
@@ -459,7 +459,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/recipes/ids": {
 				"_apiInfo": {
 					"l": "List catalog recipes by selected ids",
@@ -477,7 +477,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/recipe": {
 				"_apiInfo": {
 					"l": "Get catalog recipe by id",
@@ -499,7 +499,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/favorite": {
 				"_apiInfo": {
 					"l": "List Favorites",
@@ -522,7 +522,7 @@ module.exports = {
 				}
 			},
 		},
-		
+
 		"post": {
 			"/recipe": {
 				"_apiInfo": {
@@ -531,7 +531,7 @@ module.exports = {
 				},
 				"catalog": catalog_schema
 			},
-			
+
 			"/favorite": {
 				"_apiInfo": {
 					"l": "Add to Favorites",
@@ -554,7 +554,7 @@ module.exports = {
 				}
 			}
 		},
-		
+
 		"delete": {
 			"/item": {
 				"_apiInfo": {
@@ -577,7 +577,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/items/src": {
 				"_apiInfo": {
 					"l": "This API deletes items by source",
@@ -586,20 +586,20 @@ module.exports = {
 				"provider": {
 					"source": ['query.provider'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"owner": {
 					"source": ['query.owner'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"repo": {
 					"source": ['query.repo'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				}
 			},
-			
+
 			"/item/configure/deploy": {
 				"_apiInfo": {
 					"l": "This API deletes the configure deployment of an item",
@@ -627,7 +627,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/recipe": {
 				"_apiInfo": {
 					"l": "Delete a catalog recipe by id",
@@ -649,7 +649,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/favorite": {
 				"_apiInfo": {
 					"l": "Delete from Favorites",
@@ -672,9 +672,9 @@ module.exports = {
 				}
 			}
 		},
-		
+
 		"put": {
-			
+
 			'/soajs/item/environments': {
 				"_apiInfo": {
 					"l": "This API updates the item environments from soajs catalog only",
@@ -733,7 +733,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/item/environments': {
 				"_apiInfo": {
 					"l": "This API updates the item environments",
@@ -792,7 +792,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/item/resource": {
 				"_apiInfo": {
 					"l": "This API adds/updates an item of type resource to the catalog",
@@ -923,7 +923,7 @@ module.exports = {
 					"validation": item_soajs_schema
 				}
 			},
-			
+
 			"/item/deploy/redeploy": {
 				"_apiInfo": {
 					"l": "This API redeploys a deployed item",
@@ -1179,6 +1179,9 @@ module.exports = {
 									"strategy": {
 										"type": "string",
 										"enum": ["notify", "update"]
+									},
+									"force": {
+										"type": "boolean"
 									}
 								},
 								"required": ["strategy"]
@@ -1256,8 +1259,8 @@ module.exports = {
 										"type": "object",
 										"additionalProperties": false,
 										"properties": {
-											"min": {"type": "integer", "min": 1},
-											"max": {"type": "integer", "min": 1}
+											"min": { "type": "integer", "min": 1 },
+											"max": { "type": "integer", "min": 1 }
 										},
 										"required": ["min", "max"]
 									},
@@ -1269,7 +1272,7 @@ module.exports = {
 												"type": "object",
 												"additionalProperties": false,
 												"properties": {
-													"percent": {"type": "number"}
+													"percent": { "type": "number" }
 												},
 												"required": ["percent"]
 											}
@@ -1457,6 +1460,9 @@ module.exports = {
 									"strategy": {
 										"type": "string",
 										"enum": ["notify", "update"]
+									},
+									"force": {
+										"type": "boolean"
 									}
 								},
 								"required": ["strategy"]
@@ -1534,8 +1540,8 @@ module.exports = {
 										"type": "object",
 										"additionalProperties": false,
 										"properties": {
-											"min": {"type": "integer", "min": 1},
-											"max": {"type": "integer", "min": 1}
+											"min": { "type": "integer", "min": 1 },
+											"max": { "type": "integer", "min": 1 }
 										},
 										"required": ["min", "max"]
 									},
@@ -1547,7 +1553,7 @@ module.exports = {
 												"type": "object",
 												"additionalProperties": false,
 												"properties": {
-													"percent": {"type": "number"}
+													"percent": { "type": "number" }
 												},
 												"required": ["percent"]
 											}
@@ -1696,7 +1702,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/item/branch": {
 				"_apiInfo": {
 					"l": "This API appends an item by branch",
@@ -1705,17 +1711,17 @@ module.exports = {
 				"name": {
 					"source": ['query.name'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"type": {
 					"source": ['query.type'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"branch": {
 					"source": ['query.branch'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				}
 			},
 
@@ -1727,22 +1733,22 @@ module.exports = {
 				"provider": {
 					"source": ['body.provider'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"owner": {
 					"source": ['body.owner'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"repo": {
 					"source": ['body.repo'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"branches": {
 					"source": ['body.branches'],
 					"required": true,
-					"validation": {"type": "array"}
+					"validation": { "type": "array" }
 				}
 			},
 
@@ -1754,17 +1760,17 @@ module.exports = {
 				"name": {
 					"source": ['query.name'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"type": {
 					"source": ['query.type'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"tag": {
 					"source": ['query.tag'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				}
 			},
 			"/item/maintenance": {
@@ -1775,22 +1781,22 @@ module.exports = {
 				"name": {
 					"source": ['query.name'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"env": {
 					"source": ['query.env'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"type": {
 					"source": ['query.type'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"version": {
 					"source": ['query.version'],
 					"required": true,
-					"validation": {"type": "string"}
+					"validation": { "type": "string" }
 				},
 				"operation": {
 					"source": ['query.operation'],
@@ -1831,7 +1837,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			"/recipe": {
 				"_apiInfo": {
 					"l": "Update catalog recipe",
