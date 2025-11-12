@@ -9,7 +9,7 @@
  */
 
 const helper = require("../../../helper.js");
-const Model = helper.requireModule('./model/mongo/marketplace.js');
+const Model = helper.requireModule('./model/mongo/Marketplace/index.js');
 const assert = require('assert');
 
 describe("Unit test for: model - marketplace", function () {

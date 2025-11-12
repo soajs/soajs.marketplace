@@ -13,7 +13,7 @@ const assert = require('assert');
 const nock = require("nock");
 const sinon = require("sinon");
 const lib_deploy = helper.requireModule('./bl/lib/deploy.js');
-const sdk = helper.requireModule('./lib/sdk.js');
+const sdk = helper.requireModule('./sdk/index.js');
 
 describe("Unit test for: BL - lib/deploy", () => {
 	let soajs = {
@@ -40,14 +40,13 @@ describe("Unit test for: BL - lib/deploy", () => {
 		}
 	};
 	let bl = {
-		marketplace: {
-			"handleError": (soajs, errCode, err) => {
-				return ({
-					"code": errCode,
-					"message": err && err.message ? err.message : err
-				});
-			},
-		}
+		"handleError": (soajs, errCode, err) => {
+			return ({
+				"code": errCode,
+				"message": err && err.message ? err.message : err
+			});
+		},
+		"mp": null
 	};
 	
 	
@@ -57,7 +56,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	afterEach((done) => {
-		bl.marketplace.mp = null;
+		bl.mp = null;
 		nock.cleanAll();
 		sinon.restore();
 		done();
@@ -72,7 +71,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail get_item mongo error", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -91,7 +90,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail item not found", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -110,7 +109,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail item not whitelisted in env", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -143,7 +142,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail item blacklist in env", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -176,7 +175,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail item no deploy object", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -212,7 +211,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail item different version 1", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -255,7 +254,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail item different version 2", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -301,7 +300,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail catalog recipe no found", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -348,7 +347,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail registry error", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -404,7 +403,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail registry not found", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -460,7 +459,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail failed to get source information error", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -632,7 +631,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - fail failed to get source information", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -806,7 +805,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - success with src tag", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1243,7 +1242,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - success with src branch", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1679,7 +1678,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - success with maintenance", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -2114,7 +2113,7 @@ describe("Unit test for: BL - lib/deploy", () => {
 	});
 	
 	it("deploy - success no src", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {

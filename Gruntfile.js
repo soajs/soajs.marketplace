@@ -110,7 +110,7 @@ module.exports = (grunt) => {
 				SOAJS_TEST: true,
 				//SOAJS_SRVPORT: 4007,
 				SOAJS_DEPLOY_MANUAL: true,
-				SOAJS_REGISTRY_API: '127.0.0.1:5000',
+				SOAJS_REGISTRY_API: '127.0.0.1:5001',
 				APP_DIR_FOR_CODE_COVERAGE: '../'
 			},
 			coverage: {
@@ -120,7 +120,7 @@ module.exports = (grunt) => {
 				SOAJS_TEST: true,
 				//SOAJS_SRVPORT: 4007,
 				SOAJS_DEPLOY_MANUAL: true,
-				SOAJS_REGISTRY_API: '127.0.0.1:5000',
+				SOAJS_REGISTRY_API: '127.0.0.1:5001',
 				APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/'
 			}
 		},
@@ -150,7 +150,7 @@ module.exports = (grunt) => {
 		
 		
 		instrument: {
-			src: ['index.js', '_index.js', 'config.js', 'Gruntfile.js', 'bl/**/*.js',  'bl/lib/*.js', 'driver/**/*.js', 'lib/*.js', 'model/mongo/*.js', 'utils/*.js'],
+			src: ['index.js', '_index.js', 'config.js', 'Gruntfile.js', 'bl/**/*.js',  'bl/lib/*.js', 'driver/**/*.js', 'lib/*.js', 'model/mongo/**/*.js', 'sdk/**/*.js', 'utils/*.js'],
 			options: {
 				lazy: false,
 				basePath: 'test/coverage/instrument/'

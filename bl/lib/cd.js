@@ -9,7 +9,7 @@
  */
 const request = require("request");
 const async = require("async");
-const sdk = require("../../lib/sdk.js");
+const sdk = require("../../sdk/index.js");
 
 function computeErrorMessageFromService(body) {
 	if (body && !body.result) {
@@ -33,9 +33,9 @@ let lib = {
 	
 	"cd": (soajs, inputmaskData, options, bl, local, cb) => {
 		if (!inputmaskData) {
-			return cb(bl.marketplace.handleError(soajs, 400, null));
+			return cb(bl.handleError(soajs, 400, null));
 		}
-		let modelObj = bl.marketplace.mp.getModel(soajs, options);
+		let modelObj = bl.mp.getModel(soajs, options);
 		/*
 			1- validate cd token
 			2- if not valid return error
@@ -72,7 +72,7 @@ let lib = {
 					};
 					request(options, (error, response, body) => {
 						if (error || !body.result || !body) {
-							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+							return callback(bl.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						}
 						if (!body.data) {
 							report.stage_1.fail.push("Deploy token not found!");
@@ -97,7 +97,7 @@ let lib = {
 				};
 				modelObj.getItem(inputmaskData, (err, response) => {
 					if (err) {
-						return callback(bl.marketplace.handleError(soajs, 602, err));
+						return callback(bl.handleError(soajs, 602, err));
 					}
 					if (!response) {
 						report.stage_2.fail.push("Item not found!");

@@ -9,11 +9,11 @@
  */
 
 const helper = require("../../helper.js");
-const sdk = helper.requireModule('./lib/sdk.js');
+const sdk = helper.requireModule('./sdk/index.js');
 const assert = require('assert');
 const nock = require("nock");
 
-describe("Unit test for: lib/sdk.js - marketplace", function () {
+describe("Unit test for: sdk/index.js - marketplace", function () {
 	afterEach((done) => {
 		nock.cleanAll();
 		done();
@@ -302,6 +302,7 @@ describe("Unit test for: lib/sdk.js - marketplace", function () {
 		};
 		nock('http://www.example.com')
 			.get('/registry')
+			.query({env: 'new'})
 			.reply(200, {
 				"result": false,
 			});

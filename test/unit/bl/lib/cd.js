@@ -13,7 +13,7 @@ const assert = require('assert');
 const nock = require("nock");
 const sinon = require("sinon");
 const lib_cd = helper.requireModule('./bl/lib/cd.js');
-const sdk = helper.requireModule('./lib/sdk.js');
+const sdk = helper.requireModule('./sdk/index.js');
 
 describe("Unit test for: BL - lib/cd", () => {
 	let soajs = {
@@ -40,13 +40,12 @@ describe("Unit test for: BL - lib/cd", () => {
 		}
 	};
 	let bl = {
-		marketplace: {
-			"handleError": (soajs, errCode) => {
-				return ({
-					"code": errCode,
-				});
-			},
-		}
+		"handleError": (soajs, errCode) => {
+			return ({
+				"code": errCode,
+			});
+		},
+		"mp": null
 	};
 	
 	
@@ -56,7 +55,7 @@ describe("Unit test for: BL - lib/cd", () => {
 	});
 	
 	afterEach((done) => {
-		bl.marketplace.mp = null;
+		bl.mp = null;
 		nock.cleanAll();
 		sinon.restore();
 		done();
@@ -72,7 +71,7 @@ describe("Unit test for: BL - lib/cd", () => {
 	});
 	
 	it("cd - fail get check_cd_token error", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -128,7 +127,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -176,7 +175,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -221,7 +220,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -270,7 +269,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -323,7 +322,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -375,7 +374,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				}
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -492,7 +491,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -609,7 +608,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -676,7 +675,7 @@ describe("Unit test for: BL - lib/cd", () => {
 			},
 			"deploy": {}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -788,7 +787,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -900,7 +899,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1009,7 +1008,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1132,7 +1131,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1256,7 +1255,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1388,7 +1387,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1517,7 +1516,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1652,7 +1651,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1792,7 +1791,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1929,7 +1928,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -2066,7 +2065,7 @@ describe("Unit test for: BL - lib/cd", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {

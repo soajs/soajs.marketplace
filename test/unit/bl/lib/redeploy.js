@@ -38,13 +38,12 @@ describe("Unit test for: BL - lib/redeploy", () => {
 		}
 	};
 	let bl = {
-		marketplace: {
-			"handleError": (soajs, errCode) => {
-				return ({
-					"code": errCode,
-				});
-			},
-		}
+		"handleError": (soajs, errCode) => {
+			return ({
+				"code": errCode,
+			});
+		},
+		"mp": null
 	};
 	
 	
@@ -54,7 +53,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	afterEach((done) => {
-		bl.marketplace.mp = null;
+		bl.mp = null;
 		nock.cleanAll();
 		done();
 	});
@@ -68,7 +67,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail get_item mongo error", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -86,7 +85,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail item not found", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -104,7 +103,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail item not in whitelist", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -145,7 +144,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail item in blacklist", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -186,7 +185,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail item in blacklist", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -227,7 +226,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail no deploy item", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -268,7 +267,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail no deploy item version", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -355,7 +354,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail get_deploy connection", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -462,7 +461,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 	});
 	
 	it("redeploy - fail get_deploy no item", function (done) {
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -630,7 +629,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -742,7 +741,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -859,7 +858,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -972,7 +971,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1088,7 +1087,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {
@@ -1203,7 +1202,7 @@ describe("Unit test for: BL - lib/redeploy", () => {
 				]
 			}
 		};
-		bl.marketplace.mp = {
+		bl.mp = {
 			getModel: () => {
 				return {
 					getItem: (data, cb) => {

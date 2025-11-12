@@ -10,7 +10,7 @@
 
 const helper = require("../../helper.js");
 const BL = helper.requireModule('bl/marketplace.js');
-const sdk = helper.requireModule('lib/sdk.js');
+const sdk = helper.requireModule('sdk/index.js');
 const sinon = require('sinon');
 const nock = require("nock");
 const assert = require('assert');

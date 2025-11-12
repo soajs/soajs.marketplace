@@ -14,7 +14,7 @@ let config = require('./config.js');
 config.packagejson = require("./package.json");
 
 const bl = require("./bl/index.js");
-const sdk = require("./lib/sdk.js");
+const sdk = require("./sdk/index.js");
 
 const service = new soajs.server.service(config);
 

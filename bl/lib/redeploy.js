@@ -33,9 +33,9 @@ let lib = {
 	
 	"redeploy": (soajs, inputmaskData, options, bl, cb) => {
 		if (!inputmaskData) {
-			return cb(bl.marketplace.handleError(soajs, 400, null));
+			return cb(bl.handleError(soajs, 400, null));
 		}
-		let modelObj = bl.marketplace.mp.getModel(soajs, options);
+		let modelObj = bl.mp.getModel(soajs, options);
 		/*
 				1- get item saved deploy configuration
 				2- set git info (branch & commit, or tag)
@@ -51,10 +51,10 @@ let lib = {
 			get_item: function (callback) {
 				modelObj.getItem(inputmaskData, (err, response) => {
 					if (err) {
-						return callback(bl.marketplace.handleError(soajs, 602, err));
+						return callback(bl.handleError(soajs, 602, err));
 					}
 					if (!response) {
-						return callback(bl.marketplace.handleError(soajs, 501, null));
+						return callback(bl.handleError(soajs, 501, null));
 					}
 					return callback(null, response);
 				});
@@ -66,12 +66,12 @@ let lib = {
 						if (results.get_item.settings.environments.type === "whitelist") {
 							if (results.get_item.settings.environments.value.length > 0 &&
 								results.get_item.settings.environments.value.indexOf(inputmaskData.env.toUpperCase()) === -1) {
-								return callback(bl.marketplace.handleError(soajs, 406, null));
+								return callback(bl.handleError(soajs, 406, null));
 							}
 						} else {
 							if (results.get_item.settings.environments.value.length > 0 &&
 								results.get_item.settings.environments.value.indexOf(inputmaskData.env.toUpperCase()) > -1) {
-								return callback(bl.marketplace.handleError(soajs, 406, null));
+								return callback(bl.handleError(soajs, 406, null));
 							}
 						}
 					}
@@ -89,19 +89,19 @@ let lib = {
 						}
 					});
 					if (!found) {
-						return callback(bl.marketplace.handleError(soajs, 410, null));
+						return callback(bl.handleError(soajs, 410, null));
 					} else {
 						return callback(null, deploy);
 					}
 				} else {
-					return callback(bl.marketplace.handleError(soajs, 407, null));
+					return callback(bl.handleError(soajs, 407, null));
 				}
 			}],
 			inspect_item: ["get_deploy", function (results, callback) {
 				let url = "/kubernetes/item/inspect";
 				soajs.awareness.connect('infra', '1', function (res) {
 					if (!res){
-						return callback(bl.marketplace.handleError(soajs, 421, null));
+						return callback(bl.handleError(soajs, 421, null));
 					}
 					let options = {
 						method: "get",
@@ -121,7 +121,7 @@ let lib = {
 					};
 					request(options, (error, response, body) => {
 						if (!body || !body.result) {
-							return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+							return callback(bl.handleError(soajs, 503, computeErrorMessageFromService(body)));
 						}
 						//check if item is deployed
 						let mode = results.get_deploy.settings.mode.toLowerCase() + "s";
@@ -129,7 +129,7 @@ let lib = {
 							return callback(null, body.data, res);
 						}
 						else {
-							return callback(bl.marketplace.handleError(soajs, 413, null));
+							return callback(bl.handleError(soajs, 413, null));
 						}
 					});
 				});
@@ -154,7 +154,7 @@ let lib = {
 				opts.config.env = inputmaskData.env;
 				if (inputmaskData.src) {
 					if (!opts.config.src){
-						return callback(bl.marketplace.handleError(soajs, 423, null));
+						return callback(bl.handleError(soajs, 423, null));
 					}
 					config.src = inputmaskData.src;
 					if (inputmaskData.src.from.tag) {
@@ -175,7 +175,7 @@ let lib = {
 				modelObj.update_item_configuration(opts, (err) => {
 					if (err) {
 						if (!err.message || err.message !== 'Marketplace: item [' + opts.name + '] was not updated.'){
-							return cb(bl.marketplace.handleError(soajs, 602, err));
+							return cb(bl.handleError(soajs, 602, err));
 						}
 					}
 					return callback(null, config);
@@ -197,7 +197,7 @@ let lib = {
 				};
 				request(options, (error, response, body) => {
 					if (!body || !body.result) {
-						return callback(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(body)));
+						return callback(bl.handleError(soajs, 503, computeErrorMessageFromService(body)));
 					}
 					return callback(null, true);
 				});

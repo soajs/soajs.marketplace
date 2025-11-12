@@ -84,10 +84,8 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfigurationAndDeploy - fail", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				}
+			"handleError": (soajs, error) => {
+				return new Error(error);
 			}
 		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
@@ -102,18 +100,16 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfigurationAndDeploy - fail no item", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			}
 		};
@@ -129,10 +125,8 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				}
+			"handleError": (soajs, error) => {
+				return new Error(error);
 			}
 		};
 		let bl = helper.requireModule('bl/deploy.js')(BL);
@@ -147,18 +141,16 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail mongo", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(new Error("mongo error"));
-							}
-						};
-					}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(new Error("mongo error"));
+						}
+					};
 				}
 			}
 		};
@@ -177,23 +169,21 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 			return cb(null, "true");
 		});
 		let BL = {
-			"marketplace": {
-				"handleError": () => {
-					return null;
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123"
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": () => {
+				return null;
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123"
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -282,23 +272,21 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - success", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": () => {
-					return null;
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123"
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": () => {
+				return null;
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123"
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -390,23 +378,21 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail error request", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, errCode) => {
-					return new Error(errCode);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123"
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": (soajs, errCode) => {
+				return new Error(errCode);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123"
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -483,27 +469,25 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - success add image from recipe", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": () => {
-					return null;
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"environments": {
-										"value": [],
-										"type": "blacklist"
-									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": () => {
+				return null;
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"environments": {
+									"value": [],
+									"type": "blacklist"
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -594,27 +578,25 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail user input env not found", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, errCode) => {
-					return new Error(errCode);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"environments": {
-										"value": [],
-										"type": "blacklist"
-									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": (soajs, errCode) => {
+				return new Error(errCode);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"environments": {
+									"value": [],
+									"type": "blacklist"
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -705,27 +687,25 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail secret env not found", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, errCode) => {
-					return new Error(errCode);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"environments": {
-										"value": [],
-										"type": "blacklist"
-									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": (soajs, errCode) => {
+				return new Error(errCode);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"environments": {
+									"value": [],
+									"type": "blacklist"
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -812,26 +792,24 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail settings recipes", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"settings": {
-										"recipes": ["00000"]
-									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"settings": {
+									"recipes": ["00000"]
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -920,29 +898,27 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail settings environments whitelist", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"settings": {
-										"environments": {
-											"value": ["test"],
-											"type": "whitelist"
-										}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"settings": {
+									"environments": {
+										"value": ["test"],
+										"type": "whitelist"
 									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -1032,29 +1008,27 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	
 	it("call saveConfiguration - fail settings environments blacklist", function (done) {
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"settings": {
-										"environments": {
-											"value": ["NEW"],
-											"type": "blacklist"
-										}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"settings": {
+									"environments": {
+										"value": ["NEW"],
+										"type": "blacklist"
 									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(null);
-							}
-						};
-					}
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(null);
+						}
+					};
 				}
 			},
 			recipe: {
@@ -1145,29 +1119,27 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	it("call saveConfiguration - fail update_item_configuration", function (done) {
 		soajs.urac.groups = [];
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"settings": {
-										"environments": {
-											"value": [],
-											"type": "whitelist"
-										}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"settings": {
+									"environments": {
+										"value": [],
+										"type": "whitelist"
 									}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(new Error('Marketplace: item [marketplace] was not updated.'));
-							}
-						};
-					}
+								}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(new Error('Marketplace: item [marketplace] was not updated.'));
+						}
+					};
 				}
 			},
 			recipe: {
@@ -1257,24 +1229,22 @@ describe("Unit test for: bl/deploy.js - marketplace", function () {
 	it("call saveConfiguration - fail update_item_configuration mongo", function (done) {
 		delete soajs.urac;
 		let BL = {
-			"marketplace": {
-				"handleError": (soajs, error) => {
-					return new Error(error);
-				},
-				"mp": {
-					"getModel": () => {
-						return {
-							getItem: (inputmaskData, cb) => {
-								return cb(null, {
-									"_id": "123",
-									"settings": {}
-								});
-							},
-							update_item_configuration: (opts, cb) => {
-								return cb(new Error('mongo error'));
-							}
-						};
-					}
+			"handleError": (soajs, error) => {
+				return new Error(error);
+			},
+			"mp": {
+				"getModel": () => {
+					return {
+						getItem: (inputmaskData, cb) => {
+							return cb(null, {
+								"_id": "123",
+								"settings": {}
+							});
+						},
+						update_item_configuration: (opts, cb) => {
+							return cb(new Error('mongo error'));
+						}
+					};
 				}
 			},
 			recipe: {
