@@ -414,10 +414,10 @@ let bl = {
 			}
 			async.detect(item.versions, function (v, callback) {
 				if (v.version === inputmaskData.version) {
-					
+
 					return callback(null, v);
 				} else {
-					return callback();
+					return callback(null);
 				}
 			}, function (err, version) {
 				if (!version) {

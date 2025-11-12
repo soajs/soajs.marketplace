@@ -12,9 +12,9 @@ const async = require("async");
 const sdk = require('../../lib/sdk');
 
 function computeErrorMessageFromService(body) {
-	if (body || (body && !body.result)) {
+	if (body && !body.result) {
 		let error = "";
-		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
+		if (body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {
 				if (error === "") {
 					error += " " + detail.message;
@@ -189,8 +189,8 @@ let lib = {
 				},
 				function (call) {
 					let env_variables = ["$SOAJS_SRV_PORT", "$SOAJS_SRV_PORT_MAINTENANCE"];
-					if (opts.item.type === "service" && opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
-						computedEnvVariables[env_variables[1]]) {
+					if (opts.item.type === "service" && (opts.recipe.recipe.buildOptions.env[env_variables[0]] ||
+						computedEnvVariables[env_variables[1]])) {
 
 						if (computedEnvVariables[env_variables[0]]) {
 							config.env.push({
@@ -267,7 +267,7 @@ let lib = {
 							"value": opts.registry.services.config.ports.controller.toString()
 						});
 						if (!opts.registry.services.config.ports.controller) {
-							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[4]] + " computed variable was not found")));
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[3]] + " computed variable was not found")));
 						}
 					}
 					if (computedEnvVariables[env_variables[4]]) {
@@ -276,7 +276,7 @@ let lib = {
 							"value": (opts.registry.services.config.ports.controller + opts.registry.services.config.ports.maintenanceInc).toString()
 						});
 						if (!opts.registry.services.config.ports.controller || !opts.registry.services.config.ports.maintenanceInc) {
-							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[5]] + " computed variable was not found")));
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[4]] + " computed variable was not found")));
 						}
 					}
 					if (computedEnvVariables[env_variables[5]]) {
@@ -285,7 +285,7 @@ let lib = {
 							"value": opts.registry.deployer.selected.split(".")[1]
 						});
 						if (!opts.registry.deployer.selected || !opts.registry.deployer.selected.split(".")[1]) {
-							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[6]] + " computed variable was not found")));
+							return call(bl.marketplace.handleError(soajs, 422, new Error(computedEnvVariables[env_variables[5]] + " computed variable was not found")));
 						}
 					}
 					return call();
@@ -412,7 +412,7 @@ let lib = {
 								if (error || !repo.result) {
 									return call(bl.marketplace.handleError(soajs, 503, computeErrorMessageFromService(repo)));
 								}
-								if (!repo && !repo.data && !repo.data.owner) {
+								if (!repo || !repo.data || !repo.data.owner) {
 									return call(bl.marketplace.handleError(soajs, 412, null));
 								}
 								let env_variables = ["SOAJS_CONFIG_REPO_OWNER", "SOAJS_CONFIG_REPO_BRANCH", "SOAJS_CONFIG_REPO_COMMIT", "SOAJS_CONFIG_REPO_NAME", "SOAJS_CONFIG_REPO_PROVIDER", "SOAJS_CONFIG_REPO_TOKEN", "SOAJS_CONFIG_REPO_DOMAIN"];

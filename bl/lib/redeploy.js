@@ -11,9 +11,9 @@ const request = require("request");
 const async = require("async");
 
 function computeErrorMessageFromService(body) {
-	if (body || (body && !body.result)) {
+	if (body && !body.result) {
 		let error = "";
-		if (body.errors && body.errors && body.errors.details && body.errors.details.length > 0) {
+		if (body.errors && body.errors.details && body.errors.details.length > 0) {
 			body.errors.details.forEach((detail) => {
 				if (error === "") {
 					error += " " + detail.message;
